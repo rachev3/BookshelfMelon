@@ -1,9 +1,13 @@
 ﻿using MelonBookshelf.Data;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace Bookshelf.Models
+namespace MelonBookshelf.Models
 {
     public class Request
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestId { get; set; }
         public RequestStatus Status { get; set; }
         public ResourceType Type { get; set; }
@@ -14,7 +18,10 @@ namespace Bookshelf.Models
         public string Motive { get; set; }
         public DateTime DateAdded { get; set; }
 
+
         public int CategoryId { get; set; }
+        [ForeignKey(nameof(CategoryId))]
+        public virtual Category Category { get; set; }
 
     }
 }
