@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MelonBookshelf.Controllers
 {
@@ -15,7 +16,10 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await followerService.GetAll();
-            return View("Follower", data);
+            var followers = data.Select(x => new FollowerViewModel(x)).ToList();
+            var viewModel = new FollowerPageViewModel(followers);
+            return View("Follower", viewModel);
+
         }
 
         public IActionResult Create()
