@@ -25,7 +25,7 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Resource>> GetAll()
+        public async Task<List<Resource>> GetAll()
         {
             var result = await _appDbContext.Resources.ToListAsync();
             return result;

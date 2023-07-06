@@ -1,6 +1,8 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.Xml;
 
 namespace MelonBookshelf.Controllers
 {
@@ -15,7 +17,10 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await resourceService.GetAll();
-            return View("Resource", data);
+            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
+            var viewModel = new ResourcePageViewModel(resources);
+
+            return View("Resource", viewModel);
         }
 
         public IActionResult Create()

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Resource>
+﻿@model ResourcePageViewModel
 
 @{
     ViewData["Title"] = "List of Resources";
@@ -9,14 +9,14 @@
         <table class="table">
             <thead>
                 <tr class="text-center">
-                    <th>@Html.DisplayNameFor(model => model.Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.Author)</th>
-                    <th>@Html.DisplayNameFor(model => model.Type)</th>
-                    <th>@Html.DisplayNameFor(model => model.Category)</th>
+                    <th>@nameof(ResourceViewModel.Title)</th>
+                    <th>@nameof(ResourceViewModel.Author)</th>
+                    <th>@nameof(ResourceViewModel.Type)</th>
+                    <th>@nameof(ResourceViewModel.Category)</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Resources)
                 {
                     <tr>
                         <td class="align-middle">
