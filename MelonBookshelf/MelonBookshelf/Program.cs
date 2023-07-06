@@ -1,6 +1,8 @@
 using MelonBookshelf.Data;
+using MelonBookshelf.Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 
 //derfwffdefferw
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICategoryService,CategoryService>();
+builder.Services.AddScoped<IFollowerService, FollowerService>();
+builder.Services.AddScoped<IRequestService, RequestService>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IUpvoteService, UpvoteService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
 
 var app = builder.Build();
 
