@@ -2,6 +2,10 @@
 {
     public class UserViewModel
     {
+        public UserViewModel()
+        {
+
+        }
         public UserViewModel(User user)
         {
             FirstName = user.FirstName;

@@ -2,6 +2,10 @@
 {
     public class CategoryViewModel
     {
+        public CategoryViewModel()
+        {
+
+        }
         public CategoryViewModel(Category category)
         {
             CategoryId = category.CategoryId;

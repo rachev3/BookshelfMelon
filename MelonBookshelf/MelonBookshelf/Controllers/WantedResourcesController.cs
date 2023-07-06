@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MelonBookshelf.Controllers
 {
@@ -15,6 +16,8 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await wantedResourcesService.GetAll();
+            var resources = data.Select(x => new WantedResourcesViewModel(x)).ToList();
+            var viewModel = new WantedResourcesPageViewModel(resources);
             return View("WantedResources", data);
         }
 

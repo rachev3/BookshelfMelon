@@ -4,6 +4,10 @@ namespace MelonBookshelf.Models
 {
     public class RequestViewModel
     {
+        public RequestViewModel()
+        {
+
+        }
         public RequestViewModel(Request request)
         {
             RequestId = request.RequestId;
