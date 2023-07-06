@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelonBookshelf.Data.Services
 {
-    public class UpvoteService:IUpvoteService
+    public class UpvoteService : IUpvoteService
     {
         private readonly ApplicationDbContext _appDbContext;
 
@@ -24,7 +24,7 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Upvote>> GetAll()
+        public async Task<List<Upvote>> GetAll()
         {
             var result = await _appDbContext.Upvotes.ToListAsync();
             return result;
@@ -42,5 +42,6 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
             return upvote;
         }
+
     }
 }

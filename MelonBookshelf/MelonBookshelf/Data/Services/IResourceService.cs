@@ -10,4 +10,4 @@ namespace MelonBookshelf.Data.Services
         Task<Resource> Update(int id, Resource resource);
         Task Delete(int id);
     }
-}
+} 

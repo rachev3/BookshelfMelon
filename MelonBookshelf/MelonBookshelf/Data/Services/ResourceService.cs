@@ -35,7 +35,7 @@ namespace MelonBookshelf.Data.Services
         {
             var result = await _appDbContext.Resources.FirstOrDefaultAsync(n => n.ResourceId == id);
             return result;
-        }
+        } 
 
         public async Task<Resource> Update(int id, Resource resource)
         {
