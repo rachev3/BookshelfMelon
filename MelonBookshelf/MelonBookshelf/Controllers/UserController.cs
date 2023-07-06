@@ -18,7 +18,7 @@ namespace MelonBookshelf.Controllers
             var data = await userService.GetAll();
             var resources = data.Select(x => new UserViewModel(x)).ToList();
             var viewModel = new UserPageViewModel(resources);
-            return View("User", data);
+            return View("User", viewModel);
         }
 
         public IActionResult Create()

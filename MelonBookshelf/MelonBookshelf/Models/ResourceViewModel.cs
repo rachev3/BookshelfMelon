@@ -38,6 +38,5 @@ namespace MelonBookshelf.Models
         public DateTime? DateTaken { get; set; }
         public DateTime? DateReturn { get; set; }
     
-        public virtual Category? Category { get; set; }
     }
 }
