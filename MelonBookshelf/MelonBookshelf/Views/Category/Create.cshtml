@@ -1,0 +1,33 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Add New Category";
+}
+<div class="row text">
+    <div class="col-md-8 offset-2">
+
+        <div class="row">
+            <div class="col-md-8 offset-4">
+
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <p>
+                        <h1>Add a New Category</h1>
+                    </p>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success float-right" asp-action="Create" />
+                        <a class="btn btn-outline-secondary" asp-action="Index">Show All Categories</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
