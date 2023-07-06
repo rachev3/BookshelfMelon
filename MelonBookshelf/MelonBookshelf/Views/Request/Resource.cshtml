@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Resource>
+﻿@model IEnumerable<Request>
 
 @{
-    ViewData["Title"] = "List of Resources";
+    ViewData["Title"] = "List of Requests";
 }
 
 <div class="row">
@@ -11,8 +11,6 @@
                 <tr class="text-center">
                     <th>@Html.DisplayNameFor(model => model.Title)</th>
                     <th>@Html.DisplayNameFor(model => model.Author)</th>
-                    <th>@Html.DisplayNameFor(model => model.Type)</th>
-                    <th>@Html.DisplayNameFor(model => model.Category)</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,17 +24,11 @@
                             @Html.DisplayFor(modelItem => item.Author)
                         </td>
                         <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Type)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Category)
-                        </td>
-                        <td class="align-middle">
-                            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.ResourceId">
+                            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.RequestId">
                                 <i class="bi bi-pencil-square"></i>Details
                             </a>
-                            <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.ResourceId"><i class="bi bi-pencil-square"></i>Edit</a>
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ResourceId"><i class="bi bi-trash"></i>Delete</a>
+                            <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.RequestId"><i class="bi bi-pencil-square"></i>Edit</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.RequestId"><i class="bi bi-trash"></i>Delete</a>
                         </td>
                     </tr>
                 }
@@ -45,6 +37,6 @@
     </div>
 </div>
 <div>
-    <a asp-controller="Resource" asp-action="Create" class="btn btn-outline-success">Add New Resource</a>
+    <a asp-controller="Request" asp-action="Create" class="btn btn-outline-success">Add New Request</a>
 
 </div>
