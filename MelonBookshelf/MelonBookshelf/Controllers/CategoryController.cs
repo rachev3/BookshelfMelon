@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MelonBookshelf.Controllers
 {
@@ -15,7 +16,10 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await categoryService.GetAll();
-            return View("Category", data);
+            var resources = data.Select(x => new CategoryViewModel(x)).ToList();
+            var viewModel = new CategoryPageViewModel(resources);
+
+            return View("Category", viewModel);
         }
 
         public IActionResult Create()
