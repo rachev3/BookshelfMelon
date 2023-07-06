@@ -4,7 +4,7 @@ namespace MelonBookshelf.Data.Services
 {
     public interface IWantedResourcesService
     {
-        Task<IEnumerable<WantedResources>> GetAll();
+        Task<List<WantedResources>> GetAll();
         Task<WantedResources> GetById(int id);
         Task Add(WantedResources wantedResources);
         Task<WantedResources> Update(int id, WantedResources wantedResources);

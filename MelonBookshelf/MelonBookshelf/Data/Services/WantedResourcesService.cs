@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelonBookshelf.Data.Services
 {
-    public class WantedResourcesService :IWantedResourcesService
+    public class WantedResourcesService : IWantedResourcesService
     {
         private readonly ApplicationDbContext _appDbContext;
 
@@ -24,7 +24,7 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<WantedResources>> GetAll()
+        public async Task<List<WantedResources>> GetAll()
         {
             var result = await _appDbContext.WantedResources.ToListAsync();
             return result;
@@ -42,5 +42,6 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
             return wantedResources;
         }
+
     }
 }

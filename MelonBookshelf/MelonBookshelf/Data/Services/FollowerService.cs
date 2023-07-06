@@ -7,16 +7,17 @@ namespace MelonBookshelf.Data.Services
     public class FollowerService : IFollowerService
     {
         private readonly ApplicationDbContext _appDbContext;
+
         public FollowerService(ApplicationDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
+
         public async Task Add(Follower follower)
         {
             await _appDbContext.Followers.AddAsync(follower);
             await _appDbContext.SaveChangesAsync();
         }
-
         public async Task Delete(int id)
         {
             var result = await _appDbContext.Followers.FirstOrDefaultAsync(n => n.Id == id);
@@ -24,7 +25,7 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Follower>> GetAll()
+        public async Task<List<Follower>> GetAll()
         {
             var result = await _appDbContext.Followers.ToListAsync();
             return result;
