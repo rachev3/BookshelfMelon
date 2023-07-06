@@ -15,7 +15,9 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await upvoteService.GetAll();
-            return View("Upvote", data);
+            var upvote = data.Select(x => new UpvoteViewModel(x)).ToList();
+            var viewModel = new UpvotePageViewModel(upvote);
+            return View("Upvote", viewModel);
         }
 
         public IActionResult Create()
