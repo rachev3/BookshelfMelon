@@ -20,6 +20,13 @@ namespace MelonBookshelf.Controllers
             var viewModel = new UserPageViewModel(resources);
             return View("User", viewModel);
         }
+        public async Task<IActionResult> Details(string id)
+        {
+            var data = await userService.GetById(id);
+            UserViewModel resource = new(data);
+            return View("Details", resource);
+
+        }
 
         public IActionResult Create()
         {
