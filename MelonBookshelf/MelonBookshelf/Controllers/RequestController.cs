@@ -21,6 +21,13 @@ namespace MelonBookshelf.Controllers
             return View("Request", viewModel);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var data = await requestService.GetById(id);
+            RequestViewModel request = new(data);
+            return View("Details", request);
+        }
+
         public IActionResult Create()
         {
             return View();
