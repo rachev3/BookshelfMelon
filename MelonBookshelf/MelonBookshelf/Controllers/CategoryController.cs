@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace MelonBookshelf.Controllers
@@ -21,7 +22,14 @@ namespace MelonBookshelf.Controllers
 
             return View("Category", viewModel);
         }
-        
+        public async Task<IActionResult> Details(int id)
+        {
+            var data = await categoryService.GetById(id);
+            CategoryViewModel resource = new(data);
+            return View("Details", resource);
+
+        }
+
 
         public IActionResult Create()
         {

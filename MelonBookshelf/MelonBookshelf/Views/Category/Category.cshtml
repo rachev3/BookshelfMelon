@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Category>
+﻿@model CategoryPageViewModel
 
 @{
     ViewData["Title"] = "List of Categories";
@@ -9,11 +9,11 @@
         <table class="table">
             <thead>
                 <tr class="text-center">
-                    <th>@Html.DisplayNameFor(model => model.Name)</th> 
+                    <th>Name</th> 
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Categories)
                 {
                     <tr>
                         <td class="align-middle">
