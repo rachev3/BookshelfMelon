@@ -67,11 +67,12 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var resource = await resourceService.GetById(id);
+            ResourceViewModel resourceViewModel = new(resource);
             if (resource == null)
             {
                 return View("NotFound");
             }
-            return View(resource);
+            return View(resourceViewModel);
         }
 
         [HttpPost, ActionName("Delete")]

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Request>
+﻿@model RequestPageViewModel
 
 @{
     ViewData["Title"] = "List of Requests";
@@ -9,12 +9,12 @@
         <table class="table">
             <thead>
                 <tr class="text-center">
-                    <th>@Html.DisplayNameFor(model => model.Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.Author)</th>
+                    <th>Title</th>
+                    <th>Author</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Requests)
                 {
                     <tr>
                         <td class="align-middle">

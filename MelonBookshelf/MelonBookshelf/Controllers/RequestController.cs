@@ -43,11 +43,12 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var request = await requestService.GetById(id);
+            var viewModel = new RequestViewModel(request);
             if (request == null)
             {
                 return View("NotFound");
             }
-            return View(request);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -65,11 +66,12 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var request = await requestService.GetById(id);
+            RequestViewModel viewModel = new(request);
             if (request == null)
             {
                 return View("NotFound");
             }
-            return View(request);
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Delete")]
