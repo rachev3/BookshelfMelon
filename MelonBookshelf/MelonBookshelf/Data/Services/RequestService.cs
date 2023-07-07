@@ -41,6 +41,36 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
             return request;
         }
+        public async Task Like(int requestId, string userId)
+        {
+            Upvote upvoter = new Upvote();
+            upvoter.RequestId = requestId;
+            upvoter.UserId = userId;
+
+            await _appDbContext.Upvotes.AddAsync(upvoter);
+            await _appDbContext.SaveChangesAsync();
+        }
+        public async Task Dislike(int requestId, string userId)
+        {
+            var result = await _appDbContext.Upvotes.FirstOrDefaultAsync(n => n.RequestId == requestId && n.UserId == userId);
+            _appDbContext.Upvotes.Remove(result);
+            await _appDbContext.SaveChangesAsync();
+        }
+        public async Task Follow(int requestId, string userId)
+        {
+            Follower follower = new();
+            follower.RequestId = requestId;
+            follower.UserId = userId;
+
+            await _appDbContext.Followers.AddAsync(follower);
+            await _appDbContext.SaveChangesAsync();
+        }
+        public async Task UnFollow(int requestId, string userId)
+        {
+            var result = await _appDbContext.Followers.FirstOrDefaultAsync(n => n.RequestId == requestId && n.UserId == userId);
+            _appDbContext.Followers.Remove(result);
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 
 }

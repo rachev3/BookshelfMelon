@@ -37,6 +37,7 @@ namespace MelonBookshelf.Models
         public DateTime? DateAdded { get; set; }
         public DateTime? DateTaken { get; set; }
         public DateTime? DateReturn { get; set; }
+        public CategoryViewModel CategoryViewModel { get; set; }
     
     }
 }
