@@ -7,6 +7,9 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+body {
+    background-color: #6b4423; 
+}
 a {
   color: #0077cc;
 }

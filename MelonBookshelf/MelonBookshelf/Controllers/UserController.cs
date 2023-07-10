@@ -1,5 +1,6 @@
 ﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -8,9 +9,13 @@ namespace MelonBookshelf.Controllers
     public class UserController:Controller
     {
         private readonly IUserService userService;
-        public UserController(IUserService userService)
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+
+        public UserController(IUserService userService, UserManager<User> userManager)
         {
             this.userService = userService;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -23,8 +28,8 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var data = await userService.GetById(id);
-            UserViewModel resource = new(data);
-            return View("Details", resource);
+            UserViewModel user = new(data);
+            return View("Details", user);
 
         }
 
@@ -33,21 +38,56 @@ namespace MelonBookshelf.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        [HttpGet]
+        public IActionResult Login()
         {
-            await userService.Add(user);
-            return RedirectToAction(nameof(Index));
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserRegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new User
+                {
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email
+                  
+                };
+
+                await userManager.CreateAsync(user, model.Password);
+
+                return RedirectToAction("Login");
+            }
+            var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+
+            foreach (var errorMessage in errorMessages)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage);
+            }
+
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
         }
 
         public async Task<IActionResult> Edit(string id)
         {
             var user = await userService.GetById(id);
+            UserViewModel model = new UserViewModel(user);
             if (user == null)
             {
                 return View("NotFound");
             }
-            return View(user);
+            return View(model);
         }
 
         [HttpPost]
@@ -65,11 +105,12 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var user = await userService.GetById(id);
+            UserViewModel userViewModel = new(user);
             if (user == null)
             {
                 return View("NotFound");
             }
-            return View(user);
+            return View(userViewModel);
         }
 
         [HttpPost, ActionName("Delete")]

@@ -1,4 +1,6 @@
-﻿namespace MelonBookshelf.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace MelonBookshelf.Models
 {
     public class UserViewModel
     {
@@ -10,9 +12,13 @@
         {
             FirstName = user.FirstName;
             LastName = user.LastName;
+            Email = user.Email; 
+            Id = user.Id;
         }
+        public string Id { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
     }
 }

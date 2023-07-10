@@ -1,4 +1,5 @@
 ﻿using MelonBookshelf.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MelonBookshelf.Data.Services
@@ -6,15 +7,17 @@ namespace MelonBookshelf.Data.Services
     public class UserService:IUserService
     {
         private readonly ApplicationDbContext _appDbContext;
+        private readonly UserManager<User> userManager;
 
-        public UserService(ApplicationDbContext appDbContext)
+        public UserService(ApplicationDbContext appDbContext, UserManager<User> userManager)
         {
             _appDbContext = appDbContext;
+            this.userManager = userManager;
         }
 
-        public async Task Add(User user)
+        public async Task Add(User user,string password)
         {
-            await _appDbContext.Users.AddAsync(user);
+            await userManager.CreateAsync(user,password);
             await _appDbContext.SaveChangesAsync();
         }
         public async Task Delete(string id)
