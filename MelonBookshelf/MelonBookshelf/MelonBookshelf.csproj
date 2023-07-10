@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
 
 </Project>
