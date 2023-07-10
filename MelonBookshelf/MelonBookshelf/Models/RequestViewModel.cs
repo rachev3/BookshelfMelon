@@ -3,7 +3,7 @@
 namespace MelonBookshelf.Models
 {
     public class RequestViewModel
-    {
+    { 
         public RequestViewModel()
         {
 
@@ -19,7 +19,9 @@ namespace MelonBookshelf.Models
             Link = request.Link;
             Motive = request.Motive;
             DateAdded = request.DateAdded;
-            CategoryId = request.CategoryId;
+            Description = request.Description;
+            Upvotes = request.Upvotes;
+            Followers = request.Followers;
         }
 
         public int RequestId { get; set; }
@@ -30,10 +32,13 @@ namespace MelonBookshelf.Models
         public string? Priority { get; set; }
         public string? Link { get; set; }
         public string? Motive { get; set; }
+        public string? Description { get; set; }
         public DateTime? DateAdded { get; set; }
+        public FollowerPageViewModel FollowerPageViewModel { get; set; }
+        public List<Upvote>? Upvotes { get; set; }
+        public List<Follower>? Followers { get; set; }
 
-
-        public int? CategoryId { get; set; }
+        public CategoryViewModel Category { get; set; }
 
     }
 }

@@ -12,6 +12,8 @@ namespace MelonBookshelf.Data.Services
         Task Dislike(int requestId, string userId);
         Task Follow(int requestId, string userId);
         Task UnFollow(int requestId, string userId);
+        Task<int> GetUpvotersCount(int requestId);
+        Task<int> GetFollowersCount(int requestId);
         Task<Request> Update(int id, Request request);
         Task Delete(int id);
     }

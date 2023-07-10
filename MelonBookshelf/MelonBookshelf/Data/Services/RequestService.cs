@@ -25,8 +25,17 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<List<Request>> GetAll()
         {
-            var result = await _appDbContext.Requests.ToListAsync();
+            var result = await _appDbContext.Requests
+                .Include(a=> a.Upvotes).ThenInclude(b=> b.User)
+                .Include(c=> c.Followers).ThenInclude(d=>d.User)
+                .ToListAsync();
             return result;
+        }
+        public async Task<int> GetUpvotersCount(int requestId)
+        {
+            var result = await _appDbContext.Upvotes.Where(u => u.RequestId == requestId).ToListAsync();
+            int upvotersCount = result.Count();
+            return upvotersCount;
         }
 
         public async Task<Request> GetById(int id)
@@ -47,14 +56,22 @@ namespace MelonBookshelf.Data.Services
             upvoter.RequestId = requestId;
             upvoter.UserId = userId;
 
-            await _appDbContext.Upvotes.AddAsync(upvoter);
-            await _appDbContext.SaveChangesAsync();
+            var like = await _appDbContext.Upvotes.FirstOrDefaultAsync(u=> u.UserId == userId && u.RequestId == requestId);
+
+            if (like == null)
+            {
+                await _appDbContext.Upvotes.AddAsync(upvoter);
+                await _appDbContext.SaveChangesAsync();
+            }
         }
         public async Task Dislike(int requestId, string userId)
         {
             var result = await _appDbContext.Upvotes.FirstOrDefaultAsync(n => n.RequestId == requestId && n.UserId == userId);
-            _appDbContext.Upvotes.Remove(result);
-            await _appDbContext.SaveChangesAsync();
+            if (result != null)
+            {
+                _appDbContext.Upvotes.Remove(result);
+                await _appDbContext.SaveChangesAsync();
+            }
         }
         public async Task Follow(int requestId, string userId)
         {
@@ -62,14 +79,26 @@ namespace MelonBookshelf.Data.Services
             follower.RequestId = requestId;
             follower.UserId = userId;
 
-            await _appDbContext.Followers.AddAsync(follower);
-            await _appDbContext.SaveChangesAsync();
+            var follow = await _appDbContext.Followers.FirstOrDefaultAsync(f => f.UserId == userId && f.RequestId == requestId);
+            if (follow == null)
+            {
+                await _appDbContext.Followers.AddAsync(follower);
+                await _appDbContext.SaveChangesAsync();
+            }
         }
         public async Task UnFollow(int requestId, string userId)
         {
             var result = await _appDbContext.Followers.FirstOrDefaultAsync(n => n.RequestId == requestId && n.UserId == userId);
-            _appDbContext.Followers.Remove(result);
-            await _appDbContext.SaveChangesAsync();
+            if (result != null)
+            {
+                _appDbContext.Followers.Remove(result);
+                await _appDbContext.SaveChangesAsync();
+            }
+        }
+
+        public Task<int> GetFollowersCount(int requestId)
+        {
+            throw new NotImplementedException();
         }
     }
 

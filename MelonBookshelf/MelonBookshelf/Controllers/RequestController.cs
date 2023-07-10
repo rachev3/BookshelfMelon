@@ -2,6 +2,7 @@
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using System.Linq;
+using System.Security.Claims;
 
 namespace MelonBookshelf.Controllers
 {
@@ -16,8 +17,8 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await requestService.GetAll();
-            var resources = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(resources);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests);
             return View("Request", viewModel);
         }
 
@@ -37,6 +38,30 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Create(Request request)
         {
             await requestService.Add(request);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Upvote(int requestId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await requestService.Like(requestId, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Downvote(int requestId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await requestService.Dislike(requestId, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Follow(int requestId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await requestService.Follow(requestId, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Unfollow(int requestId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await requestService.UnFollow(requestId, userId);
             return RedirectToAction(nameof(Index));
         }
 

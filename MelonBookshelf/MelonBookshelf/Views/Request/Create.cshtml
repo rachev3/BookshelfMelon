@@ -1,4 +1,5 @@
-﻿@model RequestViewModel
+﻿@using MelonBookshelf.Data
+@model RequestViewModel
 
 @{
     ViewData["Title"] = "Add New Request";
@@ -7,13 +8,31 @@
     <div class="col-md-8 offset-2">
 
         <div class="row">
-            <div class="col-md-8 offset-4">
+            <div class="col-md-6 offset-3">
 
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <p>
-                        <h1>Add a New Request</h1>
+                        <h1>Add new Request</h1>
                     </p>
+                    <div class="form-group">
+                        <label class="control-label">Category</label>
+                        <input asp-for="Category.Name" class="form-control" />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Type" class="control-label"></label>
+                        <select asp-for="Type" class="form-control">
+                            <option value="">Select Type</option>
+                            @foreach (var value in Enum.GetValues(typeof(ResourceType)))
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+
+
                     <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
                         <input asp-for="Title" class="form-control" />
@@ -24,9 +43,31 @@
                         <input asp-for="Author" class="form-control" />
                         <span asp-validation-for="Author" class="text-danger"></span>
                     </div>
-
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-outline-success float-right" asp-action="Create" />
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Link" class="control-label"></label>
+                        <input asp-for="Link" class="form-control" />
+                        <span asp-validation-for="Link" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Priority" class="control-label"></label>
+                        <input asp-for="Priority" class="form-control" />
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Motive" class="control-label"></label>
+                        <input asp-for="Motive" class="form-control" />
+                        <span asp-validation-for="Motive" class="text-danger"></span>
+                    </div>
+                     <div>
+                         <p></p>
+                     </div>
+                    <div class="form-group">
+                        <input type="submit" value="Add" class="btn btn-outline-success float-right" asp-action="Create" />
                         <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
                     </div>
                 </form>
