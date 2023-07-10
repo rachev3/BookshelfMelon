@@ -12,10 +12,11 @@ namespace MelonBookshelf.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public UserController(IUserService userService, UserManager<User> userManager)
+        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.userService = userService;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -37,11 +38,44 @@ namespace MelonBookshelf.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginViewModel model)
+        {
+           
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
 
-        [HttpGet]
+                var user = await userManager.FindByNameAsync(model.UserName);
+
+                if (!user.Equals(null))
+                {
+                    var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+                    if (result.Succeeded)
+                    {
+                       
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                ModelState.AddModelError("", "Invalid Login");
+
+                return View(model);
+           
+        }
+
+            [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+
+            return RedirectToAction(nameof(Login));
         }
 
         [HttpPost]
