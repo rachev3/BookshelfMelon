@@ -1,4 +1,5 @@
-﻿@model ResourcePageViewModel
+﻿@using MelonBookshelf.Data
+@model ResourcePageViewModel
 
 @{
     ViewData["Title"] = "List of Resources";
@@ -6,6 +7,27 @@
 
 <div class="row">
     <div class="col-md-8 offset-md-2">
+        <form method="post" action="@Url.Action("Index")" class="mb-3">
+            <div class="input-group">              
+                <select name="resourceType" class="form-control" >
+                    <option value="">Select Type</option>
+                    @foreach (var value in Enum.GetValues(typeof(ResourceType)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+                <select name="categoryId" class="form-control">
+                    <option value="">All Categories</option>
+                    @foreach (var value in Model.Categories)
+                    {
+                        <option value="@value.CategoryId">@value.Name</option>
+                    }
+                </select>
+                <input type="text" name="title" class="form-control" placeholder="Title">
+                <button type="submit" class="btn btn-outline-primary" asp-action="Index">Search</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+            </div>
+        </form>
         <table class="table">
             <thead>
                 <tr class="text-center">
@@ -44,3 +66,8 @@
     <a asp-controller="Resource" asp-action="Create" class="btn btn-outline-success">Add New Resource</a>
 
 </div>
+<script>
+    function clearSearch() {
+        document.querySelector('form').reset();
+    }
+</script>

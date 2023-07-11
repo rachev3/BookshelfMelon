@@ -35,7 +35,13 @@ namespace MelonBookshelf.Data.Services
         {
             var result = await _appDbContext.Resources.FirstOrDefaultAsync(n => n.ResourceId == id);
             return result;
-        } 
+        }
+
+        public async Task<List<Resource>> Search(string? title, ResourceType? type, int? categoryId)
+        {
+            var result = await _appDbContext.Resources.Where(r => r.Title == title && r.Type == type && r.CategoryId == categoryId).ToListAsync();
+            return result;
+        }
 
         public async Task<Resource> Update(int id, Resource resource)
         {

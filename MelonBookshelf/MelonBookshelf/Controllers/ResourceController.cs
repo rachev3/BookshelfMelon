@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Data.Services;
+﻿using MelonBookshelf.Data;
+using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -9,16 +10,32 @@ namespace MelonBookshelf.Controllers
     public class ResourceController : Controller
     {
         private readonly IResourceService resourceService;
-        public ResourceController (IResourceService resourceService)
+        private readonly ICategoryService categoryService;
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService)
         {
             this.resourceService = resourceService;
+            this.categoryService = categoryService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var data = await resourceService.GetAll();
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var resources = data.Select(x => new ResourceViewModel(x)).ToList();
-            var viewModel = new ResourcePageViewModel(resources);
+            var viewModel = new ResourcePageViewModel(resources, viewListCategory);
+
+            return View("Resource", viewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(string? title, ResourceType? resourceType, int? categoryId)
+        {
+            var data = await resourceService.Search(title,resourceType,categoryId);
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c=> new CategoryViewModel(c)).ToList();
+            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
+            var viewModel = new ResourcePageViewModel(resources,viewListCategory);
 
             return View("Resource", viewModel);
         }
@@ -29,6 +46,17 @@ namespace MelonBookshelf.Controllers
             return View("Details", resource);
 
         }
+        //public async Task<IActionResult> Search(string title, ResourceType resourceType, int categoryId)
+        //{
+        //    var result = await resourceService.Search(title, resourceType, categoryId);
+        //    var categories = await categoryService.GetAll();
+        //    var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+        //    var resources = result.Select(x => new ResourceViewModel(x)).ToList();
+        //    var viewModel = new ResourcePageViewModel(resources, viewListCategory);
+
+        //    return View("Search")
+
+        //}
 
         public IActionResult Create()
         {
