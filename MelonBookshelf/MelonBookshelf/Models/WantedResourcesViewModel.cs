@@ -10,13 +10,11 @@ namespace MelonBookshelf.Models
 
         }
         public WantedResourcesViewModel(WantedResources wantedResources)
-        {
-            Id = wantedResources.Id;
+        {           
             ResourceId = wantedResources.ResourceId;
             UserId = wantedResources.UserId;
         }
 
-        public int Id { get; set; }
         public int ResourceId { get; set; }
         public string UserId { get; set; }
     }

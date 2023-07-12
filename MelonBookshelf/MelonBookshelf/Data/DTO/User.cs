@@ -1,5 +1,6 @@
 ﻿using MelonBookshelf.Data;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MelonBookshelf.Models
 {
@@ -7,5 +8,6 @@ namespace MelonBookshelf.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public List<Request> Requests { get; set; }
     }
 }

@@ -1,0 +1,67 @@
+﻿@model RequestPageViewModel
+
+@{
+    ViewData["Title"] = "List of Requests";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Likes</th>
+                    <th>Followers</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Requests)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Author)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Priority)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.DateAdded)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Upvotes.Count)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Followers.Count)
+                        </td>
+                        <td class="align-middle">
+                            <p></p>
+                        </td>
+                        <td class="align-middle">
+                            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.RequestId">
+                                <i class="bi bi-pencil-square"></i>Details
+                            </a>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+    <a asp-controller="Request" asp-action="Create" class="btn btn-outline-success">Add New Request</a>
+
+</div>

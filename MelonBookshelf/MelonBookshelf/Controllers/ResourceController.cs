@@ -1,8 +1,10 @@
 ﻿using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Security.Cryptography.Xml;
 
 namespace MelonBookshelf.Controllers
@@ -39,6 +41,7 @@ namespace MelonBookshelf.Controllers
 
             return View("Resource", viewModel);
         }
+        
         public async Task<IActionResult> Details(int id)
         {
             var data = await resourceService.GetById(id);
@@ -46,18 +49,6 @@ namespace MelonBookshelf.Controllers
             return View("Details", resource);
 
         }
-        //public async Task<IActionResult> Search(string title, ResourceType resourceType, int categoryId)
-        //{
-        //    var result = await resourceService.Search(title, resourceType, categoryId);
-        //    var categories = await categoryService.GetAll();
-        //    var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-        //    var resources = result.Select(x => new ResourceViewModel(x)).ToList();
-        //    var viewModel = new ResourcePageViewModel(resources, viewListCategory);
-
-        //    return View("Search")
-
-        //}
-
         public IActionResult Create()
         {
             return View();
@@ -81,6 +72,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Resource resource)
         {
             resource.ResourceId = id;
@@ -89,6 +81,18 @@ namespace MelonBookshelf.Controllers
                 return View(resource);
             }
             await resourceService.Update(id, resource);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Want(int resourceId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await resourceService.Want(userId, resourceId);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Unwant(int resourceId)
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
         }
 

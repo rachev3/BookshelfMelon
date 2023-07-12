@@ -3,6 +3,7 @@ using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using System.Linq;
 using System.Security.Claims;
+using System.ComponentModel.Design;
 
 namespace MelonBookshelf.Controllers
 {
@@ -20,6 +21,14 @@ namespace MelonBookshelf.Controllers
             var requests = data.Select(x => new RequestViewModel(x)).ToList();
             var viewModel = new RequestPageViewModel(requests);
             return View("Request", viewModel);
+        }
+        public async Task<IActionResult> MyRequests()
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            var data = await requestService.GetMyRequests(userId);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests);
+            return View("MyRequests", viewModel);
         }
 
         public async Task<IActionResult> Details(int id)

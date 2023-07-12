@@ -8,7 +8,7 @@ namespace MelonBookshelf.Data.Services
     {
         private readonly ApplicationDbContext _appDbContext;
 
-        public ResourceService (ApplicationDbContext appDbContext)
+        public ResourceService(ApplicationDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
@@ -27,7 +27,9 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<List<Resource>> GetAll()
         {
-            var result = await _appDbContext.Resources.ToListAsync();
+            var result = await _appDbContext.Resources
+               .Include(a => a.WantedResources).ThenInclude(b => b.User)
+               .ToListAsync();
             return result;
         }
 
@@ -39,9 +41,39 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<List<Resource>> Search(string? title, ResourceType? type, int? categoryId)
         {
-            var result = await _appDbContext.Resources.Where(r => r.Title == title && r.Type == type && r.CategoryId == categoryId).ToListAsync();
+            var result = await _appDbContext.Resources.ToListAsync();
+
+            if (title != null) result = result.Where(r => r.Title == title).ToList();
+            if (type != null) result = result.Where(r => r.Type == type).ToList();
+            if (categoryId != null) result = result.Where(r => r.CategoryId == categoryId).ToList();
+
             return result;
         }
+        public async Task Want(string userId, int resourceId)
+        {
+            WantedResources wantedResources = new ();
+            wantedResources.ResourceId = resourceId;
+            wantedResources.UserId = userId;
+
+            var want = await _appDbContext.WantedResources.FirstOrDefaultAsync(wr => wr.UserId == userId && wr.ResourceId == resourceId);
+
+            if (want == null)
+            {
+                await _appDbContext.WantedResources.AddAsync(wantedResources);
+                await _appDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task Unwant(string userId, int resourceId)
+        {
+            var result = await _appDbContext.WantedResources.FirstOrDefaultAsync(n => n.ResourceId == resourceId && n.UserId == userId);
+            if (result != null)
+            {
+                _appDbContext.WantedResources.Remove(result);
+                await _appDbContext.SaveChangesAsync();
+            }
+        }
+
 
         public async Task<Resource> Update(int id, Resource resource)
         {
@@ -49,8 +81,6 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
             return resource;
         }
-
-
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace MelonBookshelf.Data
 {
@@ -16,5 +17,29 @@ namespace MelonBookshelf.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Upvote> Upvotes { get; set; }
         public DbSet<WantedResources> WantedResources { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasMany(r => r.Requests)
+                .WithOne(r => r.User)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+                
+                
+                //.HasOne(r => r.User)
+                //.WithMany()
+                //.HasForeignKey(r => r.UserId)
+                //.OnDelete(DeleteBehavior.NoAction);
+
+
+            //modelBuilder.Entity<User>()
+            //   .HasMany(r => r.Requests)
+            //   .WithOne(r => r.User)
+            //   .HasForeignKey(r => r.UserId)
+            //   .OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

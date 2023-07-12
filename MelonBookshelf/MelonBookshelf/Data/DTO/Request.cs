@@ -19,6 +19,8 @@ namespace MelonBookshelf.Models
         public string? Motive { get; set; }
         public DateTime? DateAdded { get; set; }
 
+        public string? UserId { get; set; }
+        public User? User { get; set; }
 
         public virtual List<Upvote>? Upvotes { get; set; }
         public virtual List<Follower>? Followers { get; set; }

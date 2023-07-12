@@ -22,6 +22,10 @@ namespace MelonBookshelf.Models
         public DateTime? DateReturn { get; set; }
 
 
+        public string? UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual User? User { get; set; }
+        public virtual List<WantedResources>? WantedResources { get; set; }
         public int? CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
         public virtual Category? Category { get; set; }

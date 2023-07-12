@@ -62,7 +62,7 @@ namespace MelonBookshelf.Controllers
 
                 ModelState.AddModelError("", "Invalid Login");
 
-                return View(model);
+                return View("Menu");
            
         }
 
@@ -93,6 +93,7 @@ namespace MelonBookshelf.Controllers
                 };
 
                 await userManager.CreateAsync(user, model.Password);
+                await userManager.AddToRoleAsync(user, "User");
 
                 return RedirectToAction("Login");
             }
