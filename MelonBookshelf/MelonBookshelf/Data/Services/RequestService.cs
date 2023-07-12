@@ -47,6 +47,17 @@ namespace MelonBookshelf.Data.Services
                 .ToListAsync();
             return result;
         }
+        public async Task<List<Request>> GetFollowingRequests(string userId)
+        {
+            var wr = await _appDbContext.Followers.Where(w => w.UserId == userId).ToListAsync();
+            List<Request> requests = new();
+            foreach(var item in wr)
+            {
+                requests.Add( await _appDbContext.Requests.FirstOrDefaultAsync(r => r.RequestId == item.RequestId));
+            }
+             
+            return requests;
+        }
         public async Task<int> GetUpvotersCount(int requestId)
         {
             var result = await _appDbContext.Upvotes.Where(u => u.RequestId == requestId).ToListAsync();

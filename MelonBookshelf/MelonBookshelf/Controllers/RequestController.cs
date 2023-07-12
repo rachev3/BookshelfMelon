@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.ComponentModel.Design;
 using Microsoft.AspNetCore.Authorization;
+using MelonBookshelf.Data;
 
 namespace MelonBookshelf.Controllers
 {
@@ -12,12 +13,14 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IRequestService requestService;
         private readonly ICategoryService categoryService;
+        private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService)
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
+            this.resourceService = resourceService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,6 +39,26 @@ namespace MelonBookshelf.Controllers
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var data = await requestService.GetMyRequests(userId);
             var requests = data.Select(x => new RequestViewModel(x,viewListCategory)).ToList();
+            var viewModel = new RequestPageViewModel(requests);
+            return View("MyRequests", viewModel);
+        }
+        public async Task<IActionResult> FollowingRequests()
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var data = await requestService.GetFollowingRequests(userId);
+            var requests = data.Select(x => new RequestViewModel(x, viewListCategory)).ToList();
+            var viewModel = new RequestPageViewModel(requests);
+            return View("FollowingRequests", viewModel);
+        }
+        public async Task<IActionResult> Following()
+        {
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var data = await requestService.GetMyRequests(userId);
+            var requests = data.Select(x => new RequestViewModel(x, viewListCategory)).ToList();
             var viewModel = new RequestPageViewModel(requests);
             return View("MyRequests", viewModel);
         }
@@ -68,7 +91,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Create(Request request)
         {
             string name = User.Identity.Name;
@@ -124,6 +147,23 @@ namespace MelonBookshelf.Controllers
                 return View(request);
             }
             await requestService.Update(id, request);
+            var result = requestService.GetById(request.RequestId);
+            var resultRequest = result.Result;
+
+            if(resultRequest.Status == RequestStatus.Delivered)
+            {
+                var resource = new Resource();
+                resource.Status = ResourceStatus.Available;
+                resource.Title = result.Result.Title;
+                resource.Description = result.Result.Description;
+                resource.Location = "Bookshelf";
+                resource.Category = result.Result.Category;
+                resource.Author = result.Result.Author;
+                resource.DateAdded = DateTime.UtcNow;
+                resource.Type = ResourceType.Physical;
+
+                await resourceService.Add(resource);
+            }
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> EditPendingRequest(int id)

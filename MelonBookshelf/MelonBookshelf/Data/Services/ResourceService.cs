@@ -43,7 +43,7 @@ namespace MelonBookshelf.Data.Services
         {
             var result = await _appDbContext.Resources.ToListAsync();
 
-            if (title != null) result = result.Where(r => r.Title == title).ToList();
+            if (title != null) result = result.Where(r => r.Title.Contains(title)).ToList();
             if (type != null) result = result.Where(r => r.Type == type).ToList();
             if (categoryId != null) result = result.Where(r => r.CategoryId == categoryId).ToList();
 
