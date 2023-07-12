@@ -1,4 +1,5 @@
-﻿@model RequestViewModel
+﻿@using MelonBookshelf.Data
+@model RequestViewModel
 
 @{
     ViewData["Title"] = "Edit Request";
@@ -12,9 +13,15 @@
                     <p>
                         <h1>Edit Request</h1>
                     </p>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label asp-for="Status" class="control-label"></label>
-                        <input asp-for="Status" class="form-control" />
+                        <select asp-for="Status" class="form-control">
+                            <option value="">Select Type</option>
+                            @foreach (var value in Enum.GetValues(typeof(RequestStatus)))
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -24,42 +31,42 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Type" class="control-label"></label>
-                        <input asp-for="Type" class="form-control" />
+                        <input asp-for="Type" class="form-control" readonly />
                         <span asp-validation-for="Type" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Author" class="control-label"></label>
-                        <input asp-for="Author" class="form-control" />
+                        <input asp-for="Author" class="form-control" readonly />
                         <span asp-validation-for="Author" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
-                        <input asp-for="Title" class="form-control" />
+                        <input asp-for="Title" class="form-control" readonly />
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Priority" class="control-label"></label>
-                        <input asp-for="Priority" class="form-control" />
+                        <input asp-for="Priority" class="form-control" readonly />
                         <span asp-validation-for="Priority" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Link" class="control-label"></label>
-                        <input asp-for="Link" class="form-control" />
+                        <input asp-for="Link" class="form-control" readonly />
                         <span asp-validation-for="Link" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" class="form-control" />
+                        <input asp-for="Description" class="form-control" readonly />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="DateAdded" class="control-label"></label>
-                        <input asp-for="DateAdded" class="form-control" />
+                        <input asp-for="DateAdded" class="form-control" readonly/>
                         <span asp-validation-for="DateAdded" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Category" class="control-label"></label>
-                        <input asp-for="Category" class="form-control" />
+                        <input asp-for="Category" class="form-control" readonly />
                         <span asp-validation-for="Category" class="text-danger"></span>
                     </div>
                     <div>

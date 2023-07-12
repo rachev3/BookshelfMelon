@@ -25,7 +25,7 @@ namespace MelonBookshelf.Controllers
             var data = await resourceService.GetAll();
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
+            var resources = data.Select(x => new ResourceViewModel(x,viewListCategory)).ToList();
             var viewModel = new ResourcePageViewModel(resources, viewListCategory);
 
             return View("Resource", viewModel);
@@ -36,7 +36,7 @@ namespace MelonBookshelf.Controllers
             var data = await resourceService.Search(title,resourceType,categoryId);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c=> new CategoryViewModel(c)).ToList();
-            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
+            var resources = data.Select(x => new ResourceViewModel(x,viewListCategory)).ToList();
             var viewModel = new ResourcePageViewModel(resources,viewListCategory);
 
             return View("Resource", viewModel);
@@ -45,18 +45,24 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var data = await resourceService.GetById(id);
-            ResourceViewModel resource =  new(data);
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            ResourceViewModel resource =  new(data,viewListCategory);
             return View("Details", resource);
 
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            ResourceViewModel resource = new(viewListCategory);
+            return View(resource);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Resource resource)
         {
+
             await resourceService.Add(resource);
             return RedirectToAction(nameof(Index));
         }
@@ -98,8 +104,10 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var resource = await resourceService.GetById(id);
-            ResourceViewModel resourceViewModel = new(resource);
+            ResourceViewModel resourceViewModel = new(resource, viewListCategory);
             if (resource == null)
             {
                 return View("NotFound");
@@ -108,6 +116,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             var resource = await resourceService.GetById(id);

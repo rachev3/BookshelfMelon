@@ -39,6 +39,12 @@ namespace MelonBookshelf.Data.Services
             return result;
         }
 
+        public async Task<User> GetByName(string name)
+        {
+            var result = await _appDbContext.Users.FirstOrDefaultAsync(u=>u.UserName == name);
+            return result;
+        }
+
         public async Task<User> Update(string id, User user)
         {
             _appDbContext.Update(user);

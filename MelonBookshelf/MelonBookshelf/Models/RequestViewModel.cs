@@ -45,7 +45,7 @@ namespace MelonBookshelf.Models
         public List<Follower>? Followers { get; set; } = new List<Follower>();
 
         public CategoryViewModel? Category { get; set; }
-        public List<CategoryViewModel> Categories { get; set; } 
+        public List<CategoryViewModel> Categories { get; set; }
         public User? User { get; set; }
 
     }

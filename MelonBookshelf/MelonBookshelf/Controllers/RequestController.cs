@@ -4,6 +4,7 @@ using MelonBookshelf.Models;
 using System.Linq;
 using System.Security.Claims;
 using System.ComponentModel.Design;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MelonBookshelf.Controllers
 {
@@ -11,10 +12,12 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IRequestService requestService;
         private readonly ICategoryService categoryService;
-        public RequestController(IRequestService requestService, ICategoryService categoryService)
+        private readonly IUserService userService;
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
+            this.userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,6 +39,7 @@ namespace MelonBookshelf.Controllers
             var viewModel = new RequestPageViewModel(requests);
             return View("MyRequests", viewModel);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PendingRequests()
         {
             var data = await requestService.GetPendingRequests();
@@ -64,8 +68,12 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Request request)
         {
+            string name = User.Identity.Name;
+            var user = userService.GetByName(name);
+            request.User = user.Result;
             await requestService.Add(request);
             return RedirectToAction(nameof(Index));
         }
@@ -109,6 +117,30 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Request request)
+        {
+            request.RequestId = id;
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+            await requestService.Update(id, request);
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> EditPendingRequest(int id)
+        {
+            var request = await requestService.GetById(id);
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var viewModel = new RequestViewModel(request, viewListCategory);
+            if (request == null)
+            {
+                return View("NotFound");
+            }
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPendingRequest(int id, Request request)
         {
             request.RequestId = id;
             if (!ModelState.IsValid)
