@@ -8,7 +8,11 @@ namespace MelonBookshelf.Models
         {
 
         }
-        public RequestViewModel(Request request)
+        public RequestViewModel(List<CategoryViewModel> categories)
+        {
+            Categories = categories;
+        }
+        public RequestViewModel(Request request, List<CategoryViewModel> categories)
         {
             RequestId = request.RequestId;
             Status = request.Status;
@@ -22,6 +26,8 @@ namespace MelonBookshelf.Models
             Description = request.Description;
             Upvotes = request.Upvotes;
             Followers = request.Followers;
+            User = request.User;
+            Categories = categories;
         }
 
         public int RequestId { get; set; }
@@ -35,10 +41,12 @@ namespace MelonBookshelf.Models
         public string? Description { get; set; }
         public DateTime? DateAdded { get; set; }
         public FollowerPageViewModel FollowerPageViewModel { get; set; }
-        public List<Upvote>? Upvotes { get; set; }
-        public List<Follower>? Followers { get; set; }
+        public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();
+        public List<Follower>? Followers { get; set; } = new List<Follower>();
 
-        public CategoryViewModel Category { get; set; }
+        public CategoryViewModel? Category { get; set; }
+        public List<CategoryViewModel> Categories { get; set; } 
+        public User? User { get; set; }
 
     }
 }

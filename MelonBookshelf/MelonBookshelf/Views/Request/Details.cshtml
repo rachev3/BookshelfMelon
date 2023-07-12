@@ -9,11 +9,16 @@
             <h1>Request`s details</h1>
         </p>
         <div class="row">
-            <div class="col-md-8 offset-4">
+            <div class="col-md-6 offset-3">
+                 <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input asp-for="Status" class="form-control" readonly />
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
                 <div class="form-group">
-                    <label asp-for="Title" class="control-label"></label>
-                    <input asp-for="Title" class="form-control" readonly />
-                    <span asp-validation-for="Title" class="text-danger"></span>
+                    <label asp-for="Type" class="control-label"></label>
+                    <input asp-for="Type" class="form-control" readonly />
+                    <span asp-validation-for="Type" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Author" class="control-label"></label>
@@ -21,7 +26,50 @@
                     <span asp-validation-for="Author" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a>
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" readonly />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Priority" class="control-label"></label>
+                    <input asp-for="Priority" class="form-control" readonly />
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Link" class="control-label"></label>
+                    <input asp-for="Link" class="form-control" readonly />
+                    <span asp-validation-for="Link" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Motive" class="control-label"></label>
+                    <input asp-for="Motive" class="form-control" readonly />
+                    <span asp-validation-for="Motive" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateAdded" class="control-label"></label>
+                    <input asp-for="DateAdded" class="form-control" readonly />
+                    <span asp-validation-for="DateAdded" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" readonly />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Upvotes" class="control-label"></label>
+                    <input asp-for="Upvotes.Count" class="form-control" readonly />
+                    <span asp-validation-for="Upvotes.Count" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Followers" class="control-label"></label>
+                    <input asp-for="Followers.Count" class="form-control" readonly />
+                    <span asp-validation-for="Followers.Count" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a>
+                    }
                     <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
                 </div>
 

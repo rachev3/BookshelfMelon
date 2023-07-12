@@ -17,33 +17,44 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @if(User.IsInRole("User")){
+                @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                {
                     <div class="d-flex justify-content-center">
-                        <ul class="navbar-nav flex-grow-1">                       
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Resource" asp-action="Index">Resources</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="Index">Request</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="Myrequests">MyRequests</a>
-                            </li>
+                            @if (User.IsInRole("User"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="Myrequests">MyRequests</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="PendingRequests">Pending Requests</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
+                                </li>
+                            }
                         </ul>
-                      
+
                     </div>
                 }
                 <div class="d-flex justify-content-center">
-                    <div class="d-flex justify-content-md-center"<partial name="_LoginPartial" /></div> 
+                    <div class="d-flex justify-content-md-center"<partial name="_LoginPartial" /></div>
                 </div>
-                
+
             </div>
         </nav>
     </header>
-                                                         
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

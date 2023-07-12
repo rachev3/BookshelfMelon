@@ -8,6 +8,7 @@ namespace MelonBookshelf.Data.Services
         Task<List<Request>> GetAll();
         Task<Request> GetById(int id);
         Task<List<Request>> GetMyRequests(string userId);
+        Task<List<Request>> GetPendingRequests();
         Task Add(Request request); 
         Task Like(int requestId, string userId);
         Task Dislike(int requestId, string userId);

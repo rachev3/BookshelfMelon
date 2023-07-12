@@ -62,7 +62,7 @@ namespace MelonBookshelf.Controllers
 
                 ModelState.AddModelError("", "Invalid Login");
 
-                return View("Menu");
+                return View("Login");
            
         }
 

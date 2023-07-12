@@ -31,6 +31,14 @@ namespace MelonBookshelf.Data.Services
                 .ToListAsync();
             return result;
         }
+        public async Task<List<Request>> GetPendingRequests()
+        {
+            var result = await _appDbContext.Requests.Where(r=> r.Status == RequestStatus.PendingConfirmation)
+                .Include(a => a.Upvotes).ThenInclude(b => b.User)
+                .Include(c => c.Followers).ThenInclude(d => d.User)
+                .ToListAsync();
+            return result;
+        }
         public async Task<List<Request>> GetMyRequests(string userId)
         {
             var result = await _appDbContext.Requests.Where(r => r.UserId == userId)

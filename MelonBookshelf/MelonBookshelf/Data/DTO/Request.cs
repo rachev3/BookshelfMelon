@@ -9,7 +9,7 @@ namespace MelonBookshelf.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestId { get; set; }
-        public RequestStatus? Status { get; set; }
+        public RequestStatus? Status { get; set; } = RequestStatus.PendingConfirmation;
         public ResourceType? Type { get; set; }
         public string? Author { get; set; }
         public string? Title { get; set; }

@@ -36,7 +36,10 @@
                     <span asp-validation-for="DateReturn" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <a class="btn btn-outline-success" asp-action="" asp-route-id="@Model.ResourceId">Edit</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-outline-success" asp-action="" asp-route-id="@Model.ResourceId">Edit</a>
+                    }
                     <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                 </div>
 
