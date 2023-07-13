@@ -78,6 +78,11 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
@@ -108,11 +113,6 @@ namespace MelonBookshelf.Controllers
 
         }
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
 
         public async Task<IActionResult> Edit(string id)
         {

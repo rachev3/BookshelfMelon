@@ -1,4 +1,5 @@
-﻿@model ResourceViewModel
+﻿@using MelonBookshelf.Data
+@model ResourceViewModel
 
 @{
     ViewData["Title"] = "Update Resource";
@@ -13,6 +14,27 @@
                         <h1>Update Resource</h1>
                     </p>
                     <div class="form-group">
+                        <label asp-for="Type" class="control-label"></label>
+                        <select asp-for="Type" class="form-control">
+                            <option value="">@Model.Type</option>
+                            @foreach (var value in Enum.GetValues(typeof(ResourceType)))
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label"></label>
+                        <select name="categoryId" class="form-control">
+                            <option value="">@Model.Category.Name</option>
+                            @foreach (var value in Model.Categories)
+                            {
+                                <option value="@value.CategoryId">@value.Name</option>
+                            }
+                        </select>
+                    </div>
+                     <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
                         <input asp-for="Title" class="form-control" />
                         <span asp-validation-for="Title" class="text-danger"></span>
@@ -22,11 +44,53 @@
                         <input asp-for="Author" class="form-control" />
                         <span asp-validation-for="Author" class="text-danger"></span>
                     </div>
-                     <div class="form-group">
-                        <label asp-for="Type" class="control-label"></label>
-                        <input asp-for="Type" class="form-control" />
-                        <span asp-validation-for="Type" class="text-danger"></span>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="Location" class="control-label"></label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Invoice" class="control-label"></label>
+                        <input asp-for="Invoice" class="form-control" />
+                        <span asp-validation-for="Invoice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <input asp-for="Status" class="form-control" />
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateAdded" class="control-label"></label>
+                        <input asp-for="DateAdded" class="form-control" />
+                        <span asp-validation-for="DateAdded" class="text-danger"></span>
+                    </div>
+                    @if(Model.Type == MelonBookshelf.Data.ResourceType.Physical){
+                        <div class="form-group">
+                            <label asp-for="DateTaken" class="control-label"></label>
+                            <input asp-for="DateTaken" class="form-control" />
+                            <span asp-validation-for="DateTaken" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateReturn" class="control-label"></label>
+                            <input asp-for="DateReturn" class="form-control" />
+                            <span asp-validation-for="DateReturn" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="wantedResources" class="control-label"></label>
+                            <input asp-for="wantedResources.Count" class="form-control" />
+                            <span asp-validation-for="wantedResources.Count" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="form-group">
                         <input type="submit" value="Edit" class="btn btn-outline-success float-right" />
                         <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>

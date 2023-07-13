@@ -146,6 +146,12 @@ namespace MelonBookshelf.Controllers
             {
                 return View(request);
             }
+            //var check = requestService.GetById(id);
+            //var item = check.Result;
+            //if(item.Status != RequestStatus.PendingConfirmation)
+            //{
+            //    return View("NotFound");
+            //}
             await requestService.Update(id, request);
             var result = requestService.GetById(request.RequestId);
             var resultRequest = result.Result;

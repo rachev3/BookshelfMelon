@@ -1,4 +1,5 @@
-﻿@using MelonBookshelf.Data
+﻿@using MelonBookshelf.Controllers
+@using MelonBookshelf.Data
 @model RequestViewModel
 
 @{
@@ -11,7 +12,7 @@
                 <form asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <p>
-                        <h1>Edit Request</h1>
+                        <h1>Edit pending Request</h1>
                     </p>
                     <div class="form-group">
                         <label asp-for="Status" class="control-label"></label>
@@ -73,8 +74,9 @@
                         <p></p>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Edit" class="btn btn-outline-success float-right" />
-                        <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
+                        <input type="submit" value="Edit" class="btn btn-outline-success float-right"/>
+                        @Html.ActionLink("Back",nameof(RequestController.PendingRequests),"Request",null, new{@class="btn btn-primary"})
+                        
                     </div>
                 </form>
 

@@ -7,7 +7,20 @@
 
 <div class="row">
     <div class="col-md-8 offset-md-2">
+        <div class="text-center">
+            <h1>Pending Requests</h1>
+        </div>
         <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Title</th>
+                    <th>Link</th>
+                    <th>FirstName </th>
+                    <th>LastName</th>
+                </tr>
+            </thead>
             <tbody>
                 @foreach (var item in Model.Requests)
                 {
@@ -26,6 +39,9 @@
                         </td>
                         <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.User.FirstName)
+                           
+                        </td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.User.LastName)
                         </td>
                         

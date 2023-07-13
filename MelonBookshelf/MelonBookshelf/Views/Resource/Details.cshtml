@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-8 offset-4>
                     <div class="form-group">
-                        <label asp-for="Category.Name" class="control-label"></label>
+                        <label asp-for="Category" class="control-label"></label>
                         <input asp-for="Category.Name" class="form-control" readonly />
                         <span asp-validation-for="Category.Name" class="text-danger"></span>
                     </div>
@@ -73,7 +73,7 @@
                 <div class="form-group">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-outline-success" asp-action="" asp-route-id="@Model.ResourceId">Edit</a>
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.ResourceId">Edit</a>
                     }
                     <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                 </div>

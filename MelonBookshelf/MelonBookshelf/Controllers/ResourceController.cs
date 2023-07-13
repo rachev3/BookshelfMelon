@@ -70,11 +70,14 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var resource = await resourceService.GetById(id);
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var viewModel = new ResourceViewModel(resource,viewListCategory);
             if (resource == null)
             {
                 return View("NotFound");
             }
-            return View(resource);
+            return View(viewModel);
         }
 
         [HttpPost]
