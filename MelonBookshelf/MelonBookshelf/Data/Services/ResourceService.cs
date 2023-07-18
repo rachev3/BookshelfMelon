@@ -35,7 +35,7 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<Resource> GetById(int id)
         {
-            var result = await _appDbContext.Resources.FirstOrDefaultAsync(n => n.ResourceId == id);
+            var result = await _appDbContext.Resources.Include(x=> x.Category).FirstOrDefaultAsync(n => n.ResourceId == id);
             return result;
         }
 

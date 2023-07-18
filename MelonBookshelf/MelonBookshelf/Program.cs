@@ -1,5 +1,6 @@
 using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
+using MelonBookshelf.MapperProfiles;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,11 @@ builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IUpvoteService, UpvoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<MappingProfile>();
+});
 
 var app = builder.Build();
 
