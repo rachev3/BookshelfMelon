@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace MelonBookshelf.Controllers
@@ -35,15 +38,18 @@ namespace MelonBookshelf.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CategoryViewModel category)
         {
-            var dbo = mapper.Map<Category>(category);
+            var dbo = new Category();
+            dbo.Name = category.Name;
             await categoryService.Add(dbo);
             return RedirectToAction(nameof(Index));
         }
@@ -60,14 +66,17 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, CategoryViewModel category)
         {
             category.CategoryId = id;
+            var dto = await categoryService.GetById(id);
+            dto.Name = category.Name;
+
             if (!ModelState.IsValid)
             {
                 return View(category);
             }
-            await categoryService.Update(id, category);
+            await categoryService.Update(id, dto);
             return RedirectToAction(nameof(Index));
         }
 

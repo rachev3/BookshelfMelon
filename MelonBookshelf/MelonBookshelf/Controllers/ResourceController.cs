@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Data;
+﻿using AutoMapper;
+using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +14,12 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService)
+        private readonly IMapper mapper;
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IMapper mapper)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -55,10 +58,10 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Resource resource)
+        public async Task<IActionResult> Create(ResourceEditViewModel resource)
         {
-
-            await resourceService.Add(resource);
+            var dto = mapper.Map<Resource>(resource);
+            await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Details(int id)
@@ -90,14 +93,15 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, Resource resource)
+        public async Task<IActionResult> Edit(int id, ResourceEditViewModel resource)
         {
+            var dto = mapper.Map<Resource>(resource);
             resource.ResourceId = id;
             if (!ModelState.IsValid)
             {
                 return View(resource);
             }
-            await resourceService.Update(id, resource);
+            await resourceService.Update(id, dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Want(int resourceId)

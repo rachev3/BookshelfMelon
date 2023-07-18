@@ -36,7 +36,10 @@
         </table>
     </div>
 </div>
-<div>
-    <a asp-controller="Category" asp-action="Create" class="btn btn-outline-success">Add New Category</a>
+@if (User.IsInRole("Admin"))
+{
+    <div>
+        <a asp-controller="Category" asp-action="Create" class="btn btn-outline-success">Add New Category</a>
 
-</div>
+    </div>
+}

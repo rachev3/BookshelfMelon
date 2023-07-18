@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Data.Services;
+﻿using AutoMapper;
+using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -8,9 +9,11 @@ namespace MelonBookshelf.Controllers
     public class FollowerController : Controller
     {
         private readonly IFollowerService followerService;
-        public FollowerController(IFollowerService followerService)
+        private readonly IMapper mapper;
+        public FollowerController(IFollowerService followerService, IMapper mapper)
         {
             this.followerService = followerService;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -28,9 +31,10 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Follower follower)
+        public async Task<IActionResult> Create(FollowerViewModel follower)
         {
-            await followerService.Add(follower);
+            var dto = mapper.Map<Follower>(follower);
+            await followerService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
 
@@ -45,14 +49,14 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Follower follower)
+        public async Task<IActionResult> Edit(int id, FollowerViewModel follower)
         {
-            follower.Id = id;
+            var dto = mapper.Map<Follower>(follower);
             if (!ModelState.IsValid)
             {
                 return View(follower);
             }
-            await followerService.Update(id, follower);
+            await followerService.Update(id, dto);
             return RedirectToAction(nameof(Index));
         }
 

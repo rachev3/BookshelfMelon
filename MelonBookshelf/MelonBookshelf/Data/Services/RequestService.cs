@@ -67,7 +67,10 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<Request> GetById(int id)
         {
-            var result = await _appDbContext.Requests.Include(x=> x.Category).FirstOrDefaultAsync(n => n.RequestId == id);
+            var result = await _appDbContext.Requests.Include(x=> x.Category)
+                .Include(x=> x.Upvotes)
+                .Include(x=> x.Followers)
+                .FirstOrDefaultAsync(n => n.RequestId == id);
             return result;
         }
 

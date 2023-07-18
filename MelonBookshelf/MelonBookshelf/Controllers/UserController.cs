@@ -1,8 +1,10 @@
-﻿using MelonBookshelf.Data.Services;
+﻿using AutoMapper;
+using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Principal;
 
 namespace MelonBookshelf.Controllers
 {
@@ -12,7 +14,7 @@ namespace MelonBookshelf.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
         {
             this.userService = userService;
             this.userManager = userManager;
