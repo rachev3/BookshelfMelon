@@ -29,7 +29,6 @@ namespace MelonBookshelf.Models
             Followers = request.Followers;
             User = request.User;
             Categories = categories;
-            Category = new CategoryViewModel(request.Category);
         }
 
         public int RequestId { get; set; }
@@ -46,7 +45,7 @@ namespace MelonBookshelf.Models
         public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();
         public List<Follower>? Followers { get; set; } = new List<Follower>();
 
-        public CategoryViewModel Category { get; set; }
+        public CategoryViewModel? Category { get; set; }
         public List<CategoryViewModel>? Categories { get; set; }
         public User? User { get; set; }
 

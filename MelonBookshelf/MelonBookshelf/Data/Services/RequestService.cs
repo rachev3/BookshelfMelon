@@ -71,7 +71,7 @@ namespace MelonBookshelf.Data.Services
             return result;
         }
 
-        public async Task<Request> Update(int id, Request request)
+        public async Task<Request> Update(Request request)
         {
             _appDbContext.Update(request);
             await _appDbContext.SaveChangesAsync();

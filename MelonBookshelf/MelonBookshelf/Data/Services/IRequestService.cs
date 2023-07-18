@@ -17,7 +17,7 @@ namespace MelonBookshelf.Data.Services
         Task UnFollow(int requestId, string userId);
         Task<int> GetUpvotersCount(int requestId);
         Task<int> GetFollowersCount(int requestId);
-        Task<Request> Update(int id, Request request);
+        Task<Request> Update( Request request);
         Task Delete(int id);
     }
 }

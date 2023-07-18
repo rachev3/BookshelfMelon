@@ -152,7 +152,7 @@ namespace MelonBookshelf.Controllers
             //{
             //    return View("NotFound");
             //}
-            await requestService.Update(id, request);
+            await requestService.Update(request);
             var result = requestService.GetById(request.RequestId);
             var resultRequest = result.Result;
 
@@ -186,14 +186,14 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditPendingRequest(int id, Request request)
+        public async Task<IActionResult> EditPendingRequest(Request request)
         {
-            request.RequestId = id;
+            //request.RequestId = id;
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
-            await requestService.Update(id, request);
+            await requestService.Update(request);
             return RedirectToAction(nameof(Index));
         }
 
