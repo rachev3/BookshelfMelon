@@ -28,8 +28,8 @@ namespace MelonBookshelf.Controllers
             var data = await requestService.GetAll();
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var requests = data.Select(x => new RequestViewModel(x,viewListCategory)).ToList();
-            var viewModel = new RequestPageViewModel(requests);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests,viewListCategory);
             return View("Request", viewModel);
         }
         public async Task<IActionResult> MyRequests()
@@ -38,8 +38,8 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var data = await requestService.GetMyRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x,viewListCategory)).ToList();
-            var viewModel = new RequestPageViewModel(requests);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("MyRequests", viewModel);
         }
         public async Task<IActionResult> FollowingRequests()
@@ -48,8 +48,8 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var data = await requestService.GetFollowingRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x, viewListCategory)).ToList();
-            var viewModel = new RequestPageViewModel(requests);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("FollowingRequests", viewModel);
         }
         public async Task<IActionResult> Following()
@@ -58,8 +58,8 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var data = await requestService.GetMyRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x, viewListCategory)).ToList();
-            var viewModel = new RequestPageViewModel(requests);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("MyRequests", viewModel);
         }
         [Authorize(Roles = "Admin")]
@@ -68,8 +68,8 @@ namespace MelonBookshelf.Controllers
             var data = await requestService.GetPendingRequests();
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var requests = data.Select(x => new RequestViewModel(x,viewListCategory)).ToList();
-            var viewModel = new RequestPageViewModel(requests);
+            var requests = data.Select(x => new RequestViewModel(x)).ToList();
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("PendingRequests", viewModel);
         }
 
@@ -78,7 +78,7 @@ namespace MelonBookshelf.Controllers
             var data = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestViewModel request = new(data,viewListCategory);
+            RequestEditViewModel request = new(data,viewListCategory);
             return View("Details", request);
         }
 
@@ -86,7 +86,7 @@ namespace MelonBookshelf.Controllers
         {
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var model = new RequestViewModel(viewListCategory);
+            var model = new RequestEditViewModel(viewListCategory);
             return View("Create",model);
         }
 
@@ -130,7 +130,7 @@ namespace MelonBookshelf.Controllers
             var request = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var viewModel = new RequestViewModel(request, viewListCategory);
+            var viewModel = new RequestEditViewModel(request, viewListCategory);
             if (request == null)
             {
                 return View("NotFound");
@@ -177,7 +177,7 @@ namespace MelonBookshelf.Controllers
             var request = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var viewModel = new RequestViewModel(request, viewListCategory);
+            var viewModel = new RequestEditViewModel(request, viewListCategory);
             if (request == null)
             {
                 return View("NotFound");
@@ -202,7 +202,7 @@ namespace MelonBookshelf.Controllers
             var request = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestViewModel viewModel = new(request, viewListCategory);
+            RequestEditViewModel viewModel = new(request, viewListCategory);
             if (request == null)
             {
                 return View("NotFound");

@@ -1,19 +1,18 @@
-﻿using Humanizer.Localisation;
-using MelonBookshelf.Data;
+﻿using MelonBookshelf.Data;
 
 namespace MelonBookshelf.Models
 {
-    public class RequestViewModel
-    { 
-        public RequestViewModel()
+    public class RequestEditViewModel
+    {
+        public RequestEditViewModel()
         {
 
         }
-        public RequestViewModel(List<CategoryViewModel> categories)
+        public RequestEditViewModel(List<CategoryViewModel> categories)
         {
             Categories = categories;
         }
-        public RequestViewModel(Request request, List<CategoryViewModel> categories)
+        public RequestEditViewModel(Request request, List<CategoryViewModel> categories)
         {
             RequestId = request.RequestId;
             Status = request.Status;
