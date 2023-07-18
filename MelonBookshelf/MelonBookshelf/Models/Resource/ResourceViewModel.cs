@@ -9,12 +9,7 @@ namespace MelonBookshelf.Models
         {
 
         }
-        public ResourceViewModel(List<CategoryViewModel> categories)
-        {
-
-            Categories = categories;
-        }
-        public ResourceViewModel(Resource resource, List<CategoryViewModel> categories)
+        public ResourceViewModel(Resource resource)
         {
             ResourceId = resource.ResourceId;
             Type = resource.Type;
@@ -29,8 +24,7 @@ namespace MelonBookshelf.Models
             DateTaken = resource.DateTaken;
             DateReturn = resource.DateReturn;
             wantedResources = resource.WantedResources;
-            Categories = categories;
-            Category = new CategoryViewModel(resource.Category);
+            Category = resource.Category;
         }
 
         public int ResourceId { get; set; }
@@ -45,8 +39,8 @@ namespace MelonBookshelf.Models
         public DateTime? DateAdded { get; set; }
         public DateTime? DateTaken { get; set; }
         public DateTime? DateReturn { get; set; }
-        public CategoryViewModel Category { get; set; }
-        public List<WantedResources>? wantedResources { get; set; }
+        public Category Category { get; set; }
+        public List<WantedResources>? wantedResources { get; set; }                                   
     
     }
 }

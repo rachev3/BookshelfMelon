@@ -1,5 +1,5 @@
 ﻿@using MelonBookshelf.Data
-@model ResourceViewModel
+@model ResourceEditViewModel
 
 @{
     ViewData["Title"] = "Update Resource";
@@ -71,24 +71,19 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="DateAdded" class="control-label"></label>
-                        <input asp-for="DateAdded" class="form-control" />
+                        <input type="date" asp-for="DateAdded" class="form-control" />
                         <span asp-validation-for="DateAdded" class="text-danger"></span>
                     </div>
                     @if(Model.Type == MelonBookshelf.Data.ResourceType.Physical){
                         <div class="form-group">
                             <label asp-for="DateTaken" class="control-label"></label>
-                            <input asp-for="DateTaken" class="form-control" />
+                            <input type="date" asp-for="DateTaken" class="form-control" />
                             <span asp-validation-for="DateTaken" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="DateReturn" class="control-label"></label>
-                            <input asp-for="DateReturn" class="form-control" />
+                            <input type="date" asp-for="DateReturn" class="form-control" />
                             <span asp-validation-for="DateReturn" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="wantedResources" class="control-label"></label>
-                            <input asp-for="wantedResources.Count" class="form-control" />
-                            <span asp-validation-for="wantedResources.Count" class="text-danger"></span>
                         </div>
                     }
                     <div class="form-group">

@@ -1,5 +1,5 @@
 ﻿@using MelonBookshelf.Data
-@model ResourceViewModel
+@model ResourceEditViewModel
 
 @{
     ViewData["Title"] = "Add New Resource";
@@ -79,7 +79,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="DateAdded" class="control-label"></label>
-                        <input asp-for="DateAdded" class="form-control" />
+                        <input type="date" asp-for="DateAdded" class="form-control" />
                         <span asp-validation-for="DateAdded" class="text-danger"></span>
                     </div>
                     <div class="form-group">

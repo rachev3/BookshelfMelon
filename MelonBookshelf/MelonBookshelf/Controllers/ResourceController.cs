@@ -23,10 +23,12 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await resourceService.GetAll();
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var resources = data.Select(x => new ResourceViewModel(x,viewListCategory)).ToList();
-            var viewModel = new ResourcePageViewModel(resources, viewListCategory);
+
+            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
+            var viewModel = new ResourcePageViewModel(resources,viewListCategory);
 
             return View("Resource", viewModel);
         }
@@ -34,28 +36,21 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index(string? title, ResourceType? resourceType, int? categoryId)
         {
             var data = await resourceService.Search(title,resourceType,categoryId);
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c=> new CategoryViewModel(c)).ToList();
-            var resources = data.Select(x => new ResourceViewModel(x,viewListCategory)).ToList();
+
+            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
             var viewModel = new ResourcePageViewModel(resources,viewListCategory);
 
             return View("Resource", viewModel);
         }
         
-        public async Task<IActionResult> Details(int id)
-        {
-            var data = await resourceService.GetById(id);
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            ResourceViewModel resource =  new(data,viewListCategory);
-            return View("Details", resource);
-
-        }
         public async Task<IActionResult> Create()
         {
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            ResourceViewModel resource = new(viewListCategory);
+            ResourceEditViewModel resource = new(viewListCategory);
             return View(resource);
         }
 
@@ -66,13 +61,26 @@ namespace MelonBookshelf.Controllers
             await resourceService.Add(resource);
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> Details(int id)
+        {
+            var data = await resourceService.GetById(id);
+
+            //var categories = await categoryService.GetAll();
+            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            ResourceViewModel resource =  new(data);
+            return View("Details", resource);
+
+        }
 
         public async Task<IActionResult> Edit(int id)
         {
             var resource = await resourceService.GetById(id);
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var viewModel = new ResourceViewModel(resource,viewListCategory);
+
+            var viewModel = new ResourceEditViewModel(resource,viewListCategory);
             if (resource == null)
             {
                 return View("NotFound");
@@ -107,10 +115,11 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            //var categories = await categoryService.GetAll();
+            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
             var resource = await resourceService.GetById(id);
-            ResourceViewModel resourceViewModel = new(resource, viewListCategory);
+            ResourceViewModel resourceViewModel = new(resource);
             if (resource == null)
             {
                 return View("NotFound");
