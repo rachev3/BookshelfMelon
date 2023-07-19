@@ -12,8 +12,8 @@
         </div>
         <div>
             <a asp-controller="Resource" asp-action="Create" class="btn btn-outline-success">Add New Resource</a>
-            <p></p>
-        </div>
+            <a href="/resource/download" class="btn-primary btn">Download</a>
+        </div >
         <form method="post" action="@Url.Action("Index")" class="mb-3">
             <div class="input-group">
                 <select name="resourceType" class="form-control">
@@ -23,7 +23,7 @@
                         <option value="@value">@value</option>
                     }
                 </select>
-                <select name="categoryId" class="form-control">
+                <select name="CategoryId" class="form-control">
                     <option value="">All Categories</option>
                     @foreach (var value in Model.Categories)
                     {

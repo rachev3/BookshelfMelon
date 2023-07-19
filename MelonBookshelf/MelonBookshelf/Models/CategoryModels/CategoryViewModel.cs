@@ -11,7 +11,7 @@
             CategoryId = category.CategoryId;
             Name = category.Name;
         }
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public string? Name { get; set; }
     }
 }

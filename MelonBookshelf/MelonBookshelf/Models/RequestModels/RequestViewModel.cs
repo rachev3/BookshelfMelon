@@ -25,6 +25,7 @@ namespace MelonBookshelf.Models
             Followers = request.Followers;
             User = request.User;
             Category = request.Category;
+            User = request.User;
         }
 
         public int RequestId { get; set; }

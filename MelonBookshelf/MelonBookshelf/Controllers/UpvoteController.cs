@@ -1,4 +1,6 @@
-﻿using MelonBookshelf.Data.Services;
+﻿using AutoMapper;
+using Humanizer.Localisation;
+using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,9 +9,11 @@ namespace MelonBookshelf.Controllers
     public class UpvoteController : Controller
     {
         private readonly IUpvoteService upvoteService;
-        public UpvoteController(IUpvoteService upvoteService)
+        private readonly IMapper mapper;
+        public UpvoteController(IUpvoteService upvoteService, IMapper mapper)
         {
             this.upvoteService = upvoteService;
+            this.mapper = mapper;   
         }
 
         public async Task<IActionResult> Index()
@@ -26,9 +30,10 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Upvote upvote)
+        public async Task<IActionResult> Create(UpvoteViewModel upvote)
         {
-            await upvoteService.Add(upvote);
+            var dto = mapper.Map<Upvote>(upvote);
+            await upvoteService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
 
@@ -43,14 +48,15 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Upvote upvote)
+        public async Task<IActionResult> Edit(int id, UpvoteViewModel upvote)
         {
+            var dto = mapper.Map<Upvote>(upvote);
             upvote.UpvoteId = id;
             if (!ModelState.IsValid)
             {
                 return View(upvote);
             }
-            await upvoteService.Update(id, upvote);
+            await upvoteService.Update(id, dto);
             return RedirectToAction(nameof(Index));
         }
 

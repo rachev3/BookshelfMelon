@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.ComponentModel.Design;
 using Microsoft.AspNetCore.Authorization;
 using MelonBookshelf.Data;
+using AutoMapper;
 
 namespace MelonBookshelf.Controllers
 {
@@ -15,12 +16,14 @@ namespace MelonBookshelf.Controllers
         private readonly ICategoryService categoryService;
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService)
+        private readonly IMapper mapper;
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IMapper mapper)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
             this.resourceService = resourceService;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -29,7 +32,7 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests,viewListCategory);
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("Request", viewModel);
         }
         public async Task<IActionResult> MyRequests()
@@ -78,7 +81,7 @@ namespace MelonBookshelf.Controllers
             var data = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestEditViewModel request = new(data,viewListCategory);
+            RequestEditViewModel request = new(data, viewListCategory);
             return View("Details", request);
         }
 
@@ -87,17 +90,48 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var model = new RequestEditViewModel(viewListCategory);
-            return View("Create",model);
+            return View("Create", model);
         }
 
         [HttpPost]
-        
-        public async Task<IActionResult> Create(Request request)
+
+        public async Task<IActionResult> Create(RequestEditViewModel request)
         {
+            //var category = new Category();
+            //category.Name = request.Category.Name;
+            //category.CategoryId = request.Category.CategoryId;
+            Category category = null;
+            if (request.CategoryId != null)
+            {
+
+                
+                category = await categoryService.GetById(request.CategoryId.Value);
+            }
+
             string name = User.Identity.Name;
             var user = userService.GetByName(name);
-            request.User = user.Result;
-            await requestService.Add(request);
+
+            var dto = new Request();
+            dto.Title = request.Title;
+            dto.Description = request.Description;
+            dto.Author = request.Author;
+            dto.Status = RequestStatus.PendingConfirmation;
+            //dto.User = request.User;
+            dto.Upvotes = request.Upvotes;
+            dto.Followers = request.Followers;
+            dto.Motive = request.Motive;
+            //dto.Category.Name = request.Category.Name;
+            dto.Priority = request.Priority;
+            dto.DateAdded = request.DateAdded;
+            dto.Link = request.Link;
+            dto.Type = request.Type;
+            dto.User = user.Result;
+            dto.Category = category;
+
+
+
+
+            await requestService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Upvote(int requestId)
@@ -139,9 +173,15 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+<<<<<<< HEAD
         public async Task<IActionResult> Edit(int id, Request request)
         {
             request.RequestId = id;
+=======
+        public async Task<IActionResult> Edit(RequestEditViewModel request)
+        {
+            var dto = mapper.Map<Request>(request);
+>>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -152,11 +192,11 @@ namespace MelonBookshelf.Controllers
             //{
             //    return View("NotFound");
             //}
-            await requestService.Update(request);
+            await requestService.Update(dto);
             var result = requestService.GetById(request.RequestId);
             var resultRequest = result.Result;
 
-            if(resultRequest.Status == RequestStatus.Delivered)
+            if (resultRequest.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
                 resource.Status = ResourceStatus.Available;
@@ -186,15 +226,22 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditPendingRequest(Request request)
+        public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
         {
+            var dto = mapper.Map<Request>(request);
             //request.RequestId = id;
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
+<<<<<<< HEAD
             await requestService.Update(request);
             return RedirectToAction(nameof(Index));
+=======
+
+            await requestService.Update(dto);
+            return RedirectToAction(nameof(PendingRequests));
+>>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
         }
 
         public async Task<IActionResult> Delete(int id)

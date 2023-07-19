@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Data;
+﻿using AutoMapper;
+using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.Xml;
+using System.Text;
 
 namespace MelonBookshelf.Controllers
 {
@@ -13,10 +15,12 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService)
+        private readonly IMapper mapper;
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IMapper mapper)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -55,10 +59,17 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Resource resource)
+        public async Task<IActionResult> Create(ResourceEditViewModel resource)
         {
+            Category category = null;
+            if (resource.CategoryId != null)
+            {
 
-            await resourceService.Add(resource);
+
+                category = await categoryService.GetById(resource.CategoryId.Value);
+            }
+            var dto = mapper.Map<Resource>(resource);
+            await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Details(int id)
@@ -90,14 +101,24 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, Resource resource)
+        public async Task<IActionResult> Edit(int id, ResourceEditViewModel resource)
         {
+            Category category = null;
+            if (resource.CategoryId != null)
+            {
+
+
+                category = await categoryService.GetById(resource.CategoryId.Value);
+            }
+
+            var dto = mapper.Map<Resource>(resource);
+            dto.Category = category;
             resource.ResourceId = id;
             if (!ModelState.IsValid)
             {
                 return View(resource);
             }
-            await resourceService.Update(id, resource);
+            await resourceService.Update(id, dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Want(int resourceId)
@@ -111,6 +132,11 @@ namespace MelonBookshelf.Controllers
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Download()
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes("My first file");
+            return File(bytes, "text/plain", "file.txt");
         }
 
         public async Task<IActionResult> Delete(int id)

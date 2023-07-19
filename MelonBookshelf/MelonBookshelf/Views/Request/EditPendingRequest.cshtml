@@ -65,17 +65,21 @@
                         <input asp-for="DateAdded" class="form-control" readonly/>
                         <span asp-validation-for="DateAdded" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label asp-for="Category" class="control-label"></label>
                         <input asp-for="Category" class="form-control" readonly />
                         <span asp-validation-for="Category" class="text-danger"></span>
-                    </div>  
+                    </div>  *@
                         <input type="hidden" asp-for="RequestId"/>
                     <div>
                         <p></p>
                     </div>
                     <div class="form-group">
+<<<<<<< HEAD
                         <button type="submit" class="btn btn-outline-secondary" asp-action="EditPendingRequest" asp-route-request="@Model">
+=======
+                        <button type="submit" class="btn btn-outline-secondary">
+>>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
                             <i class="bi bi-pencil-square"></i>Edit
                         </button>
                         @Html.ActionLink("Back",nameof(RequestController.PendingRequests),"Request",null, new{@class="btn btn-primary"})
