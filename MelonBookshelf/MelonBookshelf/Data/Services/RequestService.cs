@@ -34,6 +34,7 @@ namespace MelonBookshelf.Data.Services
         public async Task<List<Request>> GetPendingRequests()
         {
             var result = await _appDbContext.Requests.Where(r=> r.Status == RequestStatus.PendingConfirmation)
+                .Include(u=> u.User)
                 .Include(a => a.Upvotes).ThenInclude(b => b.User)
                 .Include(c => c.Followers).ThenInclude(d => d.User)
                 .ToListAsync();

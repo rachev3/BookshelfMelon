@@ -32,7 +32,7 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests,viewListCategory);
+            var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("Request", viewModel);
         }
         public async Task<IActionResult> MyRequests()
@@ -81,7 +81,7 @@ namespace MelonBookshelf.Controllers
             var data = await requestService.GetById(id);
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestEditViewModel request = new(data,viewListCategory);
+            RequestEditViewModel request = new(data, viewListCategory);
             return View("Details", request);
         }
 
@@ -90,32 +90,47 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
             var model = new RequestEditViewModel(viewListCategory);
-            return View("Create",model);
+            return View("Create", model);
         }
 
         [HttpPost]
-        
+
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
+            //var category = new Category();
+            //category.Name = request.Category.Name;
+            //category.CategoryId = request.Category.CategoryId;
+            Category category = null;
+            if (request.CategoryId != null)
+            {
+
+                
+                category = await categoryService.GetById(request.CategoryId.Value);
+            }
+
+            string name = User.Identity.Name;
+            var user = userService.GetByName(name);
 
             var dto = new Request();
             dto.Title = request.Title;
             dto.Description = request.Description;
             dto.Author = request.Author;
-            dto.Status = request.Status;
-            dto.User = request.User;
+            dto.Status = RequestStatus.PendingConfirmation;
+            //dto.User = request.User;
             dto.Upvotes = request.Upvotes;
             dto.Followers = request.Followers;
             dto.Motive = request.Motive;
-            dto.Category.Name = request.Category.Name;
+            //dto.Category.Name = request.Category.Name;
             dto.Priority = request.Priority;
             dto.DateAdded = request.DateAdded;
             dto.Link = request.Link;
             dto.Type = request.Type;
+            dto.User = user.Result;
+            dto.Category = category;
 
-            string name = User.Identity.Name;
-            var user = userService.GetByName(name);
-            request.User = user.Result;
+
+
+
             await requestService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
@@ -175,7 +190,7 @@ namespace MelonBookshelf.Controllers
             var result = requestService.GetById(request.RequestId);
             var resultRequest = result.Result;
 
-            if(resultRequest.Status == RequestStatus.Delivered)
+            if (resultRequest.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
                 resource.Status = ResourceStatus.Available;
@@ -213,7 +228,7 @@ namespace MelonBookshelf.Controllers
             {
                 return View(request);
             }
-            
+
             await requestService.Update(dto);
             return RedirectToAction(nameof(PendingRequests));
         }

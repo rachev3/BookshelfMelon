@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.Xml;
+using System.Text;
 
 namespace MelonBookshelf.Controllers
 {
@@ -60,6 +61,13 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ResourceEditViewModel resource)
         {
+            Category category = null;
+            if (resource.CategoryId != null)
+            {
+
+
+                category = await categoryService.GetById(resource.CategoryId.Value);
+            }
             var dto = mapper.Map<Resource>(resource);
             await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
@@ -95,7 +103,16 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, ResourceEditViewModel resource)
         {
+            Category category = null;
+            if (resource.CategoryId != null)
+            {
+
+
+                category = await categoryService.GetById(resource.CategoryId.Value);
+            }
+
             var dto = mapper.Map<Resource>(resource);
+            dto.Category = category;
             resource.ResourceId = id;
             if (!ModelState.IsValid)
             {
@@ -115,6 +132,11 @@ namespace MelonBookshelf.Controllers
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Download()
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes("My first file");
+            return File(bytes, "text/plain", "file.txt");
         }
 
         public async Task<IActionResult> Delete(int id)
