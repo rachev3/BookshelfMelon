@@ -58,12 +58,9 @@
                             <p></p>
                         </td>
                         <td class="align-middle">
-                            @if (item.Status == MelonBookshelf.Data.RequestStatus.PendingConfirmation)
-                            {
-                                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.RequestId">
-                                    <i class="bi bi-pencil-square"></i>Edit
-                                </a>
-                            }
+                            <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.RequestId">
+                                <i class="bi bi-pencil-square"></i>Edit
+                            </a>
                             <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.RequestId">
                                 <i class="bi bi-pencil-square"></i>Details
                             </a>

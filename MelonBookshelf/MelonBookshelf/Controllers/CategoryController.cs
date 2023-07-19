@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MelonBookshelf.Data.Services;
+﻿using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
@@ -10,12 +9,9 @@ namespace MelonBookshelf.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
-        private readonly IMapper mapper;
-
-        public CategoryController(ICategoryService categoryService,IMapper mapper)
+        public CategoryController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
-            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -41,10 +37,9 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryViewModel category)
+        public async Task<IActionResult> Create(Category category)
         {
-            var dbo = mapper.Map<Category>(category);
-            await categoryService.Add(dbo);
+            await categoryService.Add(category);
             return RedirectToAction(nameof(Index));
         }
 

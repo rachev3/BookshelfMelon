@@ -139,8 +139,9 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Request request)
+        public async Task<IActionResult> Edit(int id, Request request)
         {
+            request.RequestId = id;
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -192,7 +193,6 @@ namespace MelonBookshelf.Controllers
             {
                 return View(request);
             }
-            
             await requestService.Update(request);
             return RedirectToAction(nameof(Index));
         }

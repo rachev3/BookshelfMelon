@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Requests.Where(r=> r.Status!=MelonBookshelf.Data.RequestStatus.Delivered))
+                @foreach (var item in Model.Requests)
                 {
                     <tr>
                         <td class="align-middle">
