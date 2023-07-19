@@ -26,15 +26,15 @@ namespace MelonBookshelf.Data.Services
         public async Task<List<Request>> GetAll()
         {
             var result = await _appDbContext.Requests
-                .Include(a=> a.Upvotes).ThenInclude(b=> b.User)
-                .Include(c=> c.Followers).ThenInclude(d=>d.User)
+                .Include(a => a.Upvotes).ThenInclude(b => b.User)
+                .Include(c => c.Followers).ThenInclude(d => d.User)
                 .ToListAsync();
             return result;
         }
         public async Task<List<Request>> GetPendingRequests()
         {
-            var result = await _appDbContext.Requests.Where(r=> r.Status == RequestStatus.PendingConfirmation)
-                .Include(u=> u.User)
+            var result = await _appDbContext.Requests.Where(r => r.Status == RequestStatus.PendingConfirmation)
+                .Include(u => u.User)
                 .Include(a => a.Upvotes).ThenInclude(b => b.User)
                 .Include(c => c.Followers).ThenInclude(d => d.User)
                 .ToListAsync();
@@ -52,11 +52,11 @@ namespace MelonBookshelf.Data.Services
         {
             var wr = await _appDbContext.Followers.Where(w => w.UserId == userId).ToListAsync();
             List<Request> requests = new();
-            foreach(var item in wr)
+            foreach (var item in wr)
             {
-                requests.Add( await _appDbContext.Requests.FirstOrDefaultAsync(r => r.RequestId == item.RequestId));
+                requests.Add(await _appDbContext.Requests.FirstOrDefaultAsync(r => r.RequestId == item.RequestId));
             }
-             
+
             return requests;
         }
         public async Task<int> GetUpvotersCount(int requestId)
@@ -68,14 +68,11 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<Request> GetById(int id)
         {
-<<<<<<< HEAD
-            var result = await _appDbContext.Requests.FirstOrDefaultAsync(n => n.RequestId == id);
-=======
-            var result = await _appDbContext.Requests.Include(x=> x.Category)
-                .Include(x=> x.Upvotes)
-                .Include(x=> x.Followers)
-                .FirstOrDefaultAsync(n => n.RequestId == id);
->>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
+            var result = await _appDbContext.Requests.Include(x => x.Category)
+                           .Include(x => x.Upvotes)
+                           .Include(x => x.Followers)
+                           .FirstOrDefaultAsync(n => n.RequestId == id);
+
             return result;
         }
 
@@ -91,7 +88,7 @@ namespace MelonBookshelf.Data.Services
             upvoter.RequestId = requestId;
             upvoter.UserId = userId;
 
-            var like = await _appDbContext.Upvotes.FirstOrDefaultAsync(u=> u.UserId == userId && u.RequestId == requestId);
+            var like = await _appDbContext.Upvotes.FirstOrDefaultAsync(u => u.UserId == userId && u.RequestId == requestId);
 
             if (like == null)
             {

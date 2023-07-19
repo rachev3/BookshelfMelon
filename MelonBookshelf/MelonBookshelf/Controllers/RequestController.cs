@@ -7,6 +7,7 @@ using System.ComponentModel.Design;
 using Microsoft.AspNetCore.Authorization;
 using MelonBookshelf.Data;
 using AutoMapper;
+using Humanizer.Localisation;
 
 namespace MelonBookshelf.Controllers
 {
@@ -16,14 +17,12 @@ namespace MelonBookshelf.Controllers
         private readonly ICategoryService categoryService;
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
-        private readonly IMapper mapper;
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IMapper mapper)
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
             this.resourceService = resourceService;
-            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -97,9 +96,7 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
-            //var category = new Category();
-            //category.Name = request.Category.Name;
-            //category.CategoryId = request.Category.CategoryId;
+
             Category category = null;
             if (request.CategoryId != null)
             {
@@ -109,28 +106,25 @@ namespace MelonBookshelf.Controllers
             }
 
             string name = User.Identity.Name;
-            var user = userService.GetByName(name);
+            User user = userService.GetByName(name).Result;
 
-            var dto = new Request();
-            dto.Title = request.Title;
-            dto.Description = request.Description;
-            dto.Author = request.Author;
-            dto.Status = RequestStatus.PendingConfirmation;
-            //dto.User = request.User;
-            dto.Upvotes = request.Upvotes;
-            dto.Followers = request.Followers;
-            dto.Motive = request.Motive;
-            //dto.Category.Name = request.Category.Name;
-            dto.Priority = request.Priority;
-            dto.DateAdded = request.DateAdded;
-            dto.Link = request.Link;
-            dto.Type = request.Type;
-            dto.User = user.Result;
-            dto.Category = category;
-
-
-
-
+            Request dto = new Request(
+                RequestStatus.PendingConfirmation,
+                request.Type,
+                request.Author,
+                request.Title,
+                request.Priority,
+                request.Link,
+                request.Description,
+                request.Motive,
+                request.DateAdded,
+                null,
+                user,
+                request.Upvotes,                                    
+                request.Followers,
+                request.CategoryId,
+                category
+                );
             await requestService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
@@ -173,40 +167,60 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-<<<<<<< HEAD
-        public async Task<IActionResult> Edit(int id, Request request)
-        {
-            request.RequestId = id;
-=======
+
         public async Task<IActionResult> Edit(RequestEditViewModel request)
         {
-            var dto = mapper.Map<Request>(request);
->>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            Category category = null;
+            if (request.CategoryId != null)
+            {
+
+
+                category = await categoryService.GetById(request.CategoryId.Value);
+            }
+
+            Request dto = new Request(
+                request.Status,
+                request.Type,
+                request.Author,
+                request.Title,
+                request.Priority,
+                request.Link,
+                request.Description,
+                request.Motive,
+                request.DateAdded,
+                null,
+                request.User,
+                request.Upvotes,
+                request.Followers,
+                request.CategoryId,
+                category
+                );
+            dto.RequestId = request.RequestId;
+
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
-            //var check = requestService.GetById(id);
-            //var item = check.Result;
-            //if(item.Status != RequestStatus.PendingConfirmation)
-            //{
-            //    return View("NotFound");
-            //}
-            await requestService.Update(dto);
-            var result = requestService.GetById(request.RequestId);
-            var resultRequest = result.Result;
 
-            if (resultRequest.Status == RequestStatus.Delivered)
+            await requestService.Update(dto);
+
+            var result = requestService.GetById(request.RequestId).Result;
+
+
+            if (result.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
-                resource.Status = ResourceStatus.Available;
-                resource.Title = result.Result.Title;
-                resource.Description = result.Result.Description;
-                resource.Location = "Bookshelf";
-                resource.Category = result.Result.Category;
-                resource.Author = result.Result.Author;
-                resource.DateAdded = DateTime.UtcNow;
                 resource.Type = ResourceType.Physical;
+                resource.Author = result.Author;
+                resource.Title = result.Title;
+                resource.Description = result.Description;
+                resource.Location = "Bookshelf";
+                resource.Status = ResourceStatus.Available;
+                resource.Category = result.Category;
+                resource.DateAdded = DateTime.UtcNow;
 
                 await resourceService.Add(resource);
             }
@@ -228,20 +242,62 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
         {
-            var dto = mapper.Map<Request>(request);
-            //request.RequestId = id;
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            Category category = null;
+            if (request.CategoryId != null)
+            {
+
+
+                category = await categoryService.GetById(request.CategoryId.Value);
+            }
+
+            Request dto = new Request(
+                request.Status,
+                request.Type,
+                request.Author,
+                request.Title,
+                request.Priority,
+                request.Link,
+                request.Description,
+                request.Motive,
+                request.DateAdded,
+                null,
+                request.User,
+                request.Upvotes,
+                request.Followers,
+                request.CategoryId,
+                category
+                );
+            dto.RequestId = request.RequestId;
+
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
-<<<<<<< HEAD
-            await requestService.Update(request);
-            return RedirectToAction(nameof(Index));
-=======
 
             await requestService.Update(dto);
+
+            var result = requestService.GetById(request.RequestId).Result;
+
+
+            if (result.Status == RequestStatus.Delivered)
+            {
+                var resource = new Resource();
+                resource.Type = ResourceType.Physical;
+                resource.Author = result.Author;
+                resource.Title = result.Title;
+                resource.Description = result.Description;
+                resource.Location = "Bookshelf";
+                resource.Status = ResourceStatus.Available;
+                resource.Category = result.Category;
+                resource.DateAdded = DateTime.UtcNow;
+
+                await resourceService.Add(resource);
+            }
             return RedirectToAction(nameof(PendingRequests));
->>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
+
         }
 
         public async Task<IActionResult> Delete(int id)

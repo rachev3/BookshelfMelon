@@ -6,6 +6,29 @@ namespace MelonBookshelf.Models
 {
     public class Request
     {
+        public Request()
+        {
+
+        }
+        public Request(RequestStatus? status, ResourceType? type, string? author, string? title, string? priority, string? link, string? description, string? motive, DateTime? dateAdded, string? userId, User? user, List<Upvote>? upvotes, List<Follower>? followers, int? categoryId, Category? category)
+        {
+            Status = status;
+            Type = type;
+            Author = author;
+            Title = title;
+            Priority = priority;
+            Link = link;
+            Description = description;
+            Motive = motive;
+            DateAdded = dateAdded;
+            UserId = userId;
+            User = user;
+            Upvotes = upvotes;
+            Followers = followers;
+            CategoryId = categoryId;
+            Category = category;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestId { get; set; }

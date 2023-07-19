@@ -41,18 +41,14 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-<<<<<<< HEAD
-        public async Task<IActionResult> Create(Category category)
-        {
-            await categoryService.Add(category);
-=======
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CategoryViewModel category)
         {
             var dbo = new Category();
             dbo.Name = category.Name;
             await categoryService.Add(dbo);
->>>>>>> ad801379b967135e6b22bf9574195d21d99d723e
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -25,12 +25,12 @@
                         <span asp-validation-for="Type" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="CategoryId" class="control-label"></label>
+                        <label asp-for="Category" class="control-label"></label>
                         <select name="categoryId" class="form-control">
-                            <option value="">@Model.Category.Name</option>
+                            <option value=""></option>
                             @foreach (var value in Model.Categories)
                             {
-                                <option value="@value.CategoryId">@value.Name</option>
+                                <option class="" value="@value.CategoryId">@value.Name</option>
                             }
                         </select>
                     </div>
@@ -86,8 +86,9 @@
                             <span asp-validation-for="DateReturn" class="text-danger"></span>
                         </div>
                     }
+                    <input type="hidden" asp-for="ResourceId"/>
                     <div class="form-group">
-                        <input type="submit" value="Edit" class="btn btn-outline-success float-right" />
+                        <input type="submit" value="Save" class="btn btn-outline-success float-right" />
                         <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                     </div>
                 </form>

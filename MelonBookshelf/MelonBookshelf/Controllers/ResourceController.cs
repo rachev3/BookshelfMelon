@@ -16,11 +16,11 @@ namespace MelonBookshelf.Controllers
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IMapper mapper)
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
-            this.mapper = mapper;
+        
         }
 
         [HttpGet]
@@ -68,7 +68,22 @@ namespace MelonBookshelf.Controllers
 
                 category = await categoryService.GetById(resource.CategoryId.Value);
             }
-            var dto = mapper.Map<Resource>(resource);
+            Resource dto = new Resource(
+                resource.Type,
+                resource.Author,
+                resource.Title,
+                resource.Description,
+                resource.Location,
+                resource.Price,
+                resource.Invoice,
+                resource.Status,
+                resource.DateAdded,
+                resource.DateTaken,
+                resource.DateReturn,
+                null,
+                null,
+                null,
+                resource.CategoryId, null);
             await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
@@ -101,8 +116,11 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, ResourceEditViewModel resource)
+        public async Task<IActionResult> Edit(ResourceEditViewModel resource)
         {
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
             Category category = null;
             if (resource.CategoryId != null)
             {
@@ -111,14 +129,30 @@ namespace MelonBookshelf.Controllers
                 category = await categoryService.GetById(resource.CategoryId.Value);
             }
 
-            var dto = mapper.Map<Resource>(resource);
+            Resource dto = new Resource(
+                
+               resource.Type,
+               resource.Author,
+               resource.Title,
+               resource.Description,
+               resource.Location,
+               resource.Price,
+               resource.Invoice,
+               resource.Status,
+               resource.DateAdded,
+               resource.DateTaken,
+               resource.DateReturn,
+               null,
+               null,
+               null,
+               resource.CategoryId, null);
             dto.Category = category;
-            resource.ResourceId = id;
+            dto.ResourceId = resource.ResourceId;
             if (!ModelState.IsValid)
             {
                 return View(resource);
             }
-            await resourceService.Update(id, dto);
+            await resourceService.Update(resource.ResourceId, dto);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Want(int resourceId)

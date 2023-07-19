@@ -30,6 +30,8 @@ builder.Services.AddScoped<IUpvoteService, UpvoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

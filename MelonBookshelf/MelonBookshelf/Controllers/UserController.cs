@@ -14,7 +14,7 @@ namespace MelonBookshelf.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
+        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.userService = userService;
             this.userManager = userManager;

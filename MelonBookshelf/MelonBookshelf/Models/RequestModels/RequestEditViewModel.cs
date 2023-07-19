@@ -29,6 +29,7 @@ namespace MelonBookshelf.Models
             User = request.User;
             Categories = categories;
             CategoryId = request.CategoryId;
+            Category = request.Category;
 
         }
 
@@ -42,14 +43,14 @@ namespace MelonBookshelf.Models
         public string? Motive { get; set; }
         public string? Description { get; set; }
         public DateTime? DateAdded { get; set; }
-        public FollowerPageViewModel FollowerPageViewModel { get; set; }
+        public FollowerPageViewModel? FollowerPageViewModel { get; set; }
         public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();
         public List<Follower>? Followers { get; set; } = new List<Follower>();
 
-        public int? CategoryId { get; set; }
-
-        public CategoryViewModel Category {get;set;}
+        public int? CategoryId { get; set; } 
+        public Category? Category {get;set;}
         public List<CategoryViewModel>? Categories { get; set; }
+
         public User? User { get; set; }
 
     }
