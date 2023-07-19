@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label asp-for="Category" class="control-label"></label>
                         <select name="categoryId" class="form-control">
-                            <option value=""></option>
+                            <option value="">@Model.Category.Name</option>
                             @foreach (var value in Model.Categories)
                             {
                                 <option class="" value="@value.CategoryId">@value.Name</option>

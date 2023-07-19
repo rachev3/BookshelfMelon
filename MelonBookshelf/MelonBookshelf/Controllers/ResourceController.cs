@@ -3,11 +3,14 @@ using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Web;
+using System.IO;
 
 namespace MelonBookshelf.Controllers
 {
@@ -16,10 +19,12 @@ namespace MelonBookshelf.Controllers
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService)
+        private readonly IConfiguration _config;
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
+            this._config = config;
         
         }
 
@@ -167,11 +172,53 @@ namespace MelonBookshelf.Controllers
             await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Download()
+        //public async Task<IActionResult> Download()
+        //{
+        //    byte[] bytes = Encoding.UTF8.GetBytes("My first file");
+        //    return File(bytes, "text/plain", "file.txt");
+        //}
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file, int resourceId)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes("My first file");
-            return File(bytes, "text/plain", "file.txt");
+            Resource resource = null;
+            resource = resourceService.GetById(resourceId).Result;
+            Guid guid = Guid.NewGuid();
+            string shortLocation = _config.GetSection("FileStorage").ToString() + guid + file.FileName;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), shortLocation);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+         
+            resource.Location = shortLocation;
+            resource.FileName = file.FileName;
+            resourceService.Update(resource.ResourceId,resource);
+            return RedirectToAction(nameof(Index));
         }
+        
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Download(int resourceId)
+        {
+            Resource resource = await resourceService.GetById(resourceId);
+            if (resource == null)
+            {
+                // Handle the case when the resource is not found.
+                return NotFound();
+            }
+
+            var filePath = resource.Location;
+            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+
+            //using (var fileStream = new FileStream(filePath, FileMode.Open))
+            //{
+            //   bytes =  await fileStream.CopyToAsync(fileStream);
+            //}
+
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, resource.FileName);
+
+        }
+
 
         public async Task<IActionResult> Delete(int id)
         {

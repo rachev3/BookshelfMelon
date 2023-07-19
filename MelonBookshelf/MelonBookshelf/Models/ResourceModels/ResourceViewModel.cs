@@ -25,6 +25,7 @@ namespace MelonBookshelf.Models
             DateReturn = resource.DateReturn;
             wantedResources = resource.WantedResources;
             Category = resource.Category;
+            FileName = resource.FileName;
         }
 
         public int ResourceId { get; set; }
@@ -33,6 +34,7 @@ namespace MelonBookshelf.Models
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Location { get; set; }
+        public string? FileName { get; set; }
         public double? Price { get; set; }
         public string? Invoice { get; set; }
         public ResourceStatus? Status { get; set; }

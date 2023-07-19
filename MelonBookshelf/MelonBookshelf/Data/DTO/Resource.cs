@@ -38,6 +38,7 @@ namespace MelonBookshelf.Models
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Location { get; set; }
+        public string? FileName { get; set; }
         public double? Price { get; set; }
         public string? Invoice { get; set; }
         public ResourceStatus? Status { get; set; }

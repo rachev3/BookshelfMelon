@@ -13,7 +13,7 @@
         <div>
             <a asp-controller="Resource" asp-action="Create" class="btn btn-outline-success">Add New Resource</a>
             <a href="/resource/download" class="btn-primary btn">Download</a>
-        </div >
+        </div>
         <form method="post" action="@Url.Action("Index")" class="mb-3">
             <div class="input-group">
                 <select name="resourceType" class="form-control">
@@ -44,6 +44,7 @@
                     <th>Title</th>
                     <th>Location</th>
                     <th>Wanters</th>
+                    <th>Upload</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,36 +64,70 @@
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
                         <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Location)
+                            @Html.DisplayFor(modelItem => item.FileName)
                         </td>
+
                         @if (item.Type == ResourceType.Physical)
                         {
                             <td class="align-middle">
                                 @Html.DisplayFor(modelItem => item.wantedResources.Count)
                             </td>
                         }
-                        else{
+                        else
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="align-middle">
+                                    <form method="post" enctype="multipart/form-data" asp-action="Upload">
+                                        <div class="form-group">
+                                            <div class="classcol-md-8 offset-md-2">
+                                                <input type="file" name="file" />
+
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="resourceId" value="@item.ResourceId" />
+                                        <div class="form-group">
+                                            <div class="classcol-md-8 offset-md-2">
+                                                <input type="submit" value="Upload" />
+
+
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </td>
+                            }
                             <td class="align-middle">
+                                @if (!string.IsNullOrEmpty(item.Location))
+                                {
+                                    <a href="@Url.Action("Download", "Resource", new { resourceId = item.ResourceId })" class="btn btn-outline-secondary">Download</a>
+                                }
+                                else
+                                {
+                                    <span>No File Available</span>
+                                }
+                            </td>
+                            }
+                            <td class="align-middle">
+                                <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.ResourceId">Details</a>
+                                @if (item.Type == ResourceType.Physical)
+                                {
+                                    <a class="btn btn-danger" asp-action="Want" asp-route-resourceId="@item.ResourceId">Want</a>
+                                    <a class="btn btn-danger" asp-action="Unwant" asp-route-resourceId="@item.ResourceId">Unwant</a>
+                                }
+
+
 
                             </td>
-                        }
-                        <td class="align-middle">
-                            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.ResourceId">Details</a>
-                            @if (item.Type == ResourceType.Physical)
-                            {
-                                <a class="btn btn-danger" asp-action="Want" asp-route-resourceId="@item.ResourceId">Want</a>
-                                <a class="btn btn-danger" asp-action="Unwant" asp-route-resourceId="@item.ResourceId">Unwant</a>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<script>
-    function clearSearch() {
-        document.querySelector('form').reset();
-    }
-</script>
+    <script>
+        function clearSearch() {
+            document.querySelector('form').reset();
+        }
+    </script>
