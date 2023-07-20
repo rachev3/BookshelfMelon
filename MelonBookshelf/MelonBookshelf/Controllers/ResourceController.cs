@@ -183,7 +183,8 @@ namespace MelonBookshelf.Controllers
             Resource resource = null;
             resource = resourceService.GetById(resourceId).Result;
             Guid guid = Guid.NewGuid();
-            string shortLocation = _config.GetSection("FileStorage").ToString() + guid + file.FileName;
+            string ext = Path.GetExtension(file.FileName);
+            string shortLocation = _config.GetSection("FileStorage").ToString() + guid + ext;
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), shortLocation);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
