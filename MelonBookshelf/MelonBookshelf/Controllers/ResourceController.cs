@@ -11,6 +11,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Web;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MelonBookshelf.Controllers
 {
@@ -54,7 +55,7 @@ namespace MelonBookshelf.Controllers
 
             return View("Resource", viewModel);
         }
-        
+        [HttpGet] 
         public async Task<IActionResult> Create()
         {
             var categories = await categoryService.GetAll();
@@ -92,6 +93,7 @@ namespace MelonBookshelf.Controllers
             await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var data = await resourceService.GetById(id);
@@ -103,7 +105,7 @@ namespace MelonBookshelf.Controllers
             return View("Details", resource);
 
         }
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var resource = await resourceService.GetById(id);
@@ -178,13 +180,14 @@ namespace MelonBookshelf.Controllers
         //    return File(bytes, "text/plain", "file.txt");
         //}
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Upload(IFormFile file, int resourceId)
         {
             Resource resource = null;
             resource = resourceService.GetById(resourceId).Result;
             Guid guid = Guid.NewGuid();
             string ext = Path.GetExtension(file.FileName);
-            string shortLocation = _config.GetSection("FileStorage").ToString() + guid + ext;
+            string shortLocation = _config.GetValue<string>("FileStorage:Path").ToString() + guid + ext;
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), shortLocation);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -198,7 +201,7 @@ namespace MelonBookshelf.Controllers
         }
         
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+    
         public async Task<IActionResult> Download(int resourceId)
         {
             Resource resource = await resourceService.GetById(resourceId);
@@ -208,7 +211,7 @@ namespace MelonBookshelf.Controllers
                 return NotFound();
             }
 
-            var filePath = resource.Location;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), resource.Location);
             byte[] bytes = System.IO.File.ReadAllBytes(filePath);
 
             //using (var fileStream = new FileStream(filePath, FileMode.Open))
@@ -220,7 +223,8 @@ namespace MelonBookshelf.Controllers
 
         }
 
-
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             //var categories = await categoryService.GetAll();

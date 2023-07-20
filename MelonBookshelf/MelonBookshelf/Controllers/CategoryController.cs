@@ -25,14 +25,6 @@ namespace MelonBookshelf.Controllers
 
             return View("Category", viewModel);
         }
-        public async Task<IActionResult> Details(int id)
-        {
-            var data = await categoryService.GetById(id);
-            CategoryViewModel resource = new(data);
-            return View("Details", resource);
-
-        }
-
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -52,6 +44,7 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await categoryService.GetById(id);
@@ -64,6 +57,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, CategoryViewModel category)
         {
             category.CategoryId = id;
@@ -78,6 +72,7 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await categoryService.GetById(id);
@@ -90,6 +85,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             var category = await categoryService.GetById(id);

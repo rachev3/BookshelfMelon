@@ -32,29 +32,7 @@ namespace MelonBookshelf.Controllers
             await wantedResourcesService.Add(wantedResources);
             return RedirectToAction(nameof(Index));
         }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var wantedResources = await wantedResourcesService.GetById(id);
-            if (wantedResources == null)
-            {
-                return View("NotFound");
-            }
-            return View(wantedResources);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, WantedResources wantedResources)
-        {
-            wantedResources.Id = id;
-            if (!ModelState.IsValid)
-            {
-                return View(wantedResources);
-            }
-            await wantedResourcesService.Update(id, wantedResources);
-            return RedirectToAction(nameof(Index));
-        }
-
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var wanted = await wantedResourcesService.GetById(id);

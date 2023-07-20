@@ -24,6 +24,7 @@ namespace MelonBookshelf.Controllers
             return View("Upvote", viewModel);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -37,29 +38,7 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var upvote = await upvoteService.GetById(id);
-            if (upvote == null)
-            {
-                return View("NotFound");
-            }
-            return View(upvote);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, UpvoteViewModel upvote)
-        {
-            var dto = mapper.Map<Upvote>(upvote);
-            upvote.UpvoteId = id;
-            if (!ModelState.IsValid)
-            {
-                return View(upvote);
-            }
-            await upvoteService.Update(id, dto);
-            return RedirectToAction(nameof(Index));
-        }
-
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var upvote = await upvoteService.GetById(id);

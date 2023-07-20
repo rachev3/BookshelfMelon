@@ -10,6 +10,7 @@
         <div class="text-center">
             <h1>Pending Requests</h1>
         </div>
+
         <table class="table">
             <thead>
                 <tr class="text-center">
@@ -49,10 +50,10 @@
                             <p></p>
                         </td>
                         <td class="align-middle">
-                            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.RequestId">
+                            <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.RequestId">
                                 <i class="bi bi-pencil-square"></i>Details
                             </a>
-                            <a class="btn btn-outline-secondary" asp-action="EditPendingRequest" asp-route-id="@item.RequestId">
+                            <a class="btn btn-outline-warning" asp-action="EditPendingRequest" asp-route-id="@item.RequestId">
                                 <i class="bi bi-pencil-square"></i>Edit
                             </a>
                         </td>
@@ -61,8 +62,4 @@
             </tbody>
         </table>
     </div>
-</div>
-<div>
-    <a asp-controller="Request" asp-action="Create" class="btn btn-outline-success">Add New Request</a>
-
 </div>

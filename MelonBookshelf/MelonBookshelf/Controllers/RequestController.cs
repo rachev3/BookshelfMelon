@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using MelonBookshelf.Data;
 using AutoMapper;
 using Humanizer.Localisation;
+using MelonBookshelf.Models.Email;
 
 namespace MelonBookshelf.Controllers
 {
@@ -17,12 +18,14 @@ namespace MelonBookshelf.Controllers
         private readonly ICategoryService categoryService;
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService)
+        private readonly IEmailSender emailSender;
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
             this.resourceService = resourceService;
+            this.emailSender = emailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -34,6 +37,7 @@ namespace MelonBookshelf.Controllers
             var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("Request", viewModel);
         }
+        [HttpGet]
         public async Task<IActionResult> MyRequests()
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -44,6 +48,7 @@ namespace MelonBookshelf.Controllers
             var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("MyRequests", viewModel);
         }
+        [HttpGet]
         public async Task<IActionResult> FollowingRequests()
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -83,6 +88,7 @@ namespace MelonBookshelf.Controllers
             RequestEditViewModel request = new(data, viewListCategory);
             return View("Details", request);
         }
+        [HttpGet]
 
         public async Task<IActionResult> Create()
         {
@@ -101,7 +107,7 @@ namespace MelonBookshelf.Controllers
             if (request.CategoryId != null)
             {
 
-                
+
                 category = await categoryService.GetById(request.CategoryId.Value);
             }
 
@@ -120,7 +126,7 @@ namespace MelonBookshelf.Controllers
                 request.DateAdded,
                 null,
                 user,
-                request.Upvotes,                                    
+                request.Upvotes,
                 request.Followers,
                 request.CategoryId,
                 category
@@ -170,8 +176,18 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Edit(RequestEditViewModel request)
         {
+            ////sending email
+            //var message = new Message(new string[] { "ddrachev123@gmail.com" }, "Test Email", "Content of email.");
+            //emailSender.SendEmail(message);
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
 
             Category category = null;
             if (request.CategoryId != null)
@@ -180,6 +196,7 @@ namespace MelonBookshelf.Controllers
 
                 category = await categoryService.GetById(request.CategoryId.Value);
             }
+            var oldRequest = await requestService.GetById(request.RequestId);
 
             Request dto = new Request(
                 request.Status,
@@ -200,16 +217,12 @@ namespace MelonBookshelf.Controllers
                 );
             dto.RequestId = request.RequestId;
 
-            if (!ModelState.IsValid)
-            {
-                return View(request);
-            }
 
             await requestService.Update(dto);
 
             var result = requestService.GetById(request.RequestId).Result;
 
-
+            //creating resource
             if (result.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
@@ -224,8 +237,11 @@ namespace MelonBookshelf.Controllers
 
                 await resourceService.Add(resource);
             }
+
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPendingRequest(int id)
         {
             var request = await requestService.GetById(id);
@@ -240,8 +256,15 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
@@ -271,11 +294,6 @@ namespace MelonBookshelf.Controllers
                 category
                 );
             dto.RequestId = request.RequestId;
-
-            if (!ModelState.IsValid)
-            {
-                return View(request);
-            }
 
             await requestService.Update(dto);
 

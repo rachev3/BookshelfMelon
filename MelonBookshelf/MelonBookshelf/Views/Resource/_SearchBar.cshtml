@@ -1,0 +1,24 @@
+﻿@using MelonBookshelf.Data
+@model ResourcePageViewModel
+
+<form method="post" action="@Url.Action("Index")" class="mb-3">
+    <div class="input-group">
+        <select name="resourceType" class="form-control">
+            <option value="">Select Type</option>
+            @foreach (var value in Enum.GetValues(typeof(ResourceType)))
+            {
+                <option value="@value">@value</option>
+            }
+        </select>
+        <select name="CategoryId" class="form-control">
+            <option value="">All Categories</option>
+            @foreach (var value in Model.Categories)
+            {
+                <option value="@value.CategoryId">@value.Name</option>
+            }
+        </select>
+        <input type="text" name="title" class="form-control" placeholder="Title">
+        <button type="submit" class="btn btn-outline-primary" asp-action="Index">Search</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+    </div>
+</form>

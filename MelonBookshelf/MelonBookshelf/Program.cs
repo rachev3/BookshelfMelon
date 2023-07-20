@@ -1,6 +1,7 @@
 using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using MelonBookshelf.Models.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
@@ -29,7 +30,14 @@ builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IUpvoteService, UpvoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+
+builder.Services.AddControllers();
 
 
 var app = builder.Build();

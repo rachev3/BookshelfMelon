@@ -38,27 +38,6 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var follower = await followerService.GetById(id);
-            if (follower == null)
-            {
-                return View("NotFound");
-            }
-            return View(follower);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, FollowerViewModel follower)
-        {
-            var dto = mapper.Map<Follower>(follower);
-            if (!ModelState.IsValid)
-            {
-                return View(follower);
-            }
-            await followerService.Update(id, dto);
-            return RedirectToAction(nameof(Index));
-        }
 
         public async Task<IActionResult> Delete(int id)
         {

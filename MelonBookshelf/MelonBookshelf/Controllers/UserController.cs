@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Linq;
 using System.Security.Principal;
 
@@ -28,6 +30,8 @@ namespace MelonBookshelf.Controllers
             var viewModel = new UserPageViewModel(resources);
             return View("User", viewModel);
         }
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(string id)
         {
             var data = await userService.GetById(id);
@@ -37,6 +41,11 @@ namespace MelonBookshelf.Controllers
         }
 
         public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Login()
         {
             return View();
         }
@@ -68,11 +77,6 @@ namespace MelonBookshelf.Controllers
            
         }
 
-            [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -114,8 +118,8 @@ namespace MelonBookshelf.Controllers
             return View(model);
 
         }
-
-
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
             var user = await userService.GetById(id);
@@ -128,6 +132,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id, User user)
         {
             user.Id = id;
@@ -138,7 +143,8 @@ namespace MelonBookshelf.Controllers
             await userService.Update(id, user);
             return RedirectToAction(nameof(Index));
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await userService.GetById(id);
@@ -151,6 +157,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirm(string id)
         {
             var user = await userService.GetById(id);
