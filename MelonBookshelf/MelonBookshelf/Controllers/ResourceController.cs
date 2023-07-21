@@ -98,9 +98,7 @@ namespace MelonBookshelf.Controllers
         {
             var data = await resourceService.GetById(id);
 
-            //var categories = await categoryService.GetAll();
-            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
+          
             ResourceViewModel resource =  new(data);
             return View("Details", resource);
 
@@ -174,11 +172,7 @@ namespace MelonBookshelf.Controllers
             await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
         }
-        //public async Task<IActionResult> Download()
-        //{
-        //    byte[] bytes = Encoding.UTF8.GetBytes("My first file");
-        //    return File(bytes, "text/plain", "file.txt");
-        //}
+    
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Upload(IFormFile file, int resourceId)
@@ -207,17 +201,14 @@ namespace MelonBookshelf.Controllers
             Resource resource = await resourceService.GetById(resourceId);
             if (resource == null)
             {
-                // Handle the case when the resource is not found.
+                
                 return NotFound();
             }
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), resource.Location);
             byte[] bytes = System.IO.File.ReadAllBytes(filePath);
 
-            //using (var fileStream = new FileStream(filePath, FileMode.Open))
-            //{
-            //   bytes =  await fileStream.CopyToAsync(fileStream);
-            //}
+        
 
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, resource.FileName);
 
@@ -227,9 +218,7 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            //var categories = await categoryService.GetAll();
-            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
+           
             var resource = await resourceService.GetById(id);
             ResourceViewModel resourceViewModel = new(resource);
             if (resource == null)

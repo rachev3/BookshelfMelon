@@ -10,6 +10,7 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IFollowerService followerService;
         private readonly IMapper mapper;
+
         public FollowerController(IFollowerService followerService, IMapper mapper)
         {
             this.followerService = followerService;
@@ -21,10 +22,11 @@ namespace MelonBookshelf.Controllers
             var data = await followerService.GetAll();
             var followers = data.Select(x => new FollowerViewModel(x)).ToList();
             var viewModel = new FollowerPageViewModel(followers);
-            return View("Follower", viewModel);
 
+            return View("Follower", viewModel);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -35,17 +37,20 @@ namespace MelonBookshelf.Controllers
         {
             var dto = mapper.Map<Follower>(follower);
             await followerService.Add(dto);
+
             return RedirectToAction(nameof(Index));
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var follower = await followerService.GetById(id);
+
             if (follower == null)
             {
                 return View("NotFound");
             }
+
             return View(follower);
         }
 
@@ -53,12 +58,14 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             var follower = await followerService.GetById(id);
+
             if (follower == null)
             {
                 return View("NotFound");
             }
 
             await followerService.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
     }

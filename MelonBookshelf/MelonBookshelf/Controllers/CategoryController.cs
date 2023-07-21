@@ -12,6 +12,7 @@ namespace MelonBookshelf.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
+
         public CategoryController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
@@ -26,6 +27,7 @@ namespace MelonBookshelf.Controllers
             return View("Category", viewModel);
         }
 
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -33,12 +35,12 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CategoryViewModel category)
         {
             var dbo = new Category();
             dbo.Name = category.Name;
+
             await categoryService.Add(dbo);
 
             return RedirectToAction(nameof(Index));
@@ -49,10 +51,12 @@ namespace MelonBookshelf.Controllers
         {
             var category = await categoryService.GetById(id);
             CategoryViewModel categoryViewModel = new(category);
+
             if (category == null)
             {
                 return View("NotFound");
             }
+
             return View(categoryViewModel);
         }
 
@@ -60,7 +64,9 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, CategoryViewModel category)
         {
+            //do i need id?
             category.CategoryId = id;
+
             var dto = await categoryService.GetById(id);
             dto.Name = category.Name;
 
@@ -68,19 +74,24 @@ namespace MelonBookshelf.Controllers
             {
                 return View(category);
             }
+
             await categoryService.Update(id, dto);
+
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await categoryService.GetById(id);
             CategoryViewModel categoryViewModel = new(category);
+
             if (category == null)
             {
                 return View("NotFound");
             }
+
             return PartialView("_ConfirmDelete", categoryViewModel);
         }
 
@@ -88,11 +99,9 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirm(int categoryId)
         {
-
             var category = await categoryService.GetById(categoryId);
-            CategoryViewModel categoryView = new CategoryViewModel();
-            categoryView.Name = category.Name;
-            categoryView.CategoryId = categoryId;
+            CategoryViewModel categoryView = new CategoryViewModel(category);
+
             if (category == null)
             {
                 return View("NotFound");
@@ -103,6 +112,7 @@ namespace MelonBookshelf.Controllers
             var data = await categoryService.GetAll();
             var resources = data.Select(x => new CategoryViewModel(x)).ToList();
             var viewModel = new CategoryPageViewModel(resources);
+
             return PartialView("_CategoryTable", viewModel);
         }
     }

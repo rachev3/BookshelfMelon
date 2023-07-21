@@ -19,6 +19,7 @@ namespace MelonBookshelf.Controllers
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
         private readonly IEmailSender emailSender;
+
         public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender)
         {
             this.requestService = requestService;
@@ -30,35 +31,50 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = await requestService.GetAll();
+            var requests = await requestService.GetAll();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests, viewListCategory);
-            return View("Request", viewModel);
+
+            var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
+
+            return View("Request", pageViewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> MyRequests()
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var requests = await requestService.GetMyRequests(userId);
+            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var data = await requestService.GetMyRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests, viewListCategory);
-            return View("MyRequests", viewModel);
+
+            var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
+
+            return View("MyRequests", pageViewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> FollowingRequests()
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var data = await requestService.GetFollowingRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests, viewListCategory);
-            return View("FollowingRequests", viewModel);
-        }
+
+            var requests = await requestService.GetFollowingRequests(userId);
+            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+
+            var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
+
+            return View("FollowingRequests", pageViewModel);
+        }  
+
+        //where do you use this Task?
         public async Task<IActionResult> Following()
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -69,45 +85,54 @@ namespace MelonBookshelf.Controllers
             var viewModel = new RequestPageViewModel(requests, viewListCategory);
             return View("MyRequests", viewModel);
         }
+
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PendingRequests()
         {
-            var data = await requestService.GetPendingRequests();
+            var requests = await requestService.GetPendingRequests();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests, viewListCategory);
-            return View("PendingRequests", viewModel);
+
+            var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
+
+            return View("PendingRequests", pageViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var data = await requestService.GetById(id);
+            var request = await requestService.GetById(id);
+
+            //fix
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestEditViewModel request = new(data, viewListCategory);
-            return View("Details", request);
-        }
-        [HttpGet]
 
+            RequestEditViewModel requestViewModel = new(request, viewListCategory);
+
+            return View("Details", requestViewModel);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var model = new RequestEditViewModel(viewListCategory);
-            return View("Create", model);
+
+            var requestViewModel = new RequestEditViewModel(viewListCategory);
+
+            return View("Create", requestViewModel);
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
-
+             //check if u have category in the model
             Category category = null;
             if (request.CategoryId != null)
             {
-
-
                 category = await categoryService.GetById(request.CategoryId.Value);
             }
 
@@ -131,31 +156,37 @@ namespace MelonBookshelf.Controllers
                 request.CategoryId,
                 category
                 );
+
             await requestService.Add(dto);
+
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Upvote(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.Like(requestId, userId);
+
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Downvote(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.Dislike(requestId, userId);
+
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Follow(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.Follow(requestId, userId);
+
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Unfollow(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.UnFollow(requestId, userId);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -176,9 +207,7 @@ namespace MelonBookshelf.Controllers
 
         public async Task<IActionResult> Edit(RequestEditViewModel request)
         {
-            ////sending email
-            //var message = new Message(new string[] { "ddrachev123@gmail.com" }, "Test Email", "Content of email.");
-            //emailSender.SendEmail(message);
+           
 
             var emails = await requestService.GetFollowersEmails(request.RequestId);
 
@@ -219,25 +248,7 @@ namespace MelonBookshelf.Controllers
             originalReq.User = request.User;
             originalReq.CategoryId = request.CategoryId;
             originalReq.Category = request.Category;
-            //Request dto = new Request(
-            //    request.Status,
-            //    request.Type,
-            //    request.Author,
-            //    request.Title,
-            //    request.Priority,
-            //    request.Link,
-            //    request.Description,
-            //    request.Motive,
-            //    request.DateAdded,
-            //    null,
-            //    request.User,
-            //    request.Upvotes,
-            //    request.Followers,
-            //    request.CategoryId,
-            //    category
-            //    );
-            //dto.RequestId = request.RequestId;
-
+           
             
             await requestService.Update(originalReq);
 
