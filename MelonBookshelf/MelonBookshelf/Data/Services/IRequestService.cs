@@ -10,6 +10,7 @@ namespace MelonBookshelf.Data.Services
         Task<List<Request>> GetMyRequests(string userId);
         Task<List<Request>> GetFollowingRequests(string userId);
         Task<List<Request>> GetPendingRequests();
+        Task<List<string>> GetFollowersEmails(int requestId);
         Task Add(Request request); 
         Task Like(int requestId, string userId);
         Task Dislike(int requestId, string userId);

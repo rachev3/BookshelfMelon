@@ -66,15 +66,17 @@ namespace MelonBookshelf.Data.Services
             int upvotersCount = result.Count();
             return upvotersCount;
         }
-        //public async Task<string[]> GetFollowersEmails(int requestId)
-        //{
-        //    var followers = await _appDbContext.Followers.Where(r=> r.RequestId == requestId).ToListAsync();
-        //    List<string> emails = new List<string>();
-        //    foreach(var item in followers)
-        //    {
-        //        //emails.Add(item.)
-        //    }
-        //}
+        public async Task<List<string>> GetFollowersEmails(int requestId)
+        {
+            var followers = await _appDbContext.Followers.Where(r => r.RequestId == requestId).ToListAsync();
+            List<string> emails = new List<string>();
+            foreach (var item in followers)
+            {
+                var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == item.UserId);
+                emails.Add(user.Email);
+            }
+            return emails;
+        }
 
         public async Task<Request> GetById(int id)
         {

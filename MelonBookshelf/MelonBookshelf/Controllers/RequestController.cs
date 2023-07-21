@@ -180,6 +180,9 @@ namespace MelonBookshelf.Controllers
             //var message = new Message(new string[] { "ddrachev123@gmail.com" }, "Test Email", "Content of email.");
             //emailSender.SendEmail(message);
 
+            var emails = await requestService.GetFollowersEmails(request.RequestId);
+
+
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -196,29 +199,48 @@ namespace MelonBookshelf.Controllers
 
                 category = await categoryService.GetById(request.CategoryId.Value);
             }
-            var oldRequest = await requestService.GetById(request.RequestId);
+            var originalReq = await requestService.GetById(request.RequestId);
+            var oldStatus = originalReq.Status;
 
-            Request dto = new Request(
-                request.Status,
-                request.Type,
-                request.Author,
-                request.Title,
-                request.Priority,
-                request.Link,
-                request.Description,
-                request.Motive,
-                request.DateAdded,
-                null,
-                request.User,
-                request.Upvotes,
-                request.Followers,
-                request.CategoryId,
-                category
-                );
-            dto.RequestId = request.RequestId;
+            if (oldStatus != request.Status)
+            {
+                var message = new Message(emails, "Status Changed", "Request`s status is changed.");
+                emailSender.SendEmail(message);
+            }
+            originalReq.Status = request.Status;
+            originalReq.Type = request.Type;
+            originalReq.Author = request.Author;
+            originalReq.Title = request.Title;
+            originalReq.Priority = request.Priority;
+            originalReq.Link = request.Link;
+            originalReq.Description = request.Description;
+            originalReq.Motive = request.Motive;
+            originalReq.DateAdded = request.DateAdded;
+            originalReq.User = request.User;
+            originalReq.CategoryId = request.CategoryId;
+            originalReq.Category = request.Category;
+            //Request dto = new Request(
+            //    request.Status,
+            //    request.Type,
+            //    request.Author,
+            //    request.Title,
+            //    request.Priority,
+            //    request.Link,
+            //    request.Description,
+            //    request.Motive,
+            //    request.DateAdded,
+            //    null,
+            //    request.User,
+            //    request.Upvotes,
+            //    request.Followers,
+            //    request.CategoryId,
+            //    category
+            //    );
+            //dto.RequestId = request.RequestId;
 
+            
+            await requestService.Update(originalReq);
 
-            await requestService.Update(dto);
 
             var result = requestService.GetById(request.RequestId).Result;
 

@@ -13,7 +13,7 @@ namespace MelonBookshelf.Models.Email
         {
             To = new List<MailboxAddress>();
 
-            To.AddRange(to.Select(x => new MailboxAddress("email",x)));
+            To.AddRange(to.Select(x => new MailboxAddress("MelonBookshelf",x)));
             Subject = subject;
             Content = content;
         }
