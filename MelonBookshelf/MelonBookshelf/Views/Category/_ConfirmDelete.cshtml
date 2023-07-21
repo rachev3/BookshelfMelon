@@ -1,7 +1,7 @@
 ﻿@model CategoryViewModel
 
-<!-- Modal -->
-<form id="formDelete" class="post-using-ajax" data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#tableContainer" data-ajax-success="hideModal" asp-controller="Category" asp-action="DeleteConfirm">
+
+<form id="formDelete" class="post-using-ajax" data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#tableContainer" data-ajax-success="hideModal()" asp-controller="Category" asp-action="DeleteConfirm">
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -23,26 +23,4 @@
         </div>
     </div>
 </form>
-<script>
-    function hideModal() {
-        $('#deleteConfirmationModal').modal('hide');
-    }
-    $(function () {
-        $('.post-using-ajax').each(function () {
-            var $form = $(this);
-            $form.submit(function (e) {
-                e.preventDefault();
 
-                $.ajax({
-                    type: $form.attr('method'),
-                    url: $form.attr('action'),
-                    data: $form.serialize(),
-                    success: function (msg) {
-                        hideModal();
-                    }
-                });
-            });
-        });
-    });
-
-</script>

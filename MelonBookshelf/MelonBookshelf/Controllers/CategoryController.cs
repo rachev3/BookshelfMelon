@@ -86,19 +86,24 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirm(int id)
+        public async Task<IActionResult> DeleteConfirm(int categoryId)
         {
-            var category = await categoryService.GetById(id);
+
+            var category = await categoryService.GetById(categoryId);
             CategoryViewModel categoryView = new CategoryViewModel();
             categoryView.Name = category.Name;
-            categoryView.CategoryId = id;
+            categoryView.CategoryId = categoryId;
             if (category == null)
             {
                 return View("NotFound");
             }
 
-            await categoryService.Delete(id);
-            return RedirectToAction(nameof(Index));
+            await categoryService.Delete(categoryId);
+
+            var data = await categoryService.GetAll();
+            var resources = data.Select(x => new CategoryViewModel(x)).ToList();
+            var viewModel = new CategoryPageViewModel(resources);
+            return PartialView("_CategoryTable", viewModel);
         }
     }
 }

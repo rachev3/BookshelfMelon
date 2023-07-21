@@ -36,60 +36,26 @@
             </div>
         }
         <div id="tableContainer">
-           @Html.Partial("_CategoryTable", @Model)
-       @* <table class="table">
-            <thead>
-                <tr class="text-center">
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Categories)
-                {
-                    <tr>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-
-                        <td class="align-middle">
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.CategoryId"><i class="bi bi-pencil-square"></i>Edit</a>
-                                <a class="btn btn-danger" @*asp-action="Delete" asp-route-id="@item.CategoryId" onclick="confirmDelete('@item.CategoryId');"><i class="bi bi-trash"></i>Delete</a>
-                            }
-                        </td>
-                    </tr>
-                   @* <div id="confirmDeletePartial">
-                        @Html.Partial("_ConfirmDelete", @item)
-                    </div>
-
-                }
-            </tbody>
-        </table>*@
+            @Html.Partial("_CategoryTable", @Model)
+           
         </div>
+        <div id="confirmDeletePartial"></div>
     </div>
 </div>
-@*<div id="confirmDeletePartial">
-    @Html.Partial("_ConfirmDelete")
-</div>*@
 
 
-<script>
-    $(function () {
-        $('.post-using-ajax').each(function () {
-            var $form = $(this);
-            $form.submit(function (e) {
-                e.preventDefault();
 
-                $.ajax({
-                    type: $form.attr('method'),
-                    url: $form.attr('action'),
-                    data: $form.serialize(),
-                    success: function (msg) {
-                        hideModal();
-                    }
-                });
-            });
-        });
-    });
+<script>  
+    function confirmDelete(categoryId) {
+        var deleteLink = document.getElementById("deleteCategoryLink");
+        deleteLink.href = deleteLink.href.replace("", categoryId);
+        $('#deleteConfirmationModal').modal('show');
+    }
+    function showModal() {
+        $('#deleteConfirmationModal').modal('show');
+    }
+    function hideModal() {
+        $('#deleteConfirmationModal').modal('hide');
+    }
+
 </script>

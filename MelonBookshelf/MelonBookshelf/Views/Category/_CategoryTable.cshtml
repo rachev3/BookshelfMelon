@@ -18,83 +18,12 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.CategoryId"><i class="bi bi-pencil-square"></i>Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showAndLoad"><i class="bi bi-trash"></i>Delete</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal"><i class="bi bi-trash"></i>Delete</a>
                     }
                 </td>
             </tr>
-            <tr>
-            </tr>
-
         }
-        <div id="confirmDeletePartial"> @Html.Partial("_ConfirmDelete", Model.Categories.FirstOrDefault())</div>
+        
     </tbody>
 </table>
-<script>
-    function confirmDelete(categoryId) {
-        var deleteLink = document.getElementById("deleteCategoryLink");
-        deleteLink.href = deleteLink.href.replace("", categoryId);
-        $('#deleteConfirmationModal').modal('show');
-    }
-    function showModal() {
-        $('#deleteConfirmationModal').modal('show');
-    }
-    function hideModal() {
-        $('#deleteConfirmationModal').modal('hide');
-    }
 
-    function showAndLoad(){
-        showModal();
-        $('.post-using-ajax').each(function () {
-            var $form = $(this);
-            $form.submit(function (e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: $form.attr('method'),
-                    url: $form.attr('action'),
-                    data: $form.serialize(),
-                    success: function (msg) {
-                        hideModal();
-                    }
-                });
-            });
-        });
-    }
-    //$('input[type="submit]', $frm).click(function (e) {
-    //    e.preventDefault();
-
-    //    $.ajax({
-    //        type: $frm.attr('method'),
-    //        url: $frm.attr('action'),
-    //        data: $frm.serialize(),
-    //        success: function (msg) {
-    //            hideModal();
-    //        }
-    //    });
-    //});
-    //$(function () {
-    //    $('.post-using-ajax').each(function () {
-    //        var $form = $(this);
-    //        $form.submit(function (e) {
-    //            e.preventDefault();
-
-    //            $.ajax({
-    //                type: $form.attr('method'),
-    //                url: $form.attr('action'),
-    //                data: $form.serialize(),
-    //                success: function (msg) {
-    //                    hideModal();
-    //                }
-    //            });
-    //        });
-    //    });
-    //});
-
-
-</script>
-@*onclick="confirmDelete('@item.CategoryId');*@
-@*function confirmDelete(categoryId) {
-        var deleteLink = document.getElementById("deleteCategoryLink");
-        deleteLink.href = deleteLink.href.replace("", categoryId);
-        $('#deleteConfirmationModal').modal('show');
-    }*@
