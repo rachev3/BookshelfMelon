@@ -43,7 +43,7 @@ namespace MelonBookshelf.Models
         public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();
         public List<Follower>? Followers { get; set; } = new List<Follower>();
 
-        public Category? Category { get; set; }
+        public Category Category { get; set; }
         public User? User { get; set; }
 
     }

@@ -26,6 +26,7 @@ namespace MelonBookshelf.Data.Services
         public async Task<List<Request>> GetAll()
         {
             var result = await _appDbContext.Requests
+                .Include(ca => ca.Category)
                 .Include(a => a.Upvotes).ThenInclude(b => b.User)
                 .Include(c => c.Followers).ThenInclude(d => d.User)
                 .ToListAsync();
@@ -34,6 +35,7 @@ namespace MelonBookshelf.Data.Services
         public async Task<List<Request>> GetPendingRequests()
         {
             var result = await _appDbContext.Requests.Where(r => r.Status == RequestStatus.PendingConfirmation)
+                .Include(ca => ca.Category)
                 .Include(u => u.User)
                 .Include(a => a.Upvotes).ThenInclude(b => b.User)
                 .Include(c => c.Followers).ThenInclude(d => d.User)
@@ -43,6 +45,7 @@ namespace MelonBookshelf.Data.Services
         public async Task<List<Request>> GetMyRequests(string userId)
         {
             var result = await _appDbContext.Requests.Where(r => r.UserId == userId)
+                .Include(ca => ca.Category)
                 .Include(a => a.Upvotes).ThenInclude(b => b.User)
                 .Include(c => c.Followers)
                 .ToListAsync();
@@ -54,7 +57,9 @@ namespace MelonBookshelf.Data.Services
             List<Request> requests = new();
             foreach (var item in wr)
             {
-                requests.Add(await _appDbContext.Requests.FirstOrDefaultAsync(r => r.RequestId == item.RequestId));
+                requests.Add(await _appDbContext.Requests
+                    .Include(ca => ca.Category)
+                    .FirstOrDefaultAsync(r => r.RequestId == item.RequestId));
             }
 
             return requests;
