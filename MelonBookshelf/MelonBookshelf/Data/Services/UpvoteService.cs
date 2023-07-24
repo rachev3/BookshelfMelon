@@ -29,7 +29,7 @@ namespace MelonBookshelf.Data.Services
             var result = await _appDbContext.Upvotes.ToListAsync();
             return result;
         }
-
+       
         public async Task<Upvote> GetById(int id)
         {
             var result = await _appDbContext.Upvotes.FirstOrDefaultAsync(n => n.UpvoteId == id);

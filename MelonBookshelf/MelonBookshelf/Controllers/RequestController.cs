@@ -16,23 +16,47 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IRequestService requestService;
         private readonly ICategoryService categoryService;
+        private readonly IUpvoteService upvoteService;
+        private readonly IFollowerService followerService;
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
         private readonly IEmailSender emailSender;
 
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender)
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender, IUpvoteService upvoteService, IFollowerService followerService)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
             this.resourceService = resourceService;
             this.emailSender = emailSender;
+            this.upvoteService = upvoteService;
+            this.followerService = followerService;
         }
 
         public async Task<IActionResult> Index()
         {
+            string name = User.Identity.Name;
+            string userId = userService.GetByName(name).Result.Id;
+
             var requests = await requestService.GetAll();
-            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+            // var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+            var viewListRequest = new List<RequestViewModel>();
+            foreach (var request in requests)
+            {
+                var viewModel = new RequestViewModel(request);
+
+                var upvote = request.Upvotes.FirstOrDefault(u=> u.UserId == userId);
+                var follow = request.Followers.FirstOrDefault(f => f.UserId == userId);
+                if (upvote != null)
+                {
+                    viewModel.Liked = true;
+                }
+                if (follow != null)
+                {
+                    viewModel.Followed = true;
+                }
+                viewListRequest.Add(viewModel);
+            }
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();

@@ -1,5 +1,6 @@
 ﻿using Humanizer.Localisation;
 using MelonBookshelf.Data;
+using MimeKit.Cryptography;
 
 namespace MelonBookshelf.Models
 {
@@ -26,6 +27,7 @@ namespace MelonBookshelf.Models
             User = request.User;
             Category = request.Category;
             User = request.User;
+
         }
 
         public int RequestId { get; set; }
@@ -38,6 +40,8 @@ namespace MelonBookshelf.Models
         public string? Motive { get; set; }
         public string? Description { get; set; }
         public string? CommingViewName { get; set; }
+        public bool Liked { get; set; }
+        public bool Followed { get; set; }
         public DateTime? DateAdded { get; set; }
         public FollowerPageViewModel FollowerPageViewModel { get; set; }
         public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();

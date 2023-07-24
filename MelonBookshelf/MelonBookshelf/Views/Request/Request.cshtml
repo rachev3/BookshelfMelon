@@ -61,10 +61,20 @@
                             <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.RequestId">
                                 <i class="bi bi-pencil-square"></i>Details
                             </a>
-                            <a class="btn btn-success" asp-action="Upvote" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Like</a>
-                            <a class="btn btn-danger" asp-action="Downvote" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Dislike</a>
-                            <a class="btn btn-success" asp-action="Follow" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Follow</a>
-                            <a class="btn btn-danger" asp-action="Unfollow" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Unfollow</a>
+                            @if(item.Liked == true){
+                                <a class="btn btn-success" asp-action="Downvote" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Like</a>
+                            }
+                            else{
+                                <a class="btn btn-outline-success" asp-action="Upvote" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Like</a>
+                            }
+                            @if (item.Followed == true)
+                            {
+                                <a class="btn btn-primary" asp-action="Unfollow" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Follow</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-primary" asp-action="Follow" asp-route-requestId="@item.RequestId"><i class="bi bi-pencil-square"></i>Follow</a>
+                            }
                         </td>
                     </tr>
                 }

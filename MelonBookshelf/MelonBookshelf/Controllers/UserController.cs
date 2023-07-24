@@ -60,7 +60,7 @@ namespace MelonBookshelf.Controllers
 
                 var user = await userManager.FindByNameAsync(model.UserName);
 
-                if (!user.Equals(null))
+                if (user!=null)
                 {
                     var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
