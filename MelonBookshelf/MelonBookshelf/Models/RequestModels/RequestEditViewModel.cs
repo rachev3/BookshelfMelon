@@ -12,6 +12,25 @@ namespace MelonBookshelf.Models
         {
             Categories = categories;
         }
+        public RequestEditViewModel(Request request)
+        {
+            RequestId = request.RequestId;
+            Status = request.Status;
+            Type = request.Type;
+            Author = request.Author;
+            Title = request.Title;
+            Priority = request.Priority;
+            Link = request.Link;
+            Motive = request.Motive;
+            DateAdded = request.DateAdded;
+            Description = request.Description;
+            Upvotes = request.Upvotes;
+            Followers = request.Followers;
+            User = request.User;
+            CategoryId = request.CategoryId;
+            Category = request.Category;
+
+        }
         public RequestEditViewModel(Request request, List<CategoryViewModel> categories)
         {
             RequestId = request.RequestId;

@@ -74,18 +74,6 @@ namespace MelonBookshelf.Controllers
             return View("FollowingRequests", pageViewModel);
         }  
 
-        //where do you use this Task?
-        public async Task<IActionResult> Following()
-        {
-            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var data = await requestService.GetMyRequests(userId);
-            var requests = data.Select(x => new RequestViewModel(x)).ToList();
-            var viewModel = new RequestPageViewModel(requests, viewListCategory);
-            return View("MyRequests", viewModel);
-        }
-
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PendingRequests()
@@ -106,11 +94,7 @@ namespace MelonBookshelf.Controllers
         {
             var request = await requestService.GetById(id);
 
-            //fix
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
-            RequestEditViewModel requestViewModel = new(request, viewListCategory);
+            RequestEditViewModel requestViewModel = new(request);
 
             return View("Details", requestViewModel);
         }
@@ -129,13 +113,6 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
-             //check if u have category in the model
-            Category category = null;
-            if (request.CategoryId != null)
-            {
-                category = await categoryService.GetById(request.CategoryId.Value);
-            }
-
             string name = User.Identity.Name;
             User user = userService.GetByName(name).Result;
 
@@ -154,7 +131,7 @@ namespace MelonBookshelf.Controllers
                 request.Upvotes,
                 request.Followers,
                 request.CategoryId,
-                category
+                request.Category
                 );
 
             await requestService.Add(dto);
@@ -190,11 +167,14 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var request = await requestService.GetById(id);
+
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
             var viewModel = new RequestEditViewModel(request, viewListCategory);
             if (request == null)
             {
@@ -204,30 +184,15 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Edit(RequestEditViewModel request)
-        {
-           
-
-            var emails = await requestService.GetFollowersEmails(request.RequestId);
-
-
+        {          
             if (!ModelState.IsValid)
             {
                 return View(request);
             }
 
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var emails = await requestService.GetFollowersEmails(request.RequestId);
 
-
-            Category category = null;
-            if (request.CategoryId != null)
-            {
-
-
-                category = await categoryService.GetById(request.CategoryId.Value);
-            }
             var originalReq = await requestService.GetById(request.RequestId);
             var oldStatus = originalReq.Status;
 
@@ -236,6 +201,7 @@ namespace MelonBookshelf.Controllers
                 var message = new Message(emails, "Status Changed", "Request`s status is changed.");
                 emailSender.SendEmail(message);
             }
+
             originalReq.Status = request.Status;
             originalReq.Type = request.Type;
             originalReq.Author = request.Author;
@@ -249,23 +215,19 @@ namespace MelonBookshelf.Controllers
             originalReq.CategoryId = request.CategoryId;
             originalReq.Category = request.Category;
            
-            
             await requestService.Update(originalReq);
 
-
-            var result = requestService.GetById(request.RequestId).Result;
-
             //creating resource
-            if (result.Status == RequestStatus.Delivered)
+            if (originalReq.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
                 resource.Type = ResourceType.Physical;
-                resource.Author = result.Author;
-                resource.Title = result.Title;
-                resource.Description = result.Description;
+                resource.Author = originalReq.Author;
+                resource.Title = originalReq.Title;
+                resource.Description = originalReq.Description;
                 resource.Location = "Bookshelf";
                 resource.Status = ResourceStatus.Available;
-                resource.Category = result.Category;
+                resource.Category = originalReq.Category;
                 resource.DateAdded = DateTime.UtcNow;
 
                 await resourceService.Add(resource);
@@ -273,18 +235,23 @@ namespace MelonBookshelf.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPendingRequest(int id)
         {
             var request = await requestService.GetById(id);
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            var viewModel = new RequestEditViewModel(request, viewListCategory);
+
             if (request == null)
             {
                 return View("NotFound");
             }
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            var viewModel = new RequestEditViewModel(request, viewListCategory);
+
             return View(viewModel);
         }
 
@@ -292,7 +259,6 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -300,14 +266,6 @@ namespace MelonBookshelf.Controllers
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
-            Category category = null;
-            if (request.CategoryId != null)
-            {
-
-
-                category = await categoryService.GetById(request.CategoryId.Value);
-            }
 
             Request dto = new Request(
                 request.Status,
@@ -324,7 +282,7 @@ namespace MelonBookshelf.Controllers
                 request.Upvotes,
                 request.Followers,
                 request.CategoryId,
-                category
+                request.Category
                 );
             dto.RequestId = request.RequestId;
 
@@ -354,13 +312,17 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var request = await requestService.GetById(id);
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-            RequestEditViewModel viewModel = new(request, viewListCategory);
+
             if (request == null)
             {
                 return View("NotFound");
             }
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            RequestEditViewModel viewModel = new(request, viewListCategory);
+
             return View(viewModel);
         }
 
@@ -368,12 +330,14 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             var request = await requestService.GetById(id);
+
             if (request == null)
             {
                 return View("NotFound");
             }
 
             await requestService.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
     }
