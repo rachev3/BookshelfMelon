@@ -116,16 +116,13 @@ namespace MelonBookshelf.Controllers
             {
                 return View("NotFound");
             }
-            return View(viewModel);
+            return PartialView("_Edit",viewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(ResourceEditViewModel resource)
         {
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
             Category category = null;
             if (resource.CategoryId != null)
             {
@@ -157,8 +154,17 @@ namespace MelonBookshelf.Controllers
             {
                 return View(resource);
             }
+
             await resourceService.Update(resource.ResourceId, dto);
-            return RedirectToAction(nameof(Index));
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList(); 
+
+            var resources = await resourceService.GetAll();
+            var viewListResource =  resources.Select(r=> new ResourceViewModel(r)).ToList();
+
+            var viewModel = new ResourcePageViewModel(viewListResource, viewListCategory);
+            return PartialView("_ResourceTable", viewModel);
         }
         public async Task<IActionResult> Want(int resourceId)
         {

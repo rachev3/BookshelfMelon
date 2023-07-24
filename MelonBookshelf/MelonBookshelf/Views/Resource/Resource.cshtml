@@ -14,131 +14,26 @@
             <a asp-controller="Resource" asp-action="Create" class="btn btn-success">Add New Resource</a>
         </div>
         <partial name="_SearchBar" />
-        @*<form method="post" action="@Url.Action("Index")" class="mb-3">
-        <div class="input-group">
-        <select name="resourceType" class="form-control">
-        <option value="">Select Type</option>
-        @foreach (var value in Enum.GetValues(typeof(ResourceType)))
-        {
-        <option value="@value">@value</option>
-        }
-        </select>
-        <select name="CategoryId" class="form-control">
-        <option value="">All Categories</option>
-        @foreach (var value in Model.Categories)
-        {
-        <option value="@value.CategoryId">@value.Name</option>
-        }
-        </select>
-        <input type="text" name="title" class="form-control" placeholder="Title">
-        <button type="submit" class="btn btn-outline-primary" asp-action="Index">Search</button>
-        <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+        <div id="tableContainer">
+            @Html.Partial("_ResourceTable", @Model)
         </div>
-        </form>*@
-        <table class="table">
-            <thead>
-                <tr class="text-center">
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Author</th>
-                    <th>Title</th>
-                    <th>Wanters</th>
-                    <th>Download</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Resources)
-                {
-                    <tr>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Type)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Category.Name)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Author)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-
-
-
-                        @if (item.Type == ResourceType.Physical)
-                        {
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.wantedResources.Count)
-                            </td>
-                        }
-                        else{
-                           <td class="align-middle">
-                               <p> </p>
-                            </td>
-                        }
-                        @if (User.IsInRole("Admin") && item.Type != ResourceType.Physical)
-                        {
-                            <td class="align-middle">
-                                <form method="post" enctype="multipart/form-data" asp-action="Upload">
-                                    <div class="form-group">
-                                        <div class="classcol-md-8 offset-md-2">
-                                            <input type="file" name="file" />
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="resourceId" value="@item.ResourceId" />
-                                    <div class="form-group">
-                                        <div class="classcol-md-8 offset-md-2">
-                                            <input type="submit" value="Upload" />
-
-
-                                        </div>
-                                    </div>
-                                </form>
-
-                            </td>
-                        }
-                        @if (item.Type != ResourceType.Physical)
-                        {
-                            <td class="align-middle">
-                                @if (!string.IsNullOrEmpty(item.Location))
-                                {
-                                    @*<div class="container mt-4">*@
-                                        <a href="@Url.Action("Download", "Resource", new { resourceId = item.ResourceId })" class="btn btn-primary">Download</a>
-                                   @* </div>*@
-                                }
-                                else
-                                {
-                                    <span>No File Available</span>
-                                }
-                            </td>
-
-                        }
-                        else
-                        {
-                            <td class="align-middle">
-                                <p> </p>
-                            </td>
-                        }
-                        <td class="align-middle">
-                            @if (item.Type == ResourceType.Physical)
-                            {
-                                <a class="btn btn-outline-success btn-sm" asp-action="Want" asp-route-resourceId="@item.ResourceId">Want</a>
-                                <a class="btn btn-outline-danger btn-sm" asp-action="Unwant" asp-route-resourceId="@item.ResourceId">Unwant</a>
-                            }
-                            <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.ResourceId">Details</a>
-
-
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div id="editPartial"> </div>
     </div>
 </div>
 
 <script>
     function clearSearch() {
         document.querySelector('form').reset();
+    }
+    function edit(resourceId) {
+        var editLink = document.getElementById("editResourceLink");
+        //editLink.href = editLink.href.replace("", resourceId);
+        $('#editModal').modal('show');
+    }
+    function showModal() {
+        $('#editModal').modal('show');
+    }
+    function hideModal() {
+        $('#editModal').modal('hide');
     }
 </script>
