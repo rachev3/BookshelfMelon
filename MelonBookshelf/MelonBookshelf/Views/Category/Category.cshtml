@@ -56,4 +56,16 @@
     function hideModal() {
         $('#deleteConfirmationModal').modal('hide');
     }
+    
+    function cancelDelete(){
+        var cancelLink = document.getElementById("cancelCategoryLink");
+        cancelLink.href = cancelLink.href.replace("");
+        $("cancel").click(
+            function () {
+                hideModal();
+            }
+        );;
+    }
+
+
 </script>

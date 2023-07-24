@@ -72,7 +72,7 @@ namespace MelonBookshelf.Controllers
             var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
 
             return View("FollowingRequests", pageViewModel);
-        }  
+        }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -185,7 +185,7 @@ namespace MelonBookshelf.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Edit(RequestEditViewModel request)
-        {          
+        {
             if (!ModelState.IsValid)
             {
                 return View(request);
@@ -214,7 +214,7 @@ namespace MelonBookshelf.Controllers
             originalReq.User = request.User;
             originalReq.CategoryId = request.CategoryId;
             originalReq.Category = request.Category;
-           
+
             await requestService.Update(originalReq);
 
             //creating resource
@@ -244,6 +244,7 @@ namespace MelonBookshelf.Controllers
 
             if (request == null)
             {
+
                 return View("NotFound");
             }
 
@@ -264,43 +265,43 @@ namespace MelonBookshelf.Controllers
                 return View(request);
             }
 
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            var emails = await requestService.GetFollowersEmails(request.RequestId);
 
-            Request dto = new Request(
-                request.Status,
-                request.Type,
-                request.Author,
-                request.Title,
-                request.Priority,
-                request.Link,
-                request.Description,
-                request.Motive,
-                request.DateAdded,
-                null,
-                request.User,
-                request.Upvotes,
-                request.Followers,
-                request.CategoryId,
-                request.Category
-                );
-            dto.RequestId = request.RequestId;
+            var originalReq = await requestService.GetById(request.RequestId);
+            var oldStatus = originalReq.Status;
 
-            await requestService.Update(dto);
+            if (oldStatus != request.Status && emails.Count != 0)
+            {
+                var message = new Message(emails, "Status Changed", "Request`s status is changed.");
+                emailSender.SendEmail(message);
+            }
 
-            var result = requestService.GetById(request.RequestId).Result;
+            originalReq.Status = request.Status;
+            originalReq.Type = request.Type;
+            originalReq.Author = request.Author;
+            originalReq.Title = request.Title;
+            originalReq.Priority = request.Priority;
+            originalReq.Link = request.Link;
+            originalReq.Description = request.Description;
+            originalReq.Motive = request.Motive;
+            originalReq.DateAdded = request.DateAdded;
+            originalReq.User = request.User;
+            originalReq.CategoryId = request.CategoryId;
+            originalReq.Category = request.Category;
 
+            await requestService.Update(originalReq);
 
-            if (result.Status == RequestStatus.Delivered)
+            //creating resource
+            if (originalReq.Status == RequestStatus.Delivered)
             {
                 var resource = new Resource();
                 resource.Type = ResourceType.Physical;
-                resource.Author = result.Author;
-                resource.Title = result.Title;
-                resource.Description = result.Description;
+                resource.Author = originalReq.Author;
+                resource.Title = originalReq.Title;
+                resource.Description = originalReq.Description;
                 resource.Location = "Bookshelf";
                 resource.Status = ResourceStatus.Available;
-                resource.Category = result.Category;
+                resource.Category = originalReq.Category;
                 resource.DateAdded = DateTime.UtcNow;
 
                 await resourceService.Add(resource);
@@ -310,7 +311,7 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, string commingView)
         {
             var request = await requestService.GetById(id);
 
@@ -323,12 +324,14 @@ namespace MelonBookshelf.Controllers
             //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             RequestViewModel viewModel = new(request);
-
-            return PartialView("_ConfirmDeleteMyRequest",viewModel);
+            viewModel.CommingViewName = commingView;
+            return PartialView("_ConfirmDeleteRequest", viewModel);
         }
 
+
+
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirm(int requestId)
+        public async Task<IActionResult> DeleteConfirm(int requestId, string commingViewName)
         {
             var request = await requestService.GetById(requestId);
 
@@ -339,17 +342,34 @@ namespace MelonBookshelf.Controllers
 
             await requestService.Delete(requestId);
 
-            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
 
             var categories = await categoryService.GetAll();
             var categoriesViewModel = categories.Select(x => new CategoryViewModel(x)).ToList();
 
-            var requests = await requestService.GetMyRequests(userId);
-            var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
 
-            var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
+            if (commingViewName == "MyRequestsTable")
+            {
+                var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            return PartialView("_MyRequestsTable", viewModel);
+                var requests = await requestService.GetMyRequests(userId);
+                var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
+
+                var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
+
+                return PartialView("_MyRequestsTable", viewModel);
+            }
+            else if (commingViewName == "PendingRequestsTable")
+            {
+                var requests = await requestService.GetPendingRequests();
+                var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
+
+                var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
+                return PartialView("_PendingRequestsTable", viewModel);
+            }
+            else
+            {
+                return View("NotFound");
+            }
         }
     }
 }

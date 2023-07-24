@@ -15,9 +15,10 @@
                     Are you sure you want to delete this request?
                 </div>
                 <input type="hidden" asp-for="@Model.RequestId" />
+                <input type="hidden" asp-for="@Model.CommingViewName" />
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <input type="submit" value="Delete" class="btn btn-danger" id="deleteRequestLink" asp-action="DeleteConfirm" />
+                    <input type="submit" value="Delete" class="btn btn-danger" id="deleteRequestLink"  asp-action="DeleteConfirm" />
                 </div>
             </div>
         </div>

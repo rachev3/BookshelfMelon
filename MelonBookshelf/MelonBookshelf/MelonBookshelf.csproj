@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Request\MyRequests\" />
+    <Folder Include="Views\Request\MyRequestsView\" />
   </ItemGroup>
 
 </Project>

@@ -10,56 +10,23 @@
         <div class="text-center">
             <h1>Pending Requests</h1>
         </div>
-
-        <table class="table">
-            <thead>
-                <tr class="text-center">
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Title</th>
-                    <th>Link</th>
-                    <th>FirstName </th>
-                    <th>LastName</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Requests)
-                {
-                    <tr>                     
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Category.Name)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Type)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.Link)
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.User.FirstName)
-                           
-                        </td>
-                        <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.User.LastName)
-                        </td>
-                        
-                        <td class="align-middle">
-                            <p></p>
-                        </td>
-                        <td class="align-middle">
-                            <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.RequestId">
-                                <i class="bi bi-pencil-square"></i>Details
-                            </a>
-                            <a class="btn btn-outline-warning" asp-action="EditPendingRequest" asp-route-id="@item.RequestId">
-                                <i class="bi bi-pencil-square"></i>Edit
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div id="tableContainer">
+            @Html.Partial("_PendingRequestsTable", @Model)
+        </div>
+        <div id="confirmDeletePartial"> </div>
     </div>
 </div>
+
+<script>
+    function confirmDelete(requestId) {
+        var deleteLink = document.getElementById("deleteRequestLink");
+        deleteLink.href = deleteLink.href.replace("", requestId);
+        $('#deleteConfirmationModal').modal('show');
+    }
+    function showModal() {
+        $('#deleteConfirmationModal').modal('show');
+    }
+    function hideModal() {
+        $('#deleteConfirmationModal').modal('hide');
+    }
+</script>

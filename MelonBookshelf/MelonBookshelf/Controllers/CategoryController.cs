@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 
 namespace MelonBookshelf.Controllers
 {
@@ -100,7 +101,6 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> DeleteConfirm(int categoryId)
         {
             var category = await categoryService.GetById(categoryId);
-            CategoryViewModel categoryView = new CategoryViewModel(category);
 
             if (category == null)
             {
