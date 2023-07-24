@@ -1,0 +1,61 @@
+﻿@model RequestPageViewModel
+
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th>Status</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>DateAdded</th>
+            <th>Likes</th>
+            <th>Followers</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Requests)
+        {
+            <tr>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.DateAdded)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Upvotes.Count)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Followers.Count)
+                </td>
+                <td class="align-middle">
+                    <p></p>
+                </td>
+                <td class="align-middle">
+                    <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.RequestId">
+                        <i class="bi bi-pencil-square"></i>Edit
+                    </a>
+                    <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.RequestId">
+                        <i class="bi bi-pencil-square"></i>Details
+                    </a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.RequestId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal">
+                        <i class="bi bi-trash"></i>Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

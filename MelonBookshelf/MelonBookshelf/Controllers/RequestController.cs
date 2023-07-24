@@ -309,6 +309,7 @@ namespace MelonBookshelf.Controllers
 
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var request = await requestService.GetById(id);
@@ -318,27 +319,37 @@ namespace MelonBookshelf.Controllers
                 return View("NotFound");
             }
 
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+            //var categories = await categoryService.GetAll();
+            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            RequestEditViewModel viewModel = new(request, viewListCategory);
+            RequestViewModel viewModel = new(request);
 
-            return View(viewModel);
+            return PartialView("_ConfirmDeleteMyRequest",viewModel);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirm(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirm(int requestId)
         {
-            var request = await requestService.GetById(id);
+            var request = await requestService.GetById(requestId);
 
             if (request == null)
             {
                 return View("NotFound");
             }
 
-            await requestService.Delete(id);
+            await requestService.Delete(requestId);
 
-            return RedirectToAction(nameof(Index));
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var categories = await categoryService.GetAll();
+            var categoriesViewModel = categories.Select(x => new CategoryViewModel(x)).ToList();
+
+            var requests = await requestService.GetMyRequests(userId);
+            var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
+
+            var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
+
+            return PartialView("_MyRequestsTable", viewModel);
         }
     }
 }

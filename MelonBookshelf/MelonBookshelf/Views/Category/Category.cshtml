@@ -36,8 +36,7 @@
             </div>
         }
         <div id="tableContainer">
-            @Html.Partial("_CategoryTable", @Model)
-           
+            @Html.Partial("_CategoryTable", @Model)           
         </div>
         <div id="confirmDeletePartial"></div>
     </div>
@@ -57,5 +56,4 @@
     function hideModal() {
         $('#deleteConfirmationModal').modal('hide');
     }
-
 </script>
