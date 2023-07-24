@@ -7,7 +7,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" onclick="hideModal()" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -17,7 +17,7 @@
                 <input type="hidden" asp-for="@Model.RequestId" />
                 <input type="hidden" asp-for="@Model.CommingViewName" />
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideModal()">Cancel</button>
                     <input type="submit" value="Delete" class="btn btn-danger" id="deleteRequestLink"  asp-action="DeleteConfirm" />
                 </div>
             </div>

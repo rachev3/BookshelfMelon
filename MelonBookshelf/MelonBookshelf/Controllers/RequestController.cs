@@ -196,7 +196,7 @@ namespace MelonBookshelf.Controllers
             var originalReq = await requestService.GetById(request.RequestId);
             var oldStatus = originalReq.Status;
 
-            if (oldStatus != request.Status)
+            if (oldStatus != request.Status && emails.Count != 0)
             {
                 var message = new Message(emails, "Status Changed", "Request`s status is changed.");
                 emailSender.SendEmail(message);
