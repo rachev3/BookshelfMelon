@@ -37,27 +37,7 @@
 
                     }
                 </td>
-              @*  @if (User.IsInRole("Admin") && item.Type != ResourceType.Physical)
-                {
-                    <td class="align-middle">
-                        <form method="post" enctype="multipart/form-data" asp-action="Upload">
-                            <div class="form-group">
-                                <div class="classcol-md-8 offset-md-2">
-                                    <input type="file" name="file" />
-                                </div>
-                            </div>
-                            <input type="hidden" name="resourceId" value="@item.ResourceId" />
-                            <div class="form-group">
-                                <div class="classcol-md-8 offset-md-2">
-                                    <input type="submit" value="Upload" />
-
-
-                                </div>
-                            </div>
-                        </form>
-
-                    </td>
-                }*@
+             
                 <td class="align-middle">
                     @if (item.Type != ResourceType.Physical)
                     {
