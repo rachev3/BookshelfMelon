@@ -42,7 +42,7 @@
                     <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.RequestId" asp-route-commingViewName="@item.CommingViewName">
                         <i class="bi bi-pencil-square"></i>Edit
                     </a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.RequestId" asp-route-commingView="@item.CommingViewName" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal">
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.RequestId" asp-route-commingViewName="@item.CommingViewName" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal">
                         <i class="bi bi-trash"></i>Delete
                     </a>
                 </td>

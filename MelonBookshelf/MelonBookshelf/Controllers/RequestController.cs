@@ -281,12 +281,16 @@ namespace MelonBookshelf.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            else if (request.CommingViewName == "MyRequestsTable")
+            {
+                return RedirectToAction(nameof(MyRequests));
+            }
             return RedirectToAction(nameof(Index));
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id, string commingView)
+        public async Task<IActionResult> Delete(int id, string commingViewName)
         {
             var request = await requestService.GetById(id);
 
@@ -299,7 +303,7 @@ namespace MelonBookshelf.Controllers
             //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             RequestViewModel viewModel = new(request);
-            viewModel.CommingViewName = commingView;
+            viewModel.CommingViewName = commingViewName;
             return PartialView("_ConfirmDeleteRequest", viewModel);
         }
 
