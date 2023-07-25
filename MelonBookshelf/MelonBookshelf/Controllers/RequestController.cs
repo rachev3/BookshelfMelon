@@ -91,7 +91,7 @@ namespace MelonBookshelf.Controllers
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             var requests = await requestService.GetFollowingRequests(userId);
-            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x,"FollowingRequestsTable")).ToList();
 
             var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
 
@@ -183,11 +183,14 @@ namespace MelonBookshelf.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Unfollow(int requestId)
+        public async Task<IActionResult> Unfollow(int requestId,string commingViewName)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.UnFollow(requestId, userId);
-
+            if(commingViewName == "FollowingRequestsTable")
+            {
+                return RedirectToAction(nameof(FollowingRequests));
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -281,79 +284,6 @@ namespace MelonBookshelf.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //[HttpGet]
-        //[Authorize(Roles = "Admin")]
-        //public async Task<IActionResult> EditPendingRequest(int id)
-        //{
-        //    var request = await requestService.GetById(id);
-
-        //    if (request == null)
-        //    {
-
-        //        return View("NotFound");
-        //    }
-
-        //    var categories = await categoryService.GetAll();
-        //    var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
-        //    var viewModel = new RequestEditViewModel(request, viewListCategory);
-
-        //    return View(viewModel);
-        //}
-
-        //[HttpPost]
-        //[Authorize(Roles = "Admin")]
-        //public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(request);
-        //    }
-
-        //    var emails = await requestService.GetFollowersEmails(request.RequestId);
-
-        //    var originalReq = await requestService.GetById(request.RequestId);
-        //    var oldStatus = originalReq.Status;
-
-        //    if (oldStatus != request.Status && emails.Count != 0)
-        //    {
-        //        var message = new Message(emails, "Status Changed", "Request`s status is changed.");
-        //        emailSender.SendEmail(message);
-        //    }
-
-        //    originalReq.Status = request.Status;
-        //    originalReq.Type = request.Type;
-        //    originalReq.Author = request.Author;
-        //    originalReq.Title = request.Title;
-        //    originalReq.Priority = request.Priority;
-        //    originalReq.Link = request.Link;
-        //    originalReq.Description = request.Description;
-        //    originalReq.Motive = request.Motive;
-        //    originalReq.DateAdded = request.DateAdded;
-        //    originalReq.User = request.User;
-        //    originalReq.CategoryId = request.CategoryId;
-        //    originalReq.Category = request.Category;
-
-        //    await requestService.Update(originalReq);
-
-        //    //creating resource
-        //    if (originalReq.Status == RequestStatus.Delivered)
-        //    {
-        //        var resource = new Resource();
-        //        resource.Type = ResourceType.Physical;
-        //        resource.Author = originalReq.Author;
-        //        resource.Title = originalReq.Title;
-        //        resource.Description = originalReq.Description;
-        //        resource.Location = "Bookshelf";
-        //        resource.Status = ResourceStatus.Available;
-        //        resource.Category = originalReq.Category;
-        //        resource.DateAdded = DateTime.UtcNow;
-
-        //        await resourceService.Add(resource);
-        //    }
-        //    return RedirectToAction(nameof(PendingRequests));
-
-        //}
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id, string commingView)
