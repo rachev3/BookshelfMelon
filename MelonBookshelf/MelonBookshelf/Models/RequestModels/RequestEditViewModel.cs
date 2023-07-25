@@ -61,6 +61,7 @@ namespace MelonBookshelf.Models
         public string? Link { get; set; }
         public string? Motive { get; set; }
         public string? Description { get; set; }
+        public string? CommingViewName { get; set; }
         public DateTime? DateAdded { get; set; }
         public FollowerPageViewModel? FollowerPageViewModel { get; set; }
         public List<Upvote>? Upvotes { get; set; } = new List<Upvote>();

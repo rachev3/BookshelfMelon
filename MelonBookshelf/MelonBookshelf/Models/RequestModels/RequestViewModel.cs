@@ -29,6 +29,26 @@ namespace MelonBookshelf.Models
             User = request.User;
 
         }
+        public RequestViewModel(Request request, string commingViewName)
+        {
+            RequestId = request.RequestId;
+            Status = request.Status;
+            Type = request.Type;
+            Author = request.Author;
+            Title = request.Title;
+            Priority = request.Priority;
+            Link = request.Link;
+            Motive = request.Motive;
+            DateAdded = request.DateAdded;
+            Description = request.Description;
+            Upvotes = request.Upvotes;
+            Followers = request.Followers;
+            User = request.User;
+            Category = request.Category;
+            User = request.User;
+            CommingViewName = commingViewName;
+
+        }
 
         public int RequestId { get; set; }
         public RequestStatus? Status { get; set; }

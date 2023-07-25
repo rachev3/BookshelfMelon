@@ -72,7 +72,7 @@ namespace MelonBookshelf.Controllers
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
 
             var requests = await requestService.GetMyRequests(userId);
-            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x, "MyRequestsTable")).ToList();
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
@@ -103,7 +103,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> PendingRequests()
         {
             var requests = await requestService.GetPendingRequests();
-            var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x,"PendingRequestsTable")).ToList();
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();

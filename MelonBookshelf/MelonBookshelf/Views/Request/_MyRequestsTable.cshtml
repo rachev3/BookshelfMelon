@@ -16,7 +16,6 @@
     <tbody>
         @foreach (var item in Model.Requests)
         {
-            item.CommingViewName = "MyRequestsTable";
             <tr>
                 <td class="align-middle">
                     @Html.DisplayFor(modelItem => item.Status)

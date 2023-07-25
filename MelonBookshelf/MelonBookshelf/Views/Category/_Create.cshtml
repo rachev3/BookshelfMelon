@@ -1,0 +1,27 @@
+﻿@model CategoryViewModel
+
+<form id="formCreate" class="post-using-ajax" data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#tableContainer" data-ajax-success="hideCreateModal()" asp-controller="Category" asp-action="Create">
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Create Category</h5>
+                    <button type="button" class="close" onclick="hideCreateModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success float-right" id="createCategoryLink" asp-action="Create" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

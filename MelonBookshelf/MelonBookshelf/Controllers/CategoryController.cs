@@ -32,7 +32,7 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            return View();
+            return PartialView("_Create");
         }
 
         [HttpPost]
@@ -44,7 +44,11 @@ namespace MelonBookshelf.Controllers
 
             await categoryService.Add(dbo);
 
-            return RedirectToAction(nameof(Index));
+            var data = await categoryService.GetAll();
+            var resources = data.Select(x => new CategoryViewModel(x)).ToList();
+            var viewModel = new CategoryPageViewModel(resources);
+
+            return PartialView("_CategoryTable", viewModel);
         }
 
         [Authorize(Roles = "Admin")]
@@ -58,7 +62,7 @@ namespace MelonBookshelf.Controllers
                 return View("NotFound");
             }
 
-            return View(categoryViewModel);
+            return PartialView("_Edit", categoryViewModel);
         }
 
         [HttpPost]
@@ -78,8 +82,12 @@ namespace MelonBookshelf.Controllers
 
             await categoryService.Update(id, dto);
 
-            return RedirectToAction(nameof(Index));
-        }
+            var data = await categoryService.GetAll();
+            var resources = data.Select(x => new CategoryViewModel(x)).ToList();
+            var viewModel = new CategoryPageViewModel(resources);
+
+            return PartialView("_CategoryTable", viewModel);
+        }                                                                 
 
         [HttpGet]
         [Authorize(Roles = "Admin")]

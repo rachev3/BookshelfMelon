@@ -31,7 +31,7 @@
         @if (User.IsInRole("Admin"))
         {
             <div>
-                <a asp-controller="Category" asp-action="Create" class="btn btn-outline-success">Add New Category</a>
+                <a class="btn btn-success" asp-action="Create" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#createPartial" data-ajax-success="showCreateModal()"><i class="bi bi-trash"></i>Add New Category</a>
 
             </div>
         }
@@ -39,6 +39,8 @@
             @Html.Partial("_CategoryTable", @Model)           
         </div>
         <div id="confirmDeletePartial"></div>
+        <div id="editPartial"></div>
+        <div id="createPartial"></div>
     </div>
 </div>
 
@@ -56,16 +58,29 @@
     function hideModal() {
         $('#deleteConfirmationModal').modal('hide');
     }
-    
-    function cancelDelete(){
-        var cancelLink = document.getElementById("cancelCategoryLink");
-        cancelLink.href = cancelLink.href.replace("");
-        $("cancel").click(
-            function () {
-                hideModal();
-            }
-        );;
+
+    function edit(resourceId) {
+        var editLink = document.getElementById("editCategoryLink");
+        //editLink.href = editLink.href.replace("", resourceId);
+        $('#editModal').modal('show');
+    }
+    function showEditModal() {
+        $('#editModal').modal('show');
+    }
+    function hideEditModal() {
+        $('#editModal').modal('hide');
     }
 
+    function create() {
+        var createLink = document.getElementById("createCategoryLink");
+        //editLink.href = editLink.href.replace("", resourceId);
+        $('#createModal').modal('show');
+    }
+    function showCreateModal() {
+        $('#createModal').modal('show');
+    }
+    function hideCreateModal() {
+        $('#createModal').modal('hide');
+    }
 
 </script>

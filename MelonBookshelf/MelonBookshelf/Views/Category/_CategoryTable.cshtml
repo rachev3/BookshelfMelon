@@ -17,7 +17,7 @@
                 <td class="align-middle">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.CategoryId"><i class="bi bi-pencil-square"></i>Edit</a>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#editPartial" data-ajax-success="showEditModal"><i class="bi bi-pencil-square"></i>Edit</a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal"><i class="bi bi-trash"></i>Delete</a>
                     }
                 </td>

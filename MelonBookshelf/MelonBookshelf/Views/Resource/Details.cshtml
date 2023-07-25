@@ -73,7 +73,7 @@
                 <div class="form-group">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.ResourceId">Edit</a>
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@Model.ResourceId">Edit</a>
                     }
                     <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                 </div>
