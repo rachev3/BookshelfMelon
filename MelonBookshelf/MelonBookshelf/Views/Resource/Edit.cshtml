@@ -5,7 +5,7 @@
     ViewData["Title"] = "Update Resource";
 }
 <div class="row text">
-    <div class="col-md-8 offset-2">
+    <div class="col-md-8 offset-1">
         <div class="row">
             <div class="col-md-8 offset-4">
                 <form asp-action="Edit">
@@ -27,14 +27,14 @@
                     <div class="form-group">
                         <label asp-for="Category" class="control-label"></label>
                         <select name="categoryId" class="form-control">
-                            <option value="">@Model.Category.Name</option>
+                            <option value="@Model.Categories.FirstOrDefault(c=> c.CategoryId == Model.CategoryId).CategoryId">@Model.Category.Name</option>
                             @foreach (var value in Model.Categories)
                             {
                                 <option class="" value="@value.CategoryId">@value.Name</option>
                             }
                         </select>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
                         <input asp-for="Title" class="form-control" />
                         <span asp-validation-for="Title" class="text-danger"></span>
@@ -48,11 +48,6 @@
                         <label asp-for="Description" class="control-label"></label>
                         <input asp-for="Description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Location" class="control-label"></label>
-                        <input asp-for="Location" class="form-control" />
-                        <span asp-validation-for="Location" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Price" class="control-label"></label>
@@ -74,7 +69,8 @@
                         <input type="date" asp-for="DateAdded" class="form-control" />
                         <span asp-validation-for="DateAdded" class="text-danger"></span>
                     </div>
-                    @if(Model.Type == MelonBookshelf.Data.ResourceType.Physical){
+                    @if (Model.Type == MelonBookshelf.Data.ResourceType.Physical)
+                    {
                         <div class="form-group">
                             <label asp-for="DateTaken" class="control-label"></label>
                             <input type="date" asp-for="DateTaken" class="form-control" />
@@ -86,9 +82,24 @@
                             <span asp-validation-for="DateReturn" class="text-danger"></span>
                         </div>
                     }
-                    <input type="hidden" asp-for="ResourceId"/>
+                    <div class="align-middle mt-3">
+                        <form method="post" enctype="multipart/form-data" asp-action="Upload">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" name="file" class="custom-file-input" id="customFile" aria-describedby="inputGroupFileAddon">
+                                    </div>
+                                    <div class="input-group-append mt-2">
+                                        <input type="submit" value="Upload" class="btn btn-outline-primary" id="uploadButton" />
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="resourceId" value="@Model.ResourceId" />
+                        </form>
+                    </div>
+                    <input type="hidden" asp-for="ResourceId" />
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-outline-success float-right" />
+                        <input type="submit" value="Save" class="btn btn-outline-success float-right" id="editRequestLink" asp-action="Edit" />
                         <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                     </div>
                 </form>

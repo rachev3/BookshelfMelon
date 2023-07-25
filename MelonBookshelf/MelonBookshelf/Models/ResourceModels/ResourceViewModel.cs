@@ -27,6 +27,25 @@ namespace MelonBookshelf.Models
             Category = resource.Category;
             FileName = resource.FileName;
         }
+        public ResourceViewModel(Resource resource, string commingViewName)
+        {
+            ResourceId = resource.ResourceId;
+            Type = resource.Type;
+            Author = resource.Author;
+            Title = resource.Title;
+            Description = resource.Description;
+            Location = resource.Location;
+            Price = resource.Price;
+            Invoice = resource.Invoice;
+            Status = resource.Status;
+            DateAdded = resource.DateAdded;
+            DateTaken = resource.DateTaken;
+            DateReturn = resource.DateReturn;
+            wantedResources = resource.WantedResources;
+            Category = resource.Category;
+            FileName = resource.FileName;
+            CommingViewName = commingViewName;
+        }
 
         public int ResourceId { get; set; }
         public ResourceType Type { get; set; }
@@ -38,6 +57,7 @@ namespace MelonBookshelf.Models
         public double? Price { get; set; }
         public string? Invoice { get; set; }
         public bool Want { get; set; }
+        public string CommingViewName { get; set; }
         public ResourceStatus? Status { get; set; }
         public DateTime? DateAdded { get; set; }
         public DateTime? DateTaken { get; set; }

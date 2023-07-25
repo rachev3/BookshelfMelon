@@ -41,7 +41,7 @@ namespace MelonBookshelf.Controllers
 
             foreach(var resource in resources)
             {
-                var viewModel = new ResourceViewModel(resource);
+                var viewModel = new ResourceViewModel(resource, "ResourcesTable");
                 var want = resource.WantedResources.FirstOrDefault(w => w.UserId == userId);
                 if(want != null)
                 {
@@ -118,12 +118,12 @@ namespace MelonBookshelf.Controllers
             var data = await resourceService.GetById(id);
 
           
-            ResourceViewModel resource =  new(data);
+            ResourceViewModel resource =  new(data, "Details");
             return View("Details", resource);
 
         }
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string commingViewName)
         {
             var resource = await resourceService.GetById(id);
 
@@ -134,6 +134,10 @@ namespace MelonBookshelf.Controllers
             if (resource == null)
             {
                 return View("NotFound");
+            }
+            if(commingViewName == "Details")
+            {
+                return View("Edit",viewModel);
             }
             return PartialView("_Edit",viewModel);
         }
