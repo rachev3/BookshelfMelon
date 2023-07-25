@@ -2,14 +2,21 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+<!-- Add the necessary Bootstrap CSS and JS files to enable dropdown functionality -->
+
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+        <li class="nav-item dropdown">
+            <!-- Add "dropdown" class to the parent list item -->
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Hello @User.Identity?.Name!
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <!-- Add a dropdown-menu -->
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account Settings</a>
+                <a class="dropdown-item" asp-controller="User" asp-action="Logout">Logout</a>
+            </div>
         </li>
     }
     else
