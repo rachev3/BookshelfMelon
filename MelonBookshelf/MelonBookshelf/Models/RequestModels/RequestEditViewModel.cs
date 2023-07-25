@@ -8,9 +8,10 @@ namespace MelonBookshelf.Models
         {
 
         }
-        public RequestEditViewModel(List<CategoryViewModel> categories)
+        public RequestEditViewModel(List<CategoryViewModel> categories, string commingViewName)
         {
             Categories = categories;
+            CommingViewName  = commingViewName;
         }
         public RequestEditViewModel(Request request)
         {

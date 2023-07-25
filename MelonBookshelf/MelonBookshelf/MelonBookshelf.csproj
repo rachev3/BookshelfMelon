@@ -19,8 +19,4 @@
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Request\MyRequestsView\" />
-  </ItemGroup>
-
 </Project>

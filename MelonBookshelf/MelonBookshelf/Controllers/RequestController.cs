@@ -124,12 +124,12 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string commingViewName)
         {
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var requestViewModel = new RequestEditViewModel(viewListCategory);
+            var requestViewModel = new RequestEditViewModel(viewListCategory, commingViewName);
 
             return View("Create", requestViewModel);
         }
@@ -160,6 +160,14 @@ namespace MelonBookshelf.Controllers
 
             await requestService.Add(dto);
 
+            if(request.CommingViewName == "MyRequestsTable")
+            {
+                return RedirectToAction(nameof(MyRequests));
+            }
+            else if(request.CommingViewName == "RequestsTable")
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Upvote(int requestId)
