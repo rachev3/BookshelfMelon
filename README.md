@@ -1,5 +1,5 @@
 # BookshelfMelon
-account-password
+account-password;
 bloodykey - 123456789Dr? || Admin 
 ivo - Ivo12345?
 dimitar - Mitko12345?
