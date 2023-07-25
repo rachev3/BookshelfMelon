@@ -44,8 +44,8 @@ namespace MelonBookshelf.Controllers
             foreach (var request in requests)
             {
                 var viewModel = new RequestViewModel(request);
-
-                var upvote = request.Upvotes.FirstOrDefault(u=> u.UserId == userId);
+                viewModel.CommingViewName = "RequestsTable";
+                var upvote = request.Upvotes.FirstOrDefault(u => u.UserId == userId);
                 var follow = request.Followers.FirstOrDefault(f => f.UserId == userId);
                 if (upvote != null)
                 {
@@ -103,7 +103,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> PendingRequests()
         {
             var requests = await requestService.GetPendingRequests();
-            var viewListRequest = requests.Select(x => new RequestViewModel(x,"PendingRequestsTable")).ToList();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x, "PendingRequestsTable")).ToList();
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
@@ -192,17 +192,22 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string commingViewName)
         {
             var request = await requestService.GetById(id);
+            if (request == null)
+            {
+                return View("NotFound");
+            }
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var viewModel = new RequestEditViewModel(request, viewListCategory);
-            if (request == null)
+            var viewModel = new RequestEditViewModel(request, viewListCategory, commingViewName);
+
+            if (commingViewName == "PendingRequestsTable")
             {
-                return View("NotFound");
+                return View("EditPendingRequest", viewModel);
             }
             return View(viewModel);
         }
@@ -237,7 +242,6 @@ namespace MelonBookshelf.Controllers
             originalReq.DateAdded = request.DateAdded;
             originalReq.User = request.User;
             originalReq.CategoryId = request.CategoryId;
-            originalReq.Category = request.Category;
 
             await requestService.Update(originalReq);
 
@@ -257,82 +261,99 @@ namespace MelonBookshelf.Controllers
                 await resourceService.Add(resource);
             }
 
+
+            if (request.CommingViewName == "PendingRequestsTable")
+            {
+                var requests = await requestService.GetPendingRequests();
+                var viewListRequest = requests.Select(x => new RequestViewModel(x, "PendingRequestsTable")).ToList();
+
+                var categories = await categoryService.GetAll();
+                var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+                var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
+
+                return View("PendingRequests", pageViewModel);
+            }
+            else if (request.CommingViewName == "RequestsTable")
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditPendingRequest(int id)
-        {
-            var request = await requestService.GetById(id);
+        //[HttpGet]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> EditPendingRequest(int id)
+        //{
+        //    var request = await requestService.GetById(id);
 
-            if (request == null)
-            {
+        //    if (request == null)
+        //    {
 
-                return View("NotFound");
-            }
+        //        return View("NotFound");
+        //    }
 
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+        //    var categories = await categoryService.GetAll();
+        //    var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var viewModel = new RequestEditViewModel(request, viewListCategory);
+        //    var viewModel = new RequestEditViewModel(request, viewListCategory);
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(request);
-            }
+        //[HttpPost]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> EditPendingRequest(RequestEditViewModel request)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(request);
+        //    }
 
-            var emails = await requestService.GetFollowersEmails(request.RequestId);
+        //    var emails = await requestService.GetFollowersEmails(request.RequestId);
 
-            var originalReq = await requestService.GetById(request.RequestId);
-            var oldStatus = originalReq.Status;
+        //    var originalReq = await requestService.GetById(request.RequestId);
+        //    var oldStatus = originalReq.Status;
 
-            if (oldStatus != request.Status && emails.Count != 0)
-            {
-                var message = new Message(emails, "Status Changed", "Request`s status is changed.");
-                emailSender.SendEmail(message);
-            }
+        //    if (oldStatus != request.Status && emails.Count != 0)
+        //    {
+        //        var message = new Message(emails, "Status Changed", "Request`s status is changed.");
+        //        emailSender.SendEmail(message);
+        //    }
 
-            originalReq.Status = request.Status;
-            originalReq.Type = request.Type;
-            originalReq.Author = request.Author;
-            originalReq.Title = request.Title;
-            originalReq.Priority = request.Priority;
-            originalReq.Link = request.Link;
-            originalReq.Description = request.Description;
-            originalReq.Motive = request.Motive;
-            originalReq.DateAdded = request.DateAdded;
-            originalReq.User = request.User;
-            originalReq.CategoryId = request.CategoryId;
-            originalReq.Category = request.Category;
+        //    originalReq.Status = request.Status;
+        //    originalReq.Type = request.Type;
+        //    originalReq.Author = request.Author;
+        //    originalReq.Title = request.Title;
+        //    originalReq.Priority = request.Priority;
+        //    originalReq.Link = request.Link;
+        //    originalReq.Description = request.Description;
+        //    originalReq.Motive = request.Motive;
+        //    originalReq.DateAdded = request.DateAdded;
+        //    originalReq.User = request.User;
+        //    originalReq.CategoryId = request.CategoryId;
+        //    originalReq.Category = request.Category;
 
-            await requestService.Update(originalReq);
+        //    await requestService.Update(originalReq);
 
-            //creating resource
-            if (originalReq.Status == RequestStatus.Delivered)
-            {
-                var resource = new Resource();
-                resource.Type = ResourceType.Physical;
-                resource.Author = originalReq.Author;
-                resource.Title = originalReq.Title;
-                resource.Description = originalReq.Description;
-                resource.Location = "Bookshelf";
-                resource.Status = ResourceStatus.Available;
-                resource.Category = originalReq.Category;
-                resource.DateAdded = DateTime.UtcNow;
+        //    //creating resource
+        //    if (originalReq.Status == RequestStatus.Delivered)
+        //    {
+        //        var resource = new Resource();
+        //        resource.Type = ResourceType.Physical;
+        //        resource.Author = originalReq.Author;
+        //        resource.Title = originalReq.Title;
+        //        resource.Description = originalReq.Description;
+        //        resource.Location = "Bookshelf";
+        //        resource.Status = ResourceStatus.Available;
+        //        resource.Category = originalReq.Category;
+        //        resource.DateAdded = DateTime.UtcNow;
 
-                await resourceService.Add(resource);
-            }
-            return RedirectToAction(nameof(PendingRequests));
+        //        await resourceService.Add(resource);
+        //    }
+        //    return RedirectToAction(nameof(PendingRequests));
 
-        }
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id, string commingView)

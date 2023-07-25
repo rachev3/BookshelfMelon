@@ -31,7 +31,27 @@ namespace MelonBookshelf.Models
             Category = request.Category;
 
         }
-        public RequestEditViewModel(Request request, List<CategoryViewModel> categories)
+        public RequestEditViewModel(Request request, string commingViewName)
+        {
+            RequestId = request.RequestId;
+            Status = request.Status;
+            Type = request.Type;
+            Author = request.Author;
+            Title = request.Title;
+            Priority = request.Priority;
+            Link = request.Link;
+            Motive = request.Motive;
+            DateAdded = request.DateAdded;
+            Description = request.Description;
+            Upvotes = request.Upvotes;
+            Followers = request.Followers;
+            User = request.User;
+            CategoryId = request.CategoryId;
+            Category = request.Category;
+            CommingViewName = commingViewName;
+
+        }
+        public RequestEditViewModel(Request request, List<CategoryViewModel> categories, string commingViewName)
         {
             RequestId = request.RequestId;
             Status = request.Status;
@@ -49,7 +69,7 @@ namespace MelonBookshelf.Models
             Categories = categories;
             CategoryId = request.CategoryId;
             Category = request.Category;
-
+            CommingViewName = commingViewName;
         }
 
         public int RequestId { get; set; }
