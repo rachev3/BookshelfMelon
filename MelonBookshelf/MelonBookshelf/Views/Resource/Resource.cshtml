@@ -13,6 +13,7 @@
         <div>
             <a asp-controller="Resource" asp-action="Create" class="btn btn-success">Add New Resource</a>
         </div>
+        <p></p>
         <partial name="_SearchBar" />
         <div id="tableContainer">
             @Html.Partial("_ResourceTable", @Model)

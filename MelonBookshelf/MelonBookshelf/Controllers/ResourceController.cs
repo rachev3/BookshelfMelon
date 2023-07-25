@@ -21,26 +21,45 @@ namespace MelonBookshelf.Controllers
         private readonly ICategoryService categoryService;
         private readonly IMapper mapper;
         private readonly IConfiguration _config;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config)
+        private readonly IUserService userService;
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
             this._config = config;
-        
+            this.userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var data = await resourceService.GetAll();
+            string name = User.Identity.Name;
+            string userId = userService.GetByName(name).Result.Id;
+
+            var resources = await resourceService.GetAll();
+            var viewListResource = new List<ResourceViewModel>();
+
+            foreach(var resource in resources)
+            {
+                var viewModel = new ResourceViewModel(resource);
+                var want = resource.WantedResources.FirstOrDefault(w => w.UserId == userId);
+                if(want != null)
+                {
+                    viewModel.Want = true;
+                }
+                else
+                {
+                    viewModel.Want = false;
+                }
+                viewListResource.Add(viewModel);
+            }
 
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var resources = data.Select(x => new ResourceViewModel(x)).ToList();
-            var viewModel = new ResourcePageViewModel(resources,viewListCategory);
+            var viewPageModel = new ResourcePageViewModel(viewListResource,viewListCategory);
 
-            return View("Resource", viewModel);
+            return View("Resource", viewPageModel);
         }
         [HttpPost]
         public async Task<IActionResult> Index(string? title, ResourceType? resourceType, int? categoryId)

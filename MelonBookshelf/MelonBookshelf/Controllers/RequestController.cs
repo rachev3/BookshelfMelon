@@ -39,7 +39,7 @@ namespace MelonBookshelf.Controllers
             string userId = userService.GetByName(name).Result.Id;
 
             var requests = await requestService.GetAll();
-            // var viewListRequest = requests.Select(x => new RequestViewModel(x)).ToList();
+
             var viewListRequest = new List<RequestViewModel>();
             foreach (var request in requests)
             {
