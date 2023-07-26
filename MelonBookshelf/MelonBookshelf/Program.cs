@@ -31,6 +31,7 @@ builder.Services.AddScoped<IUpvoteService, UpvoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IResourceCommentService, ResourceCommentService>();
 
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")

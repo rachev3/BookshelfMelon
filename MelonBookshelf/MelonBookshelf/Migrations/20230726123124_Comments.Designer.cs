@@ -4,6 +4,7 @@ using MelonBookshelf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelonBookshelf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230726123124_Comments")]
+    partial class Comments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace MelonBookshelf.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComment", b =>
+            modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -461,16 +463,16 @@ namespace MelonBookshelf.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComment", b =>
+            modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComments", b =>
                 {
                     b.HasOne("MelonBookshelf.Models.Resource", "Resource")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("ResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MelonBookshelf.Models.User", "User")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -630,15 +632,11 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Models.Resource", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("WantedResources");
                 });
 
             modelBuilder.Entity("MelonBookshelf.Models.User", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618

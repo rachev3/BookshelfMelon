@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using MelonBookshelf.Data.DTO;
 
 namespace MelonBookshelf.Controllers
 {
@@ -19,15 +20,17 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
+        private readonly IResourceCommentService commentService;
         private readonly IMapper mapper;
         private readonly IConfiguration _config;
         private readonly IUserService userService;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService)
+        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
             this._config = config;
             this.userService = userService;
+            this.commentService = commentService;
         }
 
         [HttpGet]
@@ -108,6 +111,7 @@ namespace MelonBookshelf.Controllers
                 null,
                 null,
                 null,
+                null,
                 resource.CategoryId, null);
             await resourceService.Add(dto);
             return RedirectToAction(nameof(Index));
@@ -170,6 +174,7 @@ namespace MelonBookshelf.Controllers
                null,
                null,
                null,
+               null,
                resource.CategoryId, null);
             dto.Category = category;
             dto.ResourceId = resource.ResourceId;
@@ -201,7 +206,28 @@ namespace MelonBookshelf.Controllers
             await resourceService.Unwant(userId, resourceId);
             return RedirectToAction(nameof(Index));
         }
-    
+        [HttpPost]
+        public async Task<IActionResult> AddComment(ResourceCommentViewModel resourceCommentViewModel, int resourceId)
+        {
+            string name = User.Identity.Name;
+            User user = userService.GetByUserName(name).Result;
+
+            ResourceComment resourceComment = new();
+            resourceComment.Comment = resourceCommentViewModel.Comment;
+            resourceComment.User = user;
+            resourceComment.ResourceId = resourceId;
+
+            await commentService.Add(resourceComment);
+
+
+            var data = await resourceService.GetById(resourceId);
+
+
+            ResourceViewModel resource = new(data, "Details");
+            return View("Details", resource);
+
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Upload(IFormFile file, int resourceId)

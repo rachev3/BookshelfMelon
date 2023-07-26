@@ -4,6 +4,7 @@ using MelonBookshelf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelonBookshelf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230726145804_listComments")]
+    partial class listComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -470,7 +472,7 @@ namespace MelonBookshelf.Migrations
                         .IsRequired();
 
                     b.HasOne("MelonBookshelf.Models.User", "User")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -637,8 +639,6 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Models.User", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618

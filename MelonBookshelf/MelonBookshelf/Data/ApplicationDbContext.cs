@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Models;
+﻿using MelonBookshelf.Data.DTO;
+using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
@@ -17,6 +18,7 @@ namespace MelonBookshelf.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Upvote> Upvotes { get; set; }
         public DbSet<WantedResources> WantedResources { get; set; }
+        public DbSet<ResourceComment> ResourceComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

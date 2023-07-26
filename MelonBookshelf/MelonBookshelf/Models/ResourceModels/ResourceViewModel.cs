@@ -1,4 +1,5 @@
 ﻿using MelonBookshelf.Data;
+using MelonBookshelf.Data.DTO;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MelonBookshelf.Models
@@ -26,6 +27,7 @@ namespace MelonBookshelf.Models
             wantedResources = resource.WantedResources;
             Category = resource.Category;
             FileName = resource.FileName;
+            ResourceCommentViewModel.ResourceId = resource.ResourceId;
         }
         public ResourceViewModel(Resource resource, string commingViewName)
         {
@@ -42,9 +44,11 @@ namespace MelonBookshelf.Models
             DateTaken = resource.DateTaken;
             DateReturn = resource.DateReturn;
             wantedResources = resource.WantedResources;
+            ResourceComments = resource.Comments;
             Category = resource.Category;
             FileName = resource.FileName;
             CommingViewName = commingViewName;
+            ResourceCommentViewModel.ResourceId = resource.ResourceId;
         }
 
         public int ResourceId { get; set; }
@@ -63,7 +67,9 @@ namespace MelonBookshelf.Models
         public DateTime? DateTaken { get; set; }
         public DateTime? DateReturn { get; set; }
         public Category Category { get; set; }
-        public List<WantedResources>? wantedResources { get; set; }                                   
+        public List<WantedResources>? wantedResources { get; set; }
+        public ResourceCommentViewModel ResourceCommentViewModel = new();
+        public List<ResourceComment>? ResourceComments { get; set; }
     
     }
 }

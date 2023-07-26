@@ -27,7 +27,7 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<List<Resource>> GetAll()
         {
-            var result = await _appDbContext.Resources
+            var result = await _appDbContext.Resources.Include(c=>c.Comments)
                 .Include(c=>c.Category)
                .Include(a => a.WantedResources).ThenInclude(b => b.User)
                .ToListAsync();
@@ -36,7 +36,7 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<Resource> GetById(int id)
         {
-            var result = await _appDbContext.Resources.Include(c=>c.Category).FirstOrDefaultAsync(n => n.ResourceId == id);
+            var result = await _appDbContext.Resources.Include(c=>c.Category).Include(c=>c.Comments).ThenInclude(u=>u.User).FirstOrDefaultAsync(n => n.ResourceId == id);
             return result;
         }
 

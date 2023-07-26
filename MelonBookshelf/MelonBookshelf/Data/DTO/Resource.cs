@@ -1,6 +1,7 @@
 ﻿using MelonBookshelf.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using MelonBookshelf.Data.DTO;
 
 namespace MelonBookshelf.Models
 {
@@ -10,7 +11,7 @@ namespace MelonBookshelf.Models
         {
 
         }
-        public Resource(ResourceType type, string? author, string? title, string? description, string? location, double? price, string? invoice, ResourceStatus? status, DateTime? dateAdded, DateTime? dateTaken, DateTime? dateReturn, string? userId, User? user, List<WantedResources>? wantedResources, int? categoryId, Category? category)
+        public Resource(ResourceType type, string? author, string? title, string? description, string? location, double? price, string? invoice, ResourceStatus? status, DateTime? dateAdded, DateTime? dateTaken, DateTime? dateReturn, string? userId, User? user, List<WantedResources>? wantedResources,List<ResourceComment>? resourceComments, int? categoryId, Category? category)
         {
             Type = type;
             Author = author;
@@ -26,6 +27,7 @@ namespace MelonBookshelf.Models
             UserId = userId;
             User = user;
             WantedResources = wantedResources;
+            Comments = resourceComments;
             CategoryId = categoryId;
             Category = category;
         }
@@ -51,6 +53,7 @@ namespace MelonBookshelf.Models
         [ForeignKey(nameof(UserId))]
         public virtual User? User { get; set; }
         public virtual List<WantedResources>? WantedResources { get; set; }
+        public virtual List<ResourceComment>? Comments { get; set; }
         public int? CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
         public virtual Category? Category { get; set; }
