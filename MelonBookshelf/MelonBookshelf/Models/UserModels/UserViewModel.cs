@@ -14,11 +14,14 @@ namespace MelonBookshelf.Models
             LastName = user.LastName;
             Email = user.Email; 
             Id = user.Id;
+            PhoneNumber = user.PhoneNumber;
+            Username = user.UserName;
         }
         public string Id { get; set; }
-
+        public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

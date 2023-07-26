@@ -6,21 +6,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 
 namespace MelonBookshelf.Controllers
 {
-    public class UserController:Controller
+    public class UserController : Controller
     {
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IRequestService requestService;
+        private readonly ICategoryService categoryService;
 
-        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(IUserService userService, UserManager<User> userManager, SignInManager<User> signInManager, IRequestService requestService, ICategoryService categoryService)
         {
             this.userService = userService;
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.requestService = requestService;
+            this.categoryService = categoryService;
         }
 
         public async Task<IActionResult> Index()
@@ -31,12 +36,24 @@ namespace MelonBookshelf.Controllers
             return View("User", viewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string userName)
         {
-            var data = await userService.GetById(id);
-            UserViewModel user = new(data);
-            return View("Details", user);
+
+            var user = await userService.GetByUserName(userName);
+            var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+            UserViewModel userViewModel = new UserViewModel(user);
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            var followingRequests = await requestService.GetFollowingRequests(userId);
+            var viewListFollowingRequest = followingRequests.Select(x => new RequestViewModel(x, "FollowingRequestsTable")).ToList();
+
+            var myRequests = await requestService.GetMyRequests(userId);
+            var viewListMyRequest = myRequests.Select(x => new RequestViewModel(x, "MyRequestsTable")).ToList();
+
+            var pageViewModel = new UserDetailsWrapperViewModel(userViewModel, viewListFollowingRequest, viewListMyRequest, viewListCategory);
+            return View("Details", pageViewModel);
 
         }
 
@@ -52,29 +69,29 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
-           
-                if (!ModelState.IsValid)
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await userManager.FindByNameAsync(model.UserName);
+
+            if (user != null)
+            {
+                var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+                if (result.Succeeded)
                 {
-                    return View(model);
+
+                    return RedirectToAction("Index", "Home");
                 }
+            }
 
-                var user = await userManager.FindByNameAsync(model.UserName);
+            ModelState.AddModelError("", "Invalid Login");
 
-                if (user!=null)
-                {
-                    var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
+            return View("Login");
 
-                    if (result.Succeeded)
-                    {
-                       
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-
-                ModelState.AddModelError("", "Invalid Login");
-
-                return View("Login");
-           
         }
 
         public async Task<IActionResult> Logout()
@@ -100,7 +117,7 @@ namespace MelonBookshelf.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email
-                  
+
                 };
 
                 await userManager.CreateAsync(user, model.Password);
@@ -118,30 +135,39 @@ namespace MelonBookshelf.Controllers
             return View(model);
 
         }
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            var user = await userService.GetById(id);
-            UserViewModel model = new UserViewModel(user);
-            if (user == null)
-            {
-                return View("NotFound");
-            }
-            return View(model);
-        }
+        //[HttpGet]
 
+        //public async Task<IActionResult> Edit(string id)
+        //{
+        //    var user = await userService.GetById(id);
+        //    UserViewModel model = new UserViewModel(user);
+        //    if (user == null)
+        //    {
+        //        return View("NotFound");
+        //    }
+        //    return View("_UserDetailsEdit", model);
+        //}
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(string id, User user)
+        public async Task<IActionResult> ChangePassword(string newPassword, string username)
         {
-            user.Id = id;
-            if (!ModelState.IsValid)
-            {
-                return View(user);
-            }
-            await userService.Update(id, user);
-            return RedirectToAction(nameof(Index));
+            User user = await userService.GetByUserName(username);
+            await userManager.RemovePasswordAsync(user);
+            await userManager.AddPasswordAsync(user, newPassword);
+
+            return RedirectToAction("Logout");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserViewModel userViewModel)
+        {
+            User user = await userService.GetByUserName(userViewModel.Username);
+            user.FirstName = userViewModel.FirstName;
+            user.LastName = userViewModel.LastName;
+            user.Email = userViewModel.Email;
+            user.PhoneNumber = userViewModel.PhoneNumber;
+            await userService.Update(user);
+
+
+            return RedirectToAction("Details", new { userName = userViewModel.Username });
         }
         [HttpGet]
         [Authorize(Roles = "Admin")]

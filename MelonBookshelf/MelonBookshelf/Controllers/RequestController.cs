@@ -36,7 +36,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             string name = User.Identity.Name;
-            string userId = userService.GetByName(name).Result.Id;
+            string userId = userService.GetByUserName(name).Result.Id;
 
             var requests = await requestService.GetAll();
 
@@ -138,7 +138,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
             string name = User.Identity.Name;
-            User user = userService.GetByName(name).Result;
+            User user = userService.GetByUserName(name).Result;
 
             Request dto = new Request(
                 RequestStatus.PendingConfirmation,
@@ -339,7 +339,7 @@ namespace MelonBookshelf.Controllers
                 var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 var requests = await requestService.GetMyRequests(userId);
-                var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
+                var requestsViewModel = requests.Select(x => new RequestViewModel(x, "MyRequestsTable")).ToList();
 
                 var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
 
@@ -348,7 +348,7 @@ namespace MelonBookshelf.Controllers
             else if (commingViewName == "PendingRequestsTable")
             {
                 var requests = await requestService.GetPendingRequests();
-                var requestsViewModel = requests.Select(x => new RequestViewModel(x)).ToList();
+                var requestsViewModel = requests.Select(x => new RequestViewModel(x, "PendingRequestsTable")).ToList();
 
                 var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
                 return PartialView("_PendingRequestsTable", viewModel);

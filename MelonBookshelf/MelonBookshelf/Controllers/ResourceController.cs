@@ -34,7 +34,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> Index()
         {
             string name = User.Identity.Name;
-            string userId = userService.GetByName(name).Result.Id;
+            string userId = userService.GetByUserName(name).Result.Id;
 
             var resources = await resourceService.GetAll();
             var viewListResource = new List<ResourceViewModel>();

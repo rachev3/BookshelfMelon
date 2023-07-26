@@ -1,0 +1,44 @@
+﻿@using MelonBookshelf.Data
+@model RequestPageViewModel
+
+<div class="window-container">
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Title</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Requests)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Category.Name)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Link)
+                        </td>
+                        <td class="align-middle">
+                            <p></p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+

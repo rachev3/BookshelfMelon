@@ -1,0 +1,50 @@
+﻿@model RequestPageViewModel
+<div class="window-container">
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th>Status</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>DateAdded</th>
+            <th>Likes</th>
+            <th>Followers</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Requests)
+        {
+            <tr>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.DateAdded)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Upvotes.Count)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Followers.Count)
+                </td>
+
+               
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

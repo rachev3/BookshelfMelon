@@ -6,9 +6,9 @@ namespace MelonBookshelf.Data.Services
     {
         Task<List<User>> GetAll();
         Task<User> GetById(string id);
-        Task<User> GetByName(string name);
+        Task<User> GetByUserName(string name);
         Task Add(User user, string password);
-        Task<User> Update(string id, User user);
+        Task<User> Update(User user);
         Task Delete(string id);
     }
 }
