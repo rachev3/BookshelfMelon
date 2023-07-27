@@ -83,24 +83,12 @@
                             <span asp-validation-for="DateReturn" class="text-danger"></span>
                         </div>
                     }
-                    <div class="align-middle mt-3">
-                        <form method="post" enctype="multipart/form-data" asp-action="Upload">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" name="file" class="custom-file-input" id="customFile" aria-describedby="inputGroupFileAddon">
-                                    </div>
-                                    <div class="input-group-append mt-2">
-                                        <input type="submit" value="Upload" class="btn btn-outline-primary" id="uploadButton" />
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="resourceId" value="@Model.ResourceId" />
-                        </form>
-                    </div>
                     <input type="hidden" asp-for="ResourceId" />
                     <div class="form-group">
                         <input type="submit" value="Save" class="btn btn-outline-success float-right" id="editRequestLink" asp-action="Edit" />
+                    </div>
+                    <div class="align-middle mt-3">
+                        @Html.Partial("_UploadFile")
                     </div>
                 </div>
             </div>

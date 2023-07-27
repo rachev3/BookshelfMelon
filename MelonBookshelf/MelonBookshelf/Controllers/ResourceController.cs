@@ -24,7 +24,7 @@ namespace MelonBookshelf.Controllers
         private readonly IMapper mapper;
         private readonly IConfiguration _config;
         private readonly IUserService userService;
-        public ResourceController (IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService)
+        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
@@ -42,11 +42,11 @@ namespace MelonBookshelf.Controllers
             var resources = await resourceService.GetAll();
             var viewListResource = new List<ResourceViewModel>();
 
-            foreach(var resource in resources)
+            foreach (var resource in resources)
             {
                 var viewModel = new ResourceViewModel(resource, "ResourcesTable");
                 var want = resource.WantedResources.FirstOrDefault(w => w.UserId == userId);
-                if(want != null)
+                if (want != null)
                 {
                     viewModel.Want = true;
                 }
@@ -60,24 +60,24 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var viewPageModel = new ResourcePageViewModel(viewListResource,viewListCategory);
+            var viewPageModel = new ResourcePageViewModel(viewListResource, viewListCategory);
 
             return View("Resource", viewPageModel);
         }
         [HttpPost]
         public async Task<IActionResult> Index(string? title, ResourceType? resourceType, int? categoryId)
         {
-            var data = await resourceService.Search(title,resourceType,categoryId);
+            var data = await resourceService.Search(title, resourceType, categoryId);
 
             var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c=> new CategoryViewModel(c)).ToList();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             var resources = data.Select(x => new ResourceViewModel(x)).ToList();
-            var viewModel = new ResourcePageViewModel(resources,viewListCategory);
+            var viewModel = new ResourcePageViewModel(resources, viewListCategory);
 
             return View("Resource", viewModel);
         }
-        [HttpGet] 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await categoryService.GetAll();
@@ -121,8 +121,8 @@ namespace MelonBookshelf.Controllers
         {
             var data = await resourceService.GetById(id);
 
-          
-            ResourceViewModel resource =  new(data, "Details");
+
+            ResourceViewModel resource = new(data, "Details");
             return View("Details", resource);
 
         }
@@ -134,16 +134,16 @@ namespace MelonBookshelf.Controllers
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
-            var viewModel = new ResourceEditViewModel(resource,viewListCategory);
+            var viewModel = new ResourceEditViewModel(resource, viewListCategory);
             if (resource == null)
             {
                 return View("NotFound");
             }
-            if(commingViewName == "Details")
+            if (commingViewName == "Details")
             {
-                return View("Edit",viewModel);
+                return View("Edit", viewModel);
             }
-            return PartialView("_Edit",viewModel);
+            return PartialView("_Edit", viewModel);
         }
 
         [HttpPost]
@@ -159,7 +159,7 @@ namespace MelonBookshelf.Controllers
             }
 
             Resource dto = new Resource(
-                
+
                resource.Type,
                resource.Author,
                resource.Title,
@@ -186,10 +186,10 @@ namespace MelonBookshelf.Controllers
             await resourceService.Update(resource.ResourceId, dto);
 
             var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList(); 
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             var resources = await resourceService.GetAll();
-            var viewListResource =  resources.Select(r=> new ResourceViewModel(r)).ToList();
+            var viewListResource = resources.Select(r => new ResourceViewModel(r)).ToList();
 
             var viewModel = new ResourcePageViewModel(viewListResource, viewListCategory);
             return PartialView("_ResourceTable", viewModel);
@@ -258,28 +258,34 @@ namespace MelonBookshelf.Controllers
             {
                 await file.CopyToAsync(stream);
             }
-         
+
             resource.Location = shortLocation;
             resource.FileName = file.FileName;
-            resourceService.Update(resource.ResourceId,resource);
+            resourceService.Update(resource.ResourceId, resource);
             return RedirectToAction(nameof(Index));
         }
-        
+
         [HttpGet]
-    
+
         public async Task<IActionResult> Download(int resourceId)
         {
             Resource resource = await resourceService.GetById(resourceId);
             if (resource == null)
             {
-                
+
                 return NotFound();
             }
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), resource.Location);
             byte[] bytes = System.IO.File.ReadAllBytes(filePath);
 
-        
+            ResourceDownloadHistory download = new ResourceDownloadHistory();
+            download.ResourceId = resourceId;
+            download.ResourceName = resource.Title + " " + resource.Author;
+            download.Username = User.Identity.Name;
+            download.DownloadDate = DateTime.Now;
+
+            await resourceService.AddDownload(download);
 
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, resource.FileName);
 
@@ -289,7 +295,7 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-           
+
             var resource = await resourceService.GetById(id);
             ResourceViewModel resourceViewModel = new(resource);
             if (resource == null)

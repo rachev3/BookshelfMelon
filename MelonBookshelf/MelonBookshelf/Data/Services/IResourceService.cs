@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Models;
+﻿using MelonBookshelf.Data.DTO;
+using MelonBookshelf.Models;
 
 namespace MelonBookshelf.Data.Services
 {
@@ -8,6 +9,7 @@ namespace MelonBookshelf.Data.Services
         Task<Resource> GetById(int id);
        
         Task Add(Resource resource);
+        Task AddDownload(ResourceDownloadHistory resourceDownloadHistory);
         Task<Resource> Update(int id, Resource resource);
         Task<List<Resource>> Search(string? title,ResourceType? type, int? categoryId);
         Task Delete(int id);

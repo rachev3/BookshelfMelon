@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Models;
+﻿using MelonBookshelf.Data.DTO;
+using MelonBookshelf.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -16,6 +17,11 @@ namespace MelonBookshelf.Data.Services
         public async Task Add(Resource resource)
         {
             await _appDbContext.Resources.AddAsync(resource);
+            await _appDbContext.SaveChangesAsync();
+        }
+        public async Task AddDownload(ResourceDownloadHistory download)
+        {
+            await _appDbContext.ResourceDownloadHistory.AddAsync(download);
             await _appDbContext.SaveChangesAsync();
         }
         public async Task Delete(int id)

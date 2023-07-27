@@ -19,6 +19,7 @@ namespace MelonBookshelf.Data
         public DbSet<Upvote> Upvotes { get; set; }
         public DbSet<WantedResources> WantedResources { get; set; }
         public DbSet<ResourceComment> ResourceComments { get; set; }
+        public DbSet<ResourceDownloadHistory> ResourceDownloadHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
