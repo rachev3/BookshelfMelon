@@ -33,6 +33,7 @@ namespace MelonBookshelf.Controllers
             var data = await userService.GetAll();
             var resources = data.Select(x => new UserViewModel(x)).ToList();
             var viewModel = new UserPageViewModel(resources);
+
             return View("User", viewModel);
         }
         [HttpGet]
@@ -57,23 +58,24 @@ namespace MelonBookshelf.Controllers
 
             var pageViewModel = new UserDetailsWrapperViewModel(userViewModel, viewListFollowingRequest, viewListMyRequest, viewListCategory, changePassViewModel);
             pageViewModel.CommingViewName = "UserDetails";
+
             return View("Details", pageViewModel);
 
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -89,6 +91,7 @@ namespace MelonBookshelf.Controllers
                 {
                     var viewModel = new UserChangePasswordViewModel();
                     viewModel.Username = model.UserName;
+
                     return PartialView("_ChangePasswordPartial", viewModel);
                 }
                 else if (result.Succeeded)
@@ -104,11 +107,13 @@ namespace MelonBookshelf.Controllers
 
                 return PartialView("_PasswordPopUp", model);
             }
+
             ModelState.AddModelError("", "Invalid Login");
             return View("Login");
 
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -121,6 +126,7 @@ namespace MelonBookshelf.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
@@ -140,6 +146,7 @@ namespace MelonBookshelf.Controllers
 
                 return RedirectToAction("Login");
             }
+
             var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
 
             foreach (var errorMessage in errorMessages)
@@ -158,17 +165,21 @@ namespace MelonBookshelf.Controllers
             var model = new UserLoginViewModel();
             model.UserName = username;
             model.CommingViewName = commingViewName;
+
             return PartialView("_PasswordPopUp", model);
         }
+
         [HttpPost]
         public async Task<IActionResult> ChangePasswordConfirm(string newPassword, string username)
         {
             User user = await userService.GetByUserName(username);
+
             await userManager.RemovePasswordAsync(user);
             await userManager.AddPasswordAsync(user, newPassword);
 
             return RedirectToAction("Logout");
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(UserViewModel userViewModel)
         {
@@ -177,21 +188,25 @@ namespace MelonBookshelf.Controllers
             user.LastName = userViewModel.LastName;
             user.Email = userViewModel.Email;
             user.PhoneNumber = userViewModel.PhoneNumber;
-            await userService.Update(user);
 
+            await userService.Update(user);
 
             return RedirectToAction("Details", new { userName = userViewModel.Username });
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await userService.GetById(id);
+
             UserViewModel userViewModel = new(user);
+
             if (user == null)
             {
                 return View("NotFound");
             }
+
             return View(userViewModel);
         }
 
@@ -200,12 +215,14 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> DeleteConfirm(string id)
         {
             var user = await userService.GetById(id);
+
             if (user == null)
             {
                 return View("NotFound");
             }
 
             await userService.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
     }
