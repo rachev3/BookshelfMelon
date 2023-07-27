@@ -24,6 +24,7 @@ namespace MelonBookshelf.Controllers
         private readonly IMapper mapper;
         private readonly IConfiguration _config;
         private readonly IUserService userService;
+
         public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService)
         {
             this.resourceService = resourceService;
@@ -45,7 +46,9 @@ namespace MelonBookshelf.Controllers
             foreach (var resource in resources)
             {
                 var viewModel = new ResourceViewModel(resource, "ResourcesTable");
+
                 var want = resource.WantedResources.FirstOrDefault(w => w.UserId == userId);
+
                 if (want != null)
                 {
                     viewModel.Want = true;
@@ -54,6 +57,7 @@ namespace MelonBookshelf.Controllers
                 {
                     viewModel.Want = false;
                 }
+
                 viewListResource.Add(viewModel);
             }
 
@@ -64,6 +68,7 @@ namespace MelonBookshelf.Controllers
 
             return View("Resource", viewPageModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(string? title, ResourceType? resourceType, int? categoryId)
         {
@@ -77,25 +82,21 @@ namespace MelonBookshelf.Controllers
 
             return View("Resource", viewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await categoryService.GetAll();
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
             ResourceEditViewModel resource = new(viewListCategory);
+
             return View(resource);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(ResourceEditViewModel resource)
         {
-            Category category = null;
-            if (resource.CategoryId != null)
-            {
-
-
-                category = await categoryService.GetById(resource.CategoryId.Value);
-            }
             Resource dto = new Resource(
                 resource.Type,
                 resource.Author,
@@ -112,37 +113,44 @@ namespace MelonBookshelf.Controllers
                 null,
                 null,
                 null,
-                resource.CategoryId, null);
+                resource.CategoryId, 
+                null);
+
             await resourceService.Add(dto);
+
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var data = await resourceService.GetById(id);
 
-
             ResourceViewModel resource = new(data, "Details");
-            return View("Details", resource);
 
+            return View("Details", resource);
         }
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id, string commingViewName)
         {
             var resource = await resourceService.GetById(id);
 
-            var categories = await categoryService.GetAll();
-            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
-            var viewModel = new ResourceEditViewModel(resource, viewListCategory);
             if (resource == null)
             {
                 return View("NotFound");
             }
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            var viewModel = new ResourceEditViewModel(resource, viewListCategory);
+
             if (commingViewName == "Details")
             {
                 return View("Edit", viewModel);
             }
+
             return PartialView("_Edit", viewModel);
         }
 
@@ -150,12 +158,9 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(ResourceEditViewModel resource)
         {
-            Category category = null;
-            if (resource.CategoryId != null)
+            if (!ModelState.IsValid)
             {
-
-
-                category = await categoryService.GetById(resource.CategoryId.Value);
+                return View(resource);
             }
 
             Resource dto = new Resource(
@@ -176,12 +181,7 @@ namespace MelonBookshelf.Controllers
                null,
                null,
                resource.CategoryId, null);
-            dto.Category = category;
             dto.ResourceId = resource.ResourceId;
-            if (!ModelState.IsValid)
-            {
-                return View(resource);
-            }
 
             await resourceService.Update(resource.ResourceId, dto);
 
@@ -194,18 +194,27 @@ namespace MelonBookshelf.Controllers
             var viewModel = new ResourcePageViewModel(viewListResource, viewListCategory);
             return PartialView("_ResourceTable", viewModel);
         }
+
+        [HttpGet]
         public async Task<IActionResult> Want(int resourceId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+
             await resourceService.Want(userId, resourceId);
+
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
         public async Task<IActionResult> Unwant(int resourceId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
+
             await resourceService.Unwant(userId, resourceId);
+
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         public async Task<IActionResult> AddComment(ResourceCommentViewModel resourceCommentViewModel, int resourceId)
         {
@@ -219,28 +228,27 @@ namespace MelonBookshelf.Controllers
 
             await commentService.Add(resourceComment);
 
-
             var data = await resourceService.GetById(resourceId);
-
 
             ResourceViewModel resource = new(data, "Details");
             return View("Details", resource);
-
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteComment(int commentId, int resourceId)
         {
             var comment = await commentService.GetById(commentId);
+
             if (comment == null)
             {
                 return View("NotFound");
             }
 
             await commentService.Delete(commentId);
+
             var data = await resourceService.GetById(resourceId);
-
-
             ResourceViewModel resource = new(data, "Details");
+
             return View("Details", resource);
         }
 
@@ -266,13 +274,12 @@ namespace MelonBookshelf.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> Download(int resourceId)
         {
             Resource resource = await resourceService.GetById(resourceId);
+
             if (resource == null)
             {
-
                 return NotFound();
             }
 
@@ -288,20 +295,20 @@ namespace MelonBookshelf.Controllers
             await resourceService.AddDownload(download);
 
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, resource.FileName);
-
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-
             var resource = await resourceService.GetById(id);
             ResourceViewModel resourceViewModel = new(resource);
+
             if (resource == null)
             {
                 return View("NotFound");
             }
+
             return View(resourceViewModel);
         }
 
@@ -310,12 +317,14 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             var resource = await resourceService.GetById(id);
+
             if (resource == null)
             {
                 return View("NotFound");
             }
 
             await resourceService.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
     }

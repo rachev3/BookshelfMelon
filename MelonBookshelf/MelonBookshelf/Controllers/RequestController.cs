@@ -41,20 +41,25 @@ namespace MelonBookshelf.Controllers
             var requests = await requestService.GetAll();
 
             var viewListRequest = new List<RequestViewModel>();
+
             foreach (var request in requests)
             {
                 var viewModel = new RequestViewModel(request);
                 viewModel.CommingViewName = "RequestsTable";
+
                 var upvote = request.Upvotes.FirstOrDefault(u => u.UserId == userId);
                 var follow = request.Followers.FirstOrDefault(f => f.UserId == userId);
+
                 if (upvote != null)
                 {
                     viewModel.Liked = true;
                 }
+
                 if (follow != null)
                 {
                     viewModel.Followed = true;
                 }
+
                 viewListRequest.Add(viewModel);
             }
 
@@ -91,7 +96,7 @@ namespace MelonBookshelf.Controllers
             var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
 
             var requests = await requestService.GetFollowingRequests(userId);
-            var viewListRequest = requests.Select(x => new RequestViewModel(x,"FollowingRequestsTable")).ToList();
+            var viewListRequest = requests.Select(x => new RequestViewModel(x, "FollowingRequestsTable")).ToList();
 
             var pageViewModel = new RequestPageViewModel(viewListRequest, viewListCategory);
 
@@ -137,6 +142,11 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RequestEditViewModel request)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
             string name = User.Identity.Name;
             User user = userService.GetByUserName(name).Result;
 
@@ -160,16 +170,21 @@ namespace MelonBookshelf.Controllers
 
             await requestService.Add(dto);
 
-            if(request.CommingViewName == "MyRequestsTable")
+            if (request.CommingViewName == "MyRequestsTable")
             {
                 return RedirectToAction(nameof(MyRequests));
             }
-            else if(request.CommingViewName == "RequestsTable")
+            else if (request.CommingViewName == "RequestsTable")
             {
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
+
+        [HttpGet]
         public async Task<IActionResult> Upvote(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -177,6 +192,8 @@ namespace MelonBookshelf.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
         public async Task<IActionResult> Downvote(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -184,6 +201,8 @@ namespace MelonBookshelf.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
         public async Task<IActionResult> Follow(int requestId)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -191,21 +210,28 @@ namespace MelonBookshelf.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Unfollow(int requestId,string commingViewName)
+
+        [HttpGet]
+        public async Task<IActionResult> Unfollow(int requestId, string commingViewName)
         {
             var userId = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier)?.Value;
             await requestService.UnFollow(requestId, userId);
-            if(commingViewName == "FollowingRequestsTable")
+
+            if (commingViewName == "FollowingRequestsTable")
             {
                 return RedirectToAction(nameof(FollowingRequests));
             }
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id, string commingViewName)
         {
             var request = await requestService.GetById(id);
+
             if (request == null)
             {
                 return View("NotFound");
@@ -220,6 +246,7 @@ namespace MelonBookshelf.Controllers
             {
                 return View("EditPendingRequest", viewModel);
             }
+
             return View(viewModel);
         }
 
@@ -307,11 +334,9 @@ namespace MelonBookshelf.Controllers
                 return View("NotFound");
             }
 
-            //var categories = await categoryService.GetAll();
-            //var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
-
             RequestViewModel viewModel = new(request);
             viewModel.CommingViewName = commingViewName;
+
             return PartialView("_ConfirmDeleteRequest", viewModel);
         }
 
@@ -329,10 +354,8 @@ namespace MelonBookshelf.Controllers
 
             await requestService.Delete(requestId);
 
-
             var categories = await categoryService.GetAll();
             var categoriesViewModel = categories.Select(x => new CategoryViewModel(x)).ToList();
-
 
             if (commingViewName == "MyRequestsTable")
             {
@@ -351,6 +374,7 @@ namespace MelonBookshelf.Controllers
                 var requestsViewModel = requests.Select(x => new RequestViewModel(x, "PendingRequestsTable")).ToList();
 
                 var viewModel = new RequestPageViewModel(requestsViewModel, categoriesViewModel);
+
                 return PartialView("_PendingRequestsTable", viewModel);
             }
             else
