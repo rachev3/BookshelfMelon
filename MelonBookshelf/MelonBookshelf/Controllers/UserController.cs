@@ -52,7 +52,11 @@ namespace MelonBookshelf.Controllers
             var myRequests = await requestService.GetMyRequests(userId);
             var viewListMyRequest = myRequests.Select(x => new RequestViewModel(x, "MyRequestsTable")).ToList();
 
-            var pageViewModel = new UserDetailsWrapperViewModel(userViewModel, viewListFollowingRequest, viewListMyRequest, viewListCategory);
+            var changePassViewModel = new UserChangePasswordViewModel();
+            changePassViewModel.Username = userName;
+
+            var pageViewModel = new UserDetailsWrapperViewModel(userViewModel, viewListFollowingRequest, viewListMyRequest, viewListCategory, changePassViewModel);
+            pageViewModel.CommingViewName = "UserDetails";
             return View("Details", pageViewModel);
 
         }
@@ -81,15 +85,26 @@ namespace MelonBookshelf.Controllers
             {
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
-                if (result.Succeeded)
+                if (result.Succeeded && model.CommingViewName=="UserDetails")
+                {
+                    var viewModel = new UserChangePasswordViewModel();
+                    viewModel.Username = model.UserName;
+                    return PartialView("_ChangePasswordPartial", viewModel);
+                }
+                else if (result.Succeeded)
                 {
 
                     return RedirectToAction("Index", "Home");
                 }
             }
+            
+            if(model.CommingViewName == "UserDetails")
+            {
+                ModelState.AddModelError("", "Wrong Password");
 
+                return PartialView("_PasswordPopUp", model);
+            }
             ModelState.AddModelError("", "Invalid Login");
-
             return View("Login");
 
         }
@@ -135,20 +150,18 @@ namespace MelonBookshelf.Controllers
             return View(model);
 
         }
-        //[HttpGet]
 
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    var user = await userService.GetById(id);
-        //    UserViewModel model = new UserViewModel(user);
-        //    if (user == null)
-        //    {
-        //        return View("NotFound");
-        //    }
-        //    return View("_UserDetailsEdit", model);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword(string username, string commingViewName)
+        {
+
+            var model = new UserLoginViewModel();
+            model.UserName = username;
+            model.CommingViewName = commingViewName;
+            return PartialView("_PasswordPopUp", model);
+        }
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword, string username)
+        public async Task<IActionResult> ChangePasswordConfirm(string newPassword, string username)
         {
             User user = await userService.GetByUserName(username);
             await userManager.RemovePasswordAsync(user);

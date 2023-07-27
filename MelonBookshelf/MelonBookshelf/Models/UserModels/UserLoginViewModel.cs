@@ -12,6 +12,7 @@ namespace MelonBookshelf.Models
         //[DataType(DataType.Password)]
        
         public string? Password { get; set; }
+        public string? CommingViewName { get; set; }
 
     }
 }
