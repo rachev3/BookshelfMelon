@@ -82,7 +82,7 @@
         </div>
         <div class="col-md-12 mt-3">
             <h3>Comments</h3>
-    
+
             @Html.Partial("_AddComment", Model.ResourceCommentViewModel)
             <hr />
             <div id="comments">
@@ -92,6 +92,14 @@
                     {
                         <h3>@item.User.UserName</h3>
                         <p>@item.Comment</p>
+                        if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
+                        {
+                            <form asp-controller="Resource" asp-action="DeleteComment" method="post">
+                                <input type="hidden" asp-for="ResourceId" />
+                              
+                                <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.Id" asp-action="DeleteComment">Delete</button>
+                            </form>
+                        }
                     }
                 }
 

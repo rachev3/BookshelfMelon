@@ -227,6 +227,22 @@ namespace MelonBookshelf.Controllers
             return View("Details", resource);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteComment(int commentId, int resourceId)
+        {
+            var comment = await commentService.GetById(commentId);
+            if (comment == null)
+            {
+                return View("NotFound");
+            }
+
+            await commentService.Delete(commentId);
+            var data = await resourceService.GetById(resourceId);
+
+
+            ResourceViewModel resource = new(data, "Details");
+            return View("Details", resource);
+        }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
