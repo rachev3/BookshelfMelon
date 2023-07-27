@@ -18,6 +18,7 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.Categories.AddAsync(category);
             await _appDbContext.SaveChangesAsync();
         }
+
         public async Task Delete(int id)
         {
             var result = await _appDbContext.Categories.FirstOrDefaultAsync(n => n.CategoryId == id);

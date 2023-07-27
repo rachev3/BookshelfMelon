@@ -19,11 +19,13 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.Resources.AddAsync(resource);
             await _appDbContext.SaveChangesAsync();
         }
+
         public async Task AddDownload(ResourceDownloadHistory download)
         {
             await _appDbContext.ResourceDownloadHistory.AddAsync(download);
             await _appDbContext.SaveChangesAsync();
         }
+
         public async Task Delete(int id)
         {
             var result = await _appDbContext.Resources.FirstOrDefaultAsync(n => n.ResourceId == id);
@@ -56,6 +58,7 @@ namespace MelonBookshelf.Data.Services
 
             return result;
         }
+
         public async Task Want(string userId, int resourceId)
         {
             WantedResources wantedResources = new ();
@@ -80,7 +83,6 @@ namespace MelonBookshelf.Data.Services
                 await _appDbContext.SaveChangesAsync();
             }
         }
-
 
         public async Task<Resource> Update(int id, Resource resource)
         {

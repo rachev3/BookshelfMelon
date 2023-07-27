@@ -16,21 +16,17 @@ namespace MelonBookshelf.Controllers
     {
         private readonly IRequestService requestService;
         private readonly ICategoryService categoryService;
-        private readonly IUpvoteService upvoteService;
-        private readonly IFollowerService followerService;
         private readonly Data.Services.IResourceService resourceService;
         private readonly IUserService userService;
         private readonly IEmailSender emailSender;
 
-        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender, IUpvoteService upvoteService, IFollowerService followerService)
+        public RequestController(IRequestService requestService, ICategoryService categoryService, IUserService userService, Data.Services.IResourceService resourceService, IEmailSender emailSender)
         {
             this.requestService = requestService;
             this.categoryService = categoryService;
             this.userService = userService;
             this.resourceService = resourceService;
             this.emailSender = emailSender;
-            this.upvoteService = upvoteService;
-            this.followerService = followerService;
         }
 
         public async Task<IActionResult> Index()

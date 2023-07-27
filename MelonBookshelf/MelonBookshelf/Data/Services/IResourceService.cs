@@ -7,7 +7,6 @@ namespace MelonBookshelf.Data.Services
     {
         Task<List<Resource>> GetAll();
         Task<Resource> GetById(int id);
-       
         Task Add(Resource resource);
         Task AddDownload(ResourceDownloadHistory resourceDownloadHistory);
         Task<Resource> Update(int id, Resource resource);

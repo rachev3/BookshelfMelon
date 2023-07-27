@@ -24,12 +24,9 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<ICategoryService,CategoryService>();
-builder.Services.AddScoped<IFollowerService, FollowerService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
-builder.Services.AddScoped<IUpvoteService, UpvoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IWantedResourcesService, WantedResourcesService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IResourceCommentService, ResourceCommentService>();
 

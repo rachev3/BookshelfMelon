@@ -14,12 +14,6 @@ namespace MelonBookshelf.Data.Services
             _appDbContext = appDbContext;
             this.userManager = userManager;
         }
-
-        public async Task Add(User user,string password)
-        {
-            await userManager.CreateAsync(user,password);
-            await _appDbContext.SaveChangesAsync();
-        }
         public async Task Delete(string id)
         {
             var result = await _appDbContext.Users.FirstOrDefaultAsync(n => n.Id == id);
