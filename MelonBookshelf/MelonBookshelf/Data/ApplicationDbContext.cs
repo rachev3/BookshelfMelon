@@ -31,29 +31,17 @@ namespace MelonBookshelf.Data
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-
             modelBuilder.Entity<Request>()
-        .HasOne(r => r.Category)
-        .WithMany()
-        .HasForeignKey(r => r.CategoryId)
-        .OnDelete(DeleteBehavior.SetNull);
+                 .HasOne(r => r.Category)
+                 .WithMany()
+                 .HasForeignKey(r => r.CategoryId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Resource>()
-       .HasOne(r => r.Category)
-       .WithMany()
-       .HasForeignKey(r => r.CategoryId)
-       .OnDelete(DeleteBehavior.SetNull);
-            //.HasOne(r => r.User)
-            //.WithMany()
-            //.HasForeignKey(r => r.UserId)
-            //.OnDelete(DeleteBehavior.NoAction);
-
-
-            //modelBuilder.Entity<User>()
-            //   .HasMany(r => r.Requests)
-            //   .WithOne(r => r.User)
-            //   .HasForeignKey(r => r.UserId)
-            //   .OnDelete(DeleteBehavior.NoAction);
+                 .HasOne(r => r.Category)
+                 .WithMany()
+                 .HasForeignKey(r => r.CategoryId)
+                 .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
