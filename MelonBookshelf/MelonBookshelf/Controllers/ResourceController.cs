@@ -3,19 +3,10 @@ using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Web;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using MelonBookshelf.Data.DTO;
-using MelonBookshelf.Models.ExcelReport;
 using OfficeOpenXml;
-using static System.Net.WebRequestMethods;
 using OfficeOpenXml.Style;
 using System.Drawing;
 
@@ -274,8 +265,18 @@ namespace MelonBookshelf.Controllers
 
             resource.Location = shortLocation;
             resource.FileName = file.FileName;
+
+            var categories = await categoryService.GetAll();
+            var viewListCategory = categories.Select(c => new CategoryViewModel(c)).ToList();
+
+            var resources = await resourceService.GetAll();
+            var viewListResource = resources.Select(r => new ResourceViewModel(r)).ToList();
+
+            var viewModel = new ResourcePageViewModel(viewListResource, viewListCategory);
+
             resourceService.Update(resource.ResourceId, resource);
-            return RedirectToAction(nameof(Index));
+
+            return PartialView("_ResourceTable", viewModel);
         }
 
         [HttpGet]
@@ -309,19 +310,18 @@ namespace MelonBookshelf.Controllers
             return View("DownloadsReport");
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateReport(ReportViewModel reportViewModel)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             List<ResourceDownloadHistory> history = await resourceService.ReportData(reportViewModel.Date);
-            List<ExcelReportModel> reportData = new List<ExcelReportModel>();
 
             var groupedHistory = history
                  .GroupBy(item => item.ResourceName)
                  .Select(group => new
                  {
-                     DownloadDate = group.First().DownloadDate.Date.ToString(), 
+                     DownloadDate = group.First().DownloadDate.Date.ToString(),
                      ResourceName = group.Key,
                      DownloadCount = group.Count()
                  }).ToList();
@@ -356,6 +356,7 @@ namespace MelonBookshelf.Controllers
             var generatedFilePath = @"C:\Users\User\Desktop\MelonBook\ExcelReport\Reports.xlsx";
             var generatedFileName = "Reports.xlsx";
             var mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
             return PhysicalFile(generatedFilePath, mimeType, generatedFileName);
         }
 
