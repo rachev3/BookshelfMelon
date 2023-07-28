@@ -1,0 +1,11 @@
+﻿@model ReportViewModel
+
+<form method="post" asp-action="Create">
+        <label asp-for="Date" class="control-label"></label>
+        <input type="date" asp-for="Date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    <div class="form-group">
+        <input type="submit" value="Generate Report" class="btn btn-primary btn-lg" asp-action="GenerateReport" />
+
+    </div>
+</form>

@@ -13,6 +13,11 @@ using System.Web;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using MelonBookshelf.Data.DTO;
+using MelonBookshelf.Models.ExcelReport;
+using OfficeOpenXml;
+using static System.Net.WebRequestMethods;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace MelonBookshelf.Controllers
 {
@@ -113,7 +118,7 @@ namespace MelonBookshelf.Controllers
                 null,
                 null,
                 null,
-                resource.CategoryId, 
+                resource.CategoryId,
                 null);
 
             await resourceService.Add(dto);
@@ -295,6 +300,63 @@ namespace MelonBookshelf.Controllers
             await resourceService.AddDownload(download);
 
             return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, resource.FileName);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DownloadsReport()
+        {
+            return View("DownloadsReport");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> GenerateReport(ReportViewModel reportViewModel)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            List<ResourceDownloadHistory> history = await resourceService.ReportData(reportViewModel.Date);
+            List<ExcelReportModel> reportData = new List<ExcelReportModel>();
+
+            var groupedHistory = history
+                 .GroupBy(item => item.ResourceName)
+                 .Select(group => new
+                 {
+                     DownloadDate = group.First().DownloadDate.Date.ToString(), 
+                     ResourceName = group.Key,
+                     DownloadCount = group.Count()
+                 }).ToList();
+
+            var file = new FileInfo(@"C:\Users\User\Desktop\MelonBook\ExcelReport\Reports.xlsx");
+
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
+            using var package = new ExcelPackage(file);
+
+            var ws = package.Workbook.Worksheets.Add("Report");
+
+            var range = ws.Cells["A2"].LoadFromCollection(groupedHistory, true);
+            range.AutoFitColumns();
+
+            // Formats the header
+            ws.Cells["A1"].Value = "Daily Download Report";
+            ws.Cells["A1:C1"].Merge = true;
+            ws.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            ws.Row(1).Style.Font.Size = 24;
+            ws.Row(1).Style.Font.Color.SetColor(Color.Blue);
+
+            ws.Row(2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            ws.Row(2).Style.Font.Bold = true;
+            ws.Column(3).Width = 20;
+
+            await package.SaveAsync();
+
+            var generatedFilePath = @"C:\Users\User\Desktop\MelonBook\ExcelReport\Reports.xlsx";
+            var generatedFileName = "Reports.xlsx";
+            var mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            return PhysicalFile(generatedFilePath, mimeType, generatedFileName);
         }
 
         [HttpGet]

@@ -90,6 +90,12 @@ namespace MelonBookshelf.Data.Services
             await _appDbContext.SaveChangesAsync();
             return resource;
         }
+
+        public async Task<List<ResourceDownloadHistory>> ReportData(DateTime date)
+        {
+            var result = await _appDbContext.ResourceDownloadHistory.Where(r => r.DownloadDate.Date == date.Date).ToListAsync();
+            return result;
+        }
     }
 }
 
