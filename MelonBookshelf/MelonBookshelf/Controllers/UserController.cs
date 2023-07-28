@@ -2,6 +2,7 @@
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -36,6 +37,17 @@ namespace MelonBookshelf.Controllers
 
             return View("User", viewModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DarkTheme()
+        {
+            CookieOptions cookies = new CookieOptions();
+            cookies.Expires = DateTime.Now.AddHours(1);
+
+            Response.Cookies.Append("theme", "dark", cookies);
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Details(string userName)
         {

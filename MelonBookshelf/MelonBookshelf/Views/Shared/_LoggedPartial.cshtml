@@ -2,7 +2,7 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-<!-- Add the necessary Bootstrap CSS and JS files to enable dropdown functionality -->
+
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
@@ -12,6 +12,12 @@
                 @User.Identity?.Name
             </button>
             <ul class="dropdown-menu">
+                <li>
+                    <!-- Add a button with a dark theme -->
+                    <button class="btn btn-dark-theme" onclick="toggleDarkTheme()">
+                        Dark Theme
+                    </button>
+                </li>
                 <li><a class="dropdown-item" asp-controller="User" asp-action="Details" asp-route-userName="@User.Identity.Name">Your profile</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" asp-controller="User" asp-action="Logout">Logout</a></li>
@@ -28,3 +34,22 @@
         </li>
     }
 </ul>
+
+<script>
+    function toggleDarkTheme() {
+        var button = document.querySelector('.btn-dark-theme');
+        button.classList.toggle("dark-theme");
+        $,post("/User/DarkTheme");
+    }
+</script>
+
+<!-- Dark theme button styles -->
+<style>
+    .btn-dark-theme {
+        background-color: #343a40;
+        color: #fff;
+    }
+    .btn-dark-theme.dark-theme {
+        background-color: #f7f0f0; /* Change this to the desired background color for the button when dark theme is active */
+    }
+</style>
