@@ -9,6 +9,7 @@ using MelonBookshelf.Data.DTO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using MelonBookshelf.ReportGenrator;
 
 namespace MelonBookshelf.Controllers
 {
@@ -20,14 +21,16 @@ namespace MelonBookshelf.Controllers
         private readonly IMapper mapper;
         private readonly IConfiguration _config;
         private readonly IUserService userService;
+        private readonly IReportService reportService;
 
-        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService)
+        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService,IReportService reportService )
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
             this._config = config;
             this.userService = userService;
             this.commentService = commentService;
+            this.reportService = reportService;
         }
 
         [HttpGet]
@@ -314,46 +317,9 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateReport(ReportViewModel reportViewModel)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            List<ResourceDownloadHistory> history = await resourceService.ReportData(reportViewModel.Date);
+            await reportService.Data(reportViewModel.Date);
 
-            var groupedHistory = history
-                 .GroupBy(item => item.ResourceName)
-                 .Select(group => new
-                 {
-                     DownloadDate = group.First().DownloadDate.Date.ToString(),
-                     ResourceName = group.Key,
-                     DownloadCount = group.Count()
-                 }).ToList();
-
-            var file = new FileInfo(@"C:\Users\User\Desktop\MelonBook\ExcelReport\Reports.xlsx");
-
-            if (file.Exists)
-            {
-                file.Delete();
-            }
-
-            using var package = new ExcelPackage(file);
-
-            var ws = package.Workbook.Worksheets.Add("Report");
-
-            var range = ws.Cells["A2"].LoadFromCollection(groupedHistory, true);
-            range.AutoFitColumns();
-
-            // Formats the header
-            ws.Cells["A1"].Value = "Daily Download Report";
-            ws.Cells["A1:C1"].Merge = true;
-            ws.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Row(1).Style.Font.Size = 24;
-            ws.Row(1).Style.Font.Color.SetColor(Color.Blue);
-
-            ws.Row(2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Row(2).Style.Font.Bold = true;
-            ws.Column(3).Width = 20;
-
-            await package.SaveAsync();
-
-            var generatedFilePath = @"C:\Users\User\Desktop\MelonBook\ExcelReport\Reports.xlsx";
+            var generatedFilePath = _config.GetValue<string>("ReportStorage:Path");
             var generatedFileName = "Reports.xlsx";
             var mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
