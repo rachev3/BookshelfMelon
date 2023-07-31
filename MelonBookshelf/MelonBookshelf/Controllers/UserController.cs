@@ -41,10 +41,17 @@ namespace MelonBookshelf.Controllers
         [HttpPost]
         public async Task<IActionResult> DarkTheme()
         {
-            CookieOptions cookies = new CookieOptions();
-            cookies.Expires = DateTime.Now.AddHours(1);
-
-            Response.Cookies.Append("theme", "dark", cookies);
+            var cookie = Request.Cookies["DarkTheme"];
+            if (cookie != null)
+            {
+                Response.Cookies.Delete("DarkTheme");
+            }
+            else
+            {
+                var cookieOptions = new CookieOptions();
+                cookieOptions.Path = "/";
+                Response.Cookies.Append("DarkTheme", "Dark", cookieOptions);
+            }
             return Ok();
         }
 

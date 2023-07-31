@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
@@ -13,8 +14,9 @@
             </button>
             <ul class="dropdown-menu">
                 <li>
+                     
                     <!-- Add a button with a dark theme -->
-                    <button class="btn btn-dark-theme" onclick="toggleDarkTheme()">
+                    <button id="darkThemeButton" class="btn btn-dark-theme"@* asp-controller="User" asp-action="DarkTheme"*@ onclick="toggleDarkTheme()">
                         Dark Theme
                     </button>
                 </li>
@@ -35,21 +37,15 @@
     }
 </ul>
 
-<script>
-    function toggleDarkTheme() {
-        var button = document.querySelector('.btn-dark-theme');
-        button.classList.toggle("dark-theme");
-        $,post("/User/DarkTheme");
-    }
-</script>
+
 
 <!-- Dark theme button styles -->
 <style>
     .btn-dark-theme {
-        background-color: #343a40;
+          background-color: #f7f0f0;
         color: #fff;
     }
     .btn-dark-theme.dark-theme {
-        background-color: #f7f0f0; /* Change this to the desired background color for the button when dark theme is active */
+            background-color: #343a40;
     }
 </style>

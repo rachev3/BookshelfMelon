@@ -15,6 +15,8 @@ namespace MelonBookshelf.Controllers
 
         public IActionResult Index()
         {
+            HttpContext httpContext = HttpContext;                        
+            ViewData["HttpContext"] = httpContext;
             return View();
         }
 
