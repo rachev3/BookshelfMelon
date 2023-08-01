@@ -1,5 +1,6 @@
 ﻿using MimeKit;
 using MailKit.Net.Smtp;
+using System.Net.Mail;
 
 namespace MelonBookshelf.Models.Email
 {

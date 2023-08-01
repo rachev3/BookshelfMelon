@@ -8,7 +8,7 @@ namespace MelonBookshelf.Data
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BackgroundTaskId { get; set; }
-        public string? TaskType { get; set; }
+        public TaskType? TaskType { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? ExecutionTime { get; set; }
         public string? Payload { get; set; }

@@ -16,7 +16,11 @@ namespace MelonBookshelf.Data.Services
             _appDbContext.BackgroundTasks.Add(backgroundTask);
             await _appDbContext.SaveChangesAsync();
         }
-
+        public async Task<List<BackgroundTask>> GetAll()
+        {
+            var result = await _appDbContext.BackgroundTasks.ToListAsync();
+            return result;
+        }
         public async Task Remove(int id)
         {
             var result = await _appDbContext.BackgroundTasks.FirstOrDefaultAsync(n => n.BackgroundTaskId == id);

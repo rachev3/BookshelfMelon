@@ -10,6 +10,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using MelonBookshelf.ReportGenrator;
+using MelonBookshelf.Models.Email;
 
 namespace MelonBookshelf.Controllers
 {
@@ -22,8 +23,10 @@ namespace MelonBookshelf.Controllers
         private readonly IConfiguration _config;
         private readonly IUserService userService;
         private readonly IReportService reportService;
+        private readonly IEmailSender emailSender;
+        private readonly IBackgroundTaskService backgroundTaskService;
 
-        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService,IReportService reportService )
+        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService,IReportService reportService, IEmailSender email, IBackgroundTaskService backgroundTaskService )
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
@@ -31,6 +34,8 @@ namespace MelonBookshelf.Controllers
             this.userService = userService;
             this.commentService = commentService;
             this.reportService = reportService;
+            emailSender = email;
+            this.backgroundTaskService = backgroundTaskService;
         }
 
         [HttpGet]
@@ -324,6 +329,33 @@ namespace MelonBookshelf.Controllers
             var mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             return PhysicalFile(generatedFilePath, mimeType, generatedFileName);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GenerateReportPerTime(ReportViewModel reportViewModel)
+        {
+            //await reportService.Data(reportViewModel.Date);
+
+            //string name = User.Identity.Name;
+            //User user = userService.GetByUserName(name).Result;
+
+            //List<string> emails = new List<string>();
+            //var email = user.Email;
+            //emails.Add(email);
+
+            //var message = new Message(emails, "Report", "Report has arrived.");
+            //emailSender.SendEmail(message);
+
+            var task = new BackgroundTask();
+            task.ExecutionTime = DateTime.UtcNow.AddSeconds(10);
+            task.DateCreated = DateTime.UtcNow;
+            task.TaskType = TaskType.SendEmailForReport;
+            task.Payload = "ddrachevpro@abv.bg,Report,Report has arrived.";
+
+            await backgroundTaskService.Add(task);
+
+            return Ok();
         }
 
         [HttpGet]
