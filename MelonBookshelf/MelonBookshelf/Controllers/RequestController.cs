@@ -261,7 +261,7 @@ namespace MelonBookshelf.Controllers
 
             if (oldStatus != request.Status && emails.Count != 0)
             {
-                var message = new Message(emails, "Status Changed", "Request`s status is changed.");
+                var message = new Message(emails,emails, "Status Changed", "Request`s status is changed.");
                 emailSender.SendEmail(message);
             }
 

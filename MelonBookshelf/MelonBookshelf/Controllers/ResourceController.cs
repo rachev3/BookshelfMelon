@@ -11,6 +11,9 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using MelonBookshelf.ReportGenrator;
 using MelonBookshelf.Models.Email;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MelonBookshelf.Controllers
 {
@@ -26,7 +29,7 @@ namespace MelonBookshelf.Controllers
         private readonly IEmailSender emailSender;
         private readonly IBackgroundTaskService backgroundTaskService;
 
-        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService,IReportService reportService, IEmailSender email, IBackgroundTaskService backgroundTaskService )
+        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService, IReportService reportService, IEmailSender email, IBackgroundTaskService backgroundTaskService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
@@ -337,21 +340,30 @@ namespace MelonBookshelf.Controllers
         {
             //await reportService.Data(reportViewModel.Date);
 
-            //string name = User.Identity.Name;
-            //User user = userService.GetByUserName(name).Result;
+            string name = User.Identity.Name;
+            User user = userService.GetByUserName(name).Result;
 
-            //List<string> emails = new List<string>();
-            //var email = user.Email;
-            //emails.Add(email);
+            List<string> emails = new List<string>();
+            var email = user.Email;
+            emails.Add(email);
 
-            //var message = new Message(emails, "Report", "Report has arrived.");
-            //emailSender.SendEmail(message);
+
+            List<string> messages = new List<string>();
+            string mes = JsonSerializer.Serialize(new Message(emails, "Report", "Report has arrived."));
+            messages.Add(mes);
+
+            string json = JsonSerializer.Serialize(messages);
 
             var task = new BackgroundTask();
-            task.ExecutionTime = DateTime.UtcNow.AddSeconds(10);
+
+            //List<string> strings = JsonSerializer.Deserialize<List<string>>(json);
+            //Message message = JsonSerializer.Deserialize<Message>(strings[0]);    
+            //message.Convert(message.ToEmails);
+
+            task.ExecutionTime = DateTime.UtcNow.AddSeconds(60);
             task.DateCreated = DateTime.UtcNow;
             task.TaskType = TaskType.SendEmailForReport;
-            task.Payload = "ddrachevpro@abv.bg,Report,Report has arrived.";
+            task.Payload = json;
 
             await backgroundTaskService.Add(task);
 

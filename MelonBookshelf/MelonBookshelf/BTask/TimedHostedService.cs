@@ -2,6 +2,7 @@
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Migrations;
 using MelonBookshelf.Models.Email;
+using System.Text.Json;
 
 namespace MelonBookshelf.BTask
 {
@@ -11,7 +12,7 @@ namespace MelonBookshelf.BTask
         private readonly ILogger<TimedHostedService> _logger;
         private Timer? _timer = null;
 
-        private List<BackgroundTask> BackgroundTasks = new List<BackgroundTask>();
+        private List<BackgroundTask> _BackgroundTasks = new List<BackgroundTask>();
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScopeFactory _scopeFactory;
 
@@ -35,7 +36,7 @@ namespace MelonBookshelf.BTask
             _logger.LogInformation("Timed Hosted Service running.");
 
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(60));
+                TimeSpan.FromSeconds(30));
 
             return Task.CompletedTask;
         }
@@ -49,16 +50,32 @@ namespace MelonBookshelf.BTask
                 var backgroundTaskService = scope.ServiceProvider.GetRequiredService<IBackgroundTaskService>();
                 var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
-                this.BackgroundTasks = await GetAndSortTasks(backgroundTaskService);
-                var messageComponents = BackgroundTasks[0].Payload.Split(',').ToList();
-            
+                _BackgroundTasks = await GetAndSortTasks(backgroundTaskService);
 
-                List<string> emails = new List<string>();
-                var email = messageComponents[0];
-                emails.Add(email);
+                foreach (var task in _BackgroundTasks)
+                {
+                    if (task.ExecutionTime < DateTime.UtcNow)
+                    {
+                        string json = task.Payload;
+                        List<string> strings = JsonSerializer.Deserialize<List<string>>(json);
+                        Message message = JsonSerializer.Deserialize<Message>(strings[0]);
+                        message.Convert(message.ToEmails);
 
-                var message = new Message(emails, messageComponents[1], messageComponents[2]);
-                emailSender.SendEmail(message);
+                        emailSender.SendEmail(message);
+                        backgroundTaskService.Remove(task.BackgroundTaskId);
+
+                    }
+                }
+
+                //var messageComponents = BackgroundTasks[0].Payload.Split(',').ToList();
+
+
+                //List<string> emails = new List<string>();
+                //var email = messageComponents[0];
+                //emails.Add(email);
+
+                //var message = new Message(emails, messageComponents[1], messageComponents[2]);
+                //emailSender.SendEmail(message);
 
             }
 
