@@ -1,3 +1,4 @@
+using MelonBookshelf.BTask;
 using MelonBookshelf.Data;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IResourceCommentService, ResourceCommentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddHostedService<TimedHostedService>();
 
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")

@@ -4,6 +4,7 @@ using MelonBookshelf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelonBookshelf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230731114349_BackgroundTasks")]
+    partial class BackgroundTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,27 +24,29 @@ namespace MelonBookshelf.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("MelonBookshelf.Data.BackgroundTask", b =>
+            modelBuilder.Entity("MelonBookshelf.Data.DTO.BackgroundTask", b =>
                 {
-                    b.Property<int>("BackgroundTaskId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BackgroundTaskId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("DateCreated")
+                    b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("ExecutionTime")
+                    b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Payload")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TaskType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("BackgroundTaskId");
+                    b.HasKey("Id");
 
                     b.ToTable("BackgroundTasks");
                 });

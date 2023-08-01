@@ -25,6 +25,5 @@ function toggleDarkTheme() {
     $.ajax({
         url: "/User/DarkTheme",
         type: "POST",
-
     });
 }
