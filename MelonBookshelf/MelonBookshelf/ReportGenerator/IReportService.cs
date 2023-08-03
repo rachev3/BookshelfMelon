@@ -1,8 +1,11 @@
-﻿namespace MelonBookshelf.ReportGenrator
+﻿using MelonBookshelf.ReportGenerator;
+
+namespace MelonBookshelf.ReportGenrator
 {
     public interface IReportService
     {
-        public Task Data(DateTime date);
-        public Task ExcelConfiguration(List<ReportData> data);
+        Task Data(DateTime date);
+        Task ExcelConfiguration(List<ReportData> data);
+        Task<EmailJsonPayload> GenerateExcelFile(DateTime date);
     }
 }

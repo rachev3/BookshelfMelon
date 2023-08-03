@@ -2,7 +2,9 @@
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Migrations;
 using MelonBookshelf.Models.Email;
+using MelonBookshelf.ReportGenerator;
 using System.Text.Json;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace MelonBookshelf.BTask
 {
@@ -57,30 +59,52 @@ namespace MelonBookshelf.BTask
                     if (task.ExecutionTime < DateTime.UtcNow)
                     {
                         string json = task.Payload;
-                        List<string> strings = JsonSerializer.Deserialize<List<string>>(json);
-                        Message message = JsonSerializer.Deserialize<Message>(strings[0]);
+
+                        EmailJsonPayload emailJson = JsonSerializer.Deserialize<EmailJsonPayload>(json);
+                        Message message = new Message();
+                        message.Subject = emailJson.Subject;
+                        message.Content = emailJson.Content;
+                        message.ToEmails = emailJson.ToEmails;
+
                         message.Convert(message.ToEmails);
 
-                        emailSender.SendEmail(message);
-                        backgroundTaskService.Remove(task.BackgroundTaskId);
+                        var filePath = emailJson.FilePathAttachments;
+                        byte[] bytes = System.IO.File.ReadAllBytes(filePath);
 
+                        using (var memoryStream = new MemoryStream(bytes))
+                        {
+
+                            var excelFile = new FormFile(memoryStream, 0, memoryStream.Length, "report.xlsx", "report.xlsx")
+                            {
+                                Headers = new HeaderDictionary(),
+                                ContentType = "application/json",
+                            };
+
+                            var files = new List<IFormFile>();
+                            files.Add(excelFile);
+                            message.Attachments = files;
+
+                            emailSender.SendEmail(message);
+                            await backgroundTaskService.Remove(task.BackgroundTaskId);
+
+                        }
                     }
+
+                    //var messageComponents = BackgroundTasks[0].Payload.Split(',').ToList();
+
+
+                    //List<string> emails = new List<string>();
+                    //var email = messageComponents[0];
+                    //emails.Add(email);
+
+                    //var message = new Message(emails, messageComponents[1], messageComponents[2]);
+                    //emailSender.SendEmail(message);
+
                 }
 
-                //var messageComponents = BackgroundTasks[0].Payload.Split(',').ToList();
-
-
-                //List<string> emails = new List<string>();
-                //var email = messageComponents[0];
-                //emails.Add(email);
-
-                //var message = new Message(emails, messageComponents[1], messageComponents[2]);
-                //emailSender.SendEmail(message);
-
+                _logger.LogInformation(
+                    "Timed Hosted Service is working. Count: {Count}", count);
             }
-
-            _logger.LogInformation(
-                "Timed Hosted Service is working. Count: {Count}", count);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)

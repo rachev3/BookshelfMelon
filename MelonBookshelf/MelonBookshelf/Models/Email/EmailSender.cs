@@ -24,8 +24,21 @@ namespace MelonBookshelf.Models.Email
             emailMessage.From.Add(new MailboxAddress("MelonBookshelf",_emailConfig.From));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
-
+            var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<h2 style='color:red;'>{0}</h2>", message.Content) };
+            if (message.Attachments != null && message.Attachments.Any())
+            {
+                byte[] fileBytes;
+                foreach (var attachment in message.Attachments)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        attachment.CopyTo(ms);
+                        fileBytes = ms.ToArray();
+                    }
+                    bodyBuilder.Attachments.Add(attachment.FileName, fileBytes, ContentType.Parse(attachment.ContentType));
+                }
+            }
+            emailMessage.Body = bodyBuilder.ToMessageBody();
             return emailMessage;
         }
 

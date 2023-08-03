@@ -1,19 +1,16 @@
 ﻿using AutoMapper;
 using MelonBookshelf.Data;
+using MelonBookshelf.Data.DTO;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using MelonBookshelf.Models.Email;
+using MelonBookshelf.ReportGenerator;
+using MelonBookshelf.ReportGenrator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using MelonBookshelf.Data.DTO;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Drawing;
-using MelonBookshelf.ReportGenrator;
-using MelonBookshelf.Models.Email;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+
 
 namespace MelonBookshelf.Controllers
 {
@@ -338,8 +335,10 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateReportPerTime(ReportViewModel reportViewModel)
         {
-            //await reportService.Data(reportViewModel.Date);
-
+            var json = await reportService.GenerateExcelFile(reportViewModel.Date);
+            json.Content = "Report has arived";
+            json.Subject = "Report "+reportViewModel.Date.Date.ToString();
+            
             string name = User.Identity.Name;
             User user = userService.GetByUserName(name).Result;
 
@@ -347,27 +346,19 @@ namespace MelonBookshelf.Controllers
             var email = user.Email;
             emails.Add(email);
 
-
-            List<string> messages = new List<string>();
-            string mes = JsonSerializer.Serialize(new Message(emails, "Report", "Report has arrived."));
-            messages.Add(mes);
-
-            string json = JsonSerializer.Serialize(messages);
+            json.ToEmails = emails;
+            
+            string serialized = JsonSerializer.Serialize(json);
 
             var task = new BackgroundTask();
-
-            //List<string> strings = JsonSerializer.Deserialize<List<string>>(json);
-            //Message message = JsonSerializer.Deserialize<Message>(strings[0]);    
-            //message.Convert(message.ToEmails);
-
-            task.ExecutionTime = DateTime.UtcNow.AddSeconds(60);
+            task.ExecutionTime = DateTime.UtcNow.AddSeconds(20);
             task.DateCreated = DateTime.UtcNow;
             task.TaskType = TaskType.SendEmailForReport;
-            task.Payload = json;
+            task.Payload = serialized;
 
             await backgroundTaskService.Add(task);
 
-            return Ok();
+            return View("DownloadsReport");
         }
 
         [HttpGet]

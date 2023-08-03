@@ -1,7 +1,10 @@
 ﻿using MelonBookshelf.Data.DTO;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
+using MelonBookshelf.ReportGenerator;
+using MimeKit;
 using OfficeOpenXml;
+using OfficeOpenXml.DataValidation;
 using OfficeOpenXml.Style;
 using System.Collections.Generic;
 using System.Drawing;
@@ -68,5 +71,81 @@ namespace MelonBookshelf.ReportGenrator
 
             await package.SaveAsync();
         }
+        public async Task<EmailJsonPayload> GenerateExcelFile(DateTime date)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            List<ResourceDownloadHistory> history = await resourceService.ReportData(date);
+
+            List<ReportData> groupedHistory = history
+                 .GroupBy(item => item.ResourceName)
+                 .Select(group => new ReportData
+                 {
+                     DownloadDate = group.First().DownloadDate.Date.ToString(),
+                     ResourceName = group.Key,
+                     DownloadCount = group.Count()
+                 }).ToList();
+
+            var file = new FileInfo(_config.GetValue<string>("ReportStorage:Path"));
+
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
+            using (var package = new ExcelPackage(file))
+            {
+                var ws = package.Workbook.Worksheets.Add("Report");
+
+                var range = ws.Cells["A2"].LoadFromCollection(groupedHistory, true);
+                range.AutoFitColumns();
+
+                ws.Cells["A1"].Value = "Daily Download Report";
+                ws.Cells["A1:C1"].Merge = true;
+                ws.Column(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Row(1).Style.Font.Size = 24;
+                ws.Row(1).Style.Font.Color.SetColor(Color.Blue);
+
+                ws.Row(2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Row(2).Style.Font.Bold = true;
+                ws.Column(3).Width = 20;
+
+                await package.SaveAsync();
+            }
+
+            // Read the generated Excel file into a byte array
+            byte[] fileContent = File.ReadAllBytes(file.FullName);
+
+            // Create an IFormFileCollection containing a single IFormFile
+            var excelFile = new FormFile(new MemoryStream(fileContent), 0, fileContent.Length, file.Name, file.Name);
+
+            var generatedFilePath = _config.GetValue<string>("ReportStorage:Path");
+            await File.WriteAllBytesAsync(generatedFilePath, fileContent);
+            // Create an IFormFileCollection containing the single IFormFile
+            EmailJsonPayload emailJsonPayload = new EmailJsonPayload();
+            emailJsonPayload.FilePathAttachments = generatedFilePath;
+
+            return emailJsonPayload;
+        }
+        //public async Task<EmailJsonPayload>> Get()
+        //{
+        //    var filePath = _config.GetValue<string>("ReportStorage:Path");
+        //    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+
+        //    using (var memoryStream = new MemoryStream(bytes))
+        //    {
+        //        Create a FormFile from the MemoryStream
+        //        var excelFile = new FormFile(memoryStream, 0, memoryStream.Length, "report.xlsx", "report.xlsx")
+        //        {
+        //            Headers = new HeaderDictionary()
+        //        };
+
+        //        var files = new List<IFormFile>();
+        //        files.Add(excelFile);
+
+
+
+        //        return files;
+        //    }
+        //}
     }
 }

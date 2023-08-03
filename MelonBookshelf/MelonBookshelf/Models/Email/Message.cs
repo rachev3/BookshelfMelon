@@ -13,10 +13,31 @@ namespace MelonBookshelf.Models.Email
         public List<MailboxAddress>? To { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
+        public List<IFormFile>? Attachments { get; set; }
 
         public Message()
         {
            
+        }
+        public Message(List<string> emails, IEnumerable<string> to, string subject, string content, List<IFormFile> formFiles)
+        {
+            To = new List<MailboxAddress>();
+
+            To.AddRange(to.Select(x => new MailboxAddress("MelonBookshelf", x)));
+            ToEmails = emails;
+            Subject = subject;
+            Content = content;
+            Attachments = formFiles;
+        }
+        public Message(List<string> emails, string subject, string content, List<IFormFile> formFiles)
+        {
+            To = new List<MailboxAddress>();
+
+            To.AddRange(emails.Select(x => new MailboxAddress("MelonBookshelf", x)));
+            ToEmails = emails;
+            Subject = subject;
+            Content = content;
+            Attachments = formFiles;
         }
         public Message(List<string> emails,IEnumerable<string> to, string subject, string content)
         {
