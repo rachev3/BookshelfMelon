@@ -56,7 +56,7 @@ namespace MelonBookshelf.BTask
 
                 foreach (var task in _BackgroundTasks)
                 {
-                    if (task.ExecutionTime < DateTime.UtcNow)
+                    if (task.ExecutionTime <= DateTime.Now)
                     {
                         string json = task.Payload;
 

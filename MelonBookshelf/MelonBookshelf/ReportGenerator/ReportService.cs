@@ -80,7 +80,7 @@ namespace MelonBookshelf.ReportGenrator
                  .GroupBy(item => item.ResourceName)
                  .Select(group => new ReportData
                  {
-                     DownloadDate = group.First().DownloadDate.Date.ToString(),
+                     DownloadDate = group.First().DownloadDate.Date.Date.ToString(),
                      ResourceName = group.Key,
                      DownloadCount = group.Count()
                  }).ToList();

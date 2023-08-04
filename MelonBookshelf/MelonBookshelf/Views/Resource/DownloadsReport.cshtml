@@ -5,9 +5,11 @@
     <div class="column">
         <form method="post" asp-action="GenerateReport">
             <h2>Generate Report Now</h2>
-            <label asp-for="DateOfReport" class="control-label">Choose Date for the Report:</label>
-            <input type="date" asp-for="DateOfReport" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-            <span asp-validation-for="DateOfReport" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="DateOfReport" class="control-label">Choose Date for the Report:</label>
+                <input type="date" asp-for="DateOfReport" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="DateOfReport" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Generate Report" class="btn btn-primary btn-lg" asp-action="GenerateReport" />
             </div>
@@ -18,12 +20,14 @@
     <div class="column">
         <form method="post" asp-action="GenerateReportPerTime">
             <h2>Generate Report Later</h2>
-            <label asp-for="DayOfExecution" class="control-label">Choose Date to Generate Report:</label>
-            <input asp-for="DayOfExecution" class="form-control" />
-            <span asp-validation-for="DayOfExecution" class="text-danger"></span >
             <div class="form-group">
-                <label for="ReportDate" class="control-label">Choose Date for the Report:</label>
-                <input type="date" id="ReportDate" name="ReportDate" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <label asp-for="DayOfExecution" class="control-label">Choose Date to Generate Report:</label>
+                <input asp-for="DayOfExecution" class="form-control" />
+                <span asp-validation-for="DayOfExecution" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfReport" class="control-label">Choose Date for the Report:</label>
+                <input type="date" asp-for="DateOfReport" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="DateOfReport" class="text-danger"></span>
             </div>
 

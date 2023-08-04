@@ -337,7 +337,7 @@ namespace MelonBookshelf.Controllers
         {
             var json = await reportService.GenerateJsonPayload(reportViewModel.DateOfReport);
             json.Content = "Report has arived";
-            json.Subject = "Report " +reportViewModel.DateOfReport.ToString();
+            json.Subject = "Report " + reportViewModel.DateOfReport.ToString();
             
             string name = User.Identity.Name;
             User user = userService.GetByUserName(name).Result;
