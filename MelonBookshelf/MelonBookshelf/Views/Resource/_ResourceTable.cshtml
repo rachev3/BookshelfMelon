@@ -71,13 +71,13 @@
                 <td class="align-middle">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.ResourceId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#editPartial" data-ajax-success="showModal()">Edit</a>
-                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.ResourceId">
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.ResourceId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#editPartial" data-ajax-success="showModal()" style="width: 80px;">Edit</a>
+                        <a class="btn btn-outline-info mt-1" asp-action="Details" asp-route-id="@item.ResourceId" style="width: 80px;">
                             <i class="bi bi-pencil-square"></i>Details
                         </a>
                     }
                     else{
-                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.ResourceId">
+                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.ResourceId" style="width: 80px;">
                             <i class="bi bi-pencil-square"></i>Details
                         </a>
                     }

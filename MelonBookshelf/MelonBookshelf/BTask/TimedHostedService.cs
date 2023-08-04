@@ -15,10 +15,9 @@ namespace MelonBookshelf.BTask
         private Timer? _timer = null;
 
         private List<BackgroundTask> _BackgroundTasks = new List<BackgroundTask>();
-        private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public TimedHostedService(ILogger<TimedHostedService> logger, IServiceScopeFactory scopeFactory  /*IBackgroundTaskService backgroundTaskService*/)
+        public TimedHostedService(ILogger<TimedHostedService> logger, IServiceScopeFactory scopeFactory)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
