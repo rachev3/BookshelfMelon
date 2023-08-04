@@ -6,6 +6,7 @@
         {
 
         }
-        public DateTime Date { get; set; }
+        public DateTime DateOfReport { get; set; }
+        public DateTime? DayOfExecution { get; set; }
     }
 }

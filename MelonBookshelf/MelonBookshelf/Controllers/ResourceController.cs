@@ -322,7 +322,7 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateReport(ReportViewModel reportViewModel)
         {
-            await reportService.Data(reportViewModel.Date);
+            await reportService.Data(reportViewModel.DateOfReport);
 
             var generatedFilePath = _config.GetValue<string>("ReportStorage:Path");
             var generatedFileName = "Reports.xlsx";
@@ -335,23 +335,22 @@ namespace MelonBookshelf.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateReportPerTime(ReportViewModel reportViewModel)
         {
-            var json = await reportService.GenerateExcelFile(reportViewModel.Date);
+            var json = await reportService.GenerateJsonPayload(reportViewModel.DateOfReport);
             json.Content = "Report has arived";
-            json.Subject = "Report "+reportViewModel.Date.Date.ToString();
+            json.Subject = "Report " +reportViewModel.DateOfReport.ToString();
             
             string name = User.Identity.Name;
             User user = userService.GetByUserName(name).Result;
 
             List<string> emails = new List<string>();
-            var email = user.Email;
-            emails.Add(email);
+            emails.Add(user.Email);
 
             json.ToEmails = emails;
             
             string serialized = JsonSerializer.Serialize(json);
 
             var task = new BackgroundTask();
-            task.ExecutionTime = DateTime.UtcNow.AddSeconds(20);
+            task.ExecutionTime = reportViewModel.DayOfExecution;
             task.DateCreated = DateTime.UtcNow;
             task.TaskType = TaskType.SendEmailForReport;
             task.Payload = serialized;

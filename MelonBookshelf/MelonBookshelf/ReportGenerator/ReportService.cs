@@ -71,7 +71,7 @@ namespace MelonBookshelf.ReportGenrator
 
             await package.SaveAsync();
         }
-        public async Task<EmailJsonPayload> GenerateExcelFile(DateTime date)
+        public async Task<EmailJsonPayload> GenerateJsonPayload(DateTime date)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             List<ResourceDownloadHistory> history = await resourceService.ReportData(date);
@@ -115,37 +115,18 @@ namespace MelonBookshelf.ReportGenrator
             // Read the generated Excel file into a byte array
             byte[] fileContent = File.ReadAllBytes(file.FullName);
 
-            // Create an IFormFileCollection containing a single IFormFile
+
             var excelFile = new FormFile(new MemoryStream(fileContent), 0, fileContent.Length, file.Name, file.Name);
 
             var generatedFilePath = _config.GetValue<string>("ReportStorage:Path");
+
             await File.WriteAllBytesAsync(generatedFilePath, fileContent);
-            // Create an IFormFileCollection containing the single IFormFile
-            EmailJsonPayload emailJsonPayload = new EmailJsonPayload();
-            emailJsonPayload.FilePathAttachments = generatedFilePath;
+
+            EmailJsonPayload emailJsonPayload = new EmailJsonPayload(){
+                FilePathAttachments = generatedFilePath
+            };
 
             return emailJsonPayload;
         }
-        //public async Task<EmailJsonPayload>> Get()
-        //{
-        //    var filePath = _config.GetValue<string>("ReportStorage:Path");
-        //    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
-
-        //    using (var memoryStream = new MemoryStream(bytes))
-        //    {
-        //        Create a FormFile from the MemoryStream
-        //        var excelFile = new FormFile(memoryStream, 0, memoryStream.Length, "report.xlsx", "report.xlsx")
-        //        {
-        //            Headers = new HeaderDictionary()
-        //        };
-
-        //        var files = new List<IFormFile>();
-        //        files.Add(excelFile);
-
-
-
-        //        return files;
-        //    }
-        //}
     }
 }

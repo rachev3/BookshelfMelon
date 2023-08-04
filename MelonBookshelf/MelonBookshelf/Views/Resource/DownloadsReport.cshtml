@@ -1,20 +1,72 @@
 ﻿@model ReportViewModel
+<style>
+    /* Two-column layout */
+    .row {
+        display: flex;
+        justify-content: space-between;
+    }
 
-<form method="post" asp-action="GenerateReport">
-        <label asp-for="Date" class="control-label"></label>
-        <input type="date" asp-for="Date" class="form-control" />
-        <span asp-validation-for="Date" class="text-danger"></span>
-    <div class="form-group">
-        <input type="submit" value="Generate Report" class="btn btn-primary btn-lg" asp-action="GenerateReport" />
+    .column {
+        width: 48%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
+    /* Center the forms horizontally within the columns */
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Add some spacing between form elements */
+    .form-group {
+        margin-top: 10px;
+    }
+
+    /* Style the heading */
+    h2 {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="row">
+    <!-- Left column: Generate Report Now -->
+    <div class="column">
+        <form method="post" asp-action="GenerateReport">
+            <h2>Generate Report Now</h2>
+            <label asp-for="DateOfReport" class="control-label">Choose Date for the Report:</label>
+            <input type="date" asp-for="DateOfReport" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DateOfReport" class="text-danger"></span>
+            <div class="form-group">
+                <input type="submit" value="Generate Report" class="btn btn-primary btn-lg" asp-action="GenerateReport" />
+            </div>
+        </form>
     </div>
-</form>
-<form method="post" asp-action="GenerateReportPerTime">
-    <label asp-for="Date" class="control-label"></label>
-    <input type="date" asp-for="Date" class="form-control" />
-    <span asp-validation-for="Date" class="text-danger"></span>
-    <div class="form-group">
-        <input type="submit" value="Generate Report for every 20sec (email)" class="btn btn-primary btn-lg" asp-action="GenerateReportPerTime" />
 
+    <!-- Right column: Generate Report Later -->
+    <div class="column">
+        <form method="post" asp-action="GenerateReportPerTime">
+            <h2>Generate Report Later</h2>
+            <label asp-for="DayOfExecution" class="control-label">Choose Date to Generate Report:</label>
+            <input asp-for="DayOfExecution" class="form-control" />
+            <span asp-validation-for="DayOfExecution" class="text-danger"></span>
+            <div class="form-group">
+                <input type="submit" value="Generate Report" class="btn btn-primary btn-lg" asp-action="GenerateReport" />
+            </div>
+
+            <div class="form-group">
+                <label for="ReportDate" class="control-label">Choose Date for the Report:</label>
+                <input type="date" id="ReportDate" name="ReportDate" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="DateOfReport" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Schedule Report" class="btn btn-primary btn-lg" asp-action="GenerateReportPerTime" />
+            </div>
+        </form>
     </div>
-</form>
+</div>

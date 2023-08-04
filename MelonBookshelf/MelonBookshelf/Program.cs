@@ -33,7 +33,7 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IResourceCommentService, ResourceCommentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
-builder.Services.AddHostedService<TimedHostedService>();
+//builder.Services.AddHostedService<TimedHostedService>();
 
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")

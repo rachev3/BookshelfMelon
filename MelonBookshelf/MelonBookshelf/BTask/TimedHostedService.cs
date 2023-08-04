@@ -82,6 +82,7 @@ namespace MelonBookshelf.BTask
 
                             var files = new List<IFormFile>();
                             files.Add(excelFile);
+
                             message.Attachments = files;
 
                             emailSender.SendEmail(message);
@@ -89,16 +90,6 @@ namespace MelonBookshelf.BTask
 
                         }
                     }
-
-                    //var messageComponents = BackgroundTasks[0].Payload.Split(',').ToList();
-
-
-                    //List<string> emails = new List<string>();
-                    //var email = messageComponents[0];
-                    //emails.Add(email);
-
-                    //var message = new Message(emails, messageComponents[1], messageComponents[2]);
-                    //emailSender.SendEmail(message);
 
                 }
 
