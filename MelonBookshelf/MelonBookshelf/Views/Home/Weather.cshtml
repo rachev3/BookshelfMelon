@@ -1,0 +1,55 @@
+﻿@*@model 
+<style>
+    #apiDiv {
+        padding-left: 20px;
+    }
+
+        #apiDiv select, #apiDiv button {
+            font-size: 25px;
+        }
+
+        #apiDiv h4 {
+            margin: 10px 0;
+        }
+
+        #apiDiv #message table {
+            width: 100%;
+            border: double 1px #00ffff;
+            background: #ff6a00;
+        }
+
+            #apiDiv #message table th {
+                text-align: left;
+                background: #4CAF50;
+            }
+</style>
+<h1>Implement OpenWeatherMap API in ASP.NET MVC</h1>
+@using (Html.BeginForm())
+{
+    <button id="reset" name="reset">Reset »</button>
+}
+<div id="apiDiv">
+    <h4>Select the City for Weather Report</h4>
+    @using (Html.BeginForm())
+    {
+        foreach (var city in Model.cities)
+        {
+            <span>
+                @Html.RadioButtonFor(m => m.cities, city.Value) @city.Key
+            </span>
+        }
+
+        <button name="submit">Submit</button>
+    }
+    <div id="message">@(new HtmlString(Model.apiResponse))</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("input[id='cities']").change(function () {
+            $(this).parents("#apiDiv").find
+                ("span").css("background", "none");
+            $(this).parent().css("background", "#4CAF50");
+        });
+    });
+</script>*@

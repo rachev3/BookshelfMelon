@@ -5,6 +5,8 @@ using MelonBookshelf.Models;
 using MelonBookshelf.Models.Email;
 using MelonBookshelf.ReportGenrator;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 
@@ -35,6 +37,25 @@ builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
 builder.Services.AddHostedService<TimedHostedService>();
 
+builder.Services.AddHttpClient();
+
+builder.Services.AddApiVersioning(config =>
+{
+    config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+    config.ReportApiVersions = true;
+});
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+    setup.GroupNameFormat = "'v'VVV";
+    setup.SubstituteApiVersionInUrl = true;
+});
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Version 1", Version = "v1", Description = "Bookshelf Api" });
+});
+
+
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")
         .Get<EmailConfiguration>();
@@ -43,12 +64,28 @@ builder.Services.AddSingleton(emailConfig);
 builder.Services.AddControllers();
 
 
-var app = builder.Build();
 
+
+var app = builder.Build();
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+
+
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.RoutePrefix = "";
+
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint(
+                $"/swagger/{description.GroupName}/swagger.json",
+                $"Version {description.ApiVersion.MajorVersion?.ToString()}");
+        }
+    });
 }
 else
 {
@@ -64,6 +101,11 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//});
 
 app.MapControllerRoute(
     name: "default",
