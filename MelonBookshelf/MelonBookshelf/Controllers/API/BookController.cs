@@ -1,12 +1,7 @@
 ﻿using MelonBookshelf.Models;
-using MelonBookshelf.Models.OpenWeatherMapApiModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Text.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+
 //using System.Web.Http;
 
 
@@ -45,7 +40,7 @@ namespace MelonBookshelf.Controllers.API
             {
                 string cityID = "728385";
                 string apiKey = "15f411ae608fb8661399e3a291cbffe5";
-                HttpResponseMessage response = await client.GetAsync($"https://api.openweathermap.org/data/2.5/forecast?id={cityID}&appid={apiKey}");
+                HttpResponseMessage response = await client.GetAsync($"https://api.openweathermap.org/data/2.5/weather?q=Pavlikeni&appid={apiKey}");
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -1,50 +1,31 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MelonBookshelf.Models.OpenWeatherMapApiModels
+namespace MelonBookshelf.Models
 {
     public class WeatherData
     {
-        public string Cod { get; set; }
-        public float Message { get; set; }
-        public int Cnt { get; set; }
-        public WeatherItem[] List { get; set; }
-        public City City { get; set; }
+        public Coord Coord { get; set; }
+        public WeatherItem[] Weather { get; set; }
+        public string Base { get; set; }
+        public Main Main { get; set; }
+        public int Visibility { get; set; }
+        public Wind Wind { get; set; }
+        public Clouds Clouds { get; set; }
+        public long Dt { get; set; }
+        public Sys Sys { get; set; }
+        public int Timezone { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Cod { get; set; }
+    }
+
+    public class Coord
+    {
+        public float Lon { get; set; }
+        public float Lat { get; set; }
     }
 
     public class WeatherItem
-    {
-        public long Dt { get; set; }
-        public Main Main { get; set; }
-        public Weather[] Weather { get; set; }
-        public Clouds Clouds { get; set; }
-        public Wind Wind { get; set; }
-        public int Visibility { get; set; }
-        public float Pop { get; set; }
-        public Sys Sys { get; set; }
-        [JsonPropertyName("dt_txt")]
-        public string DtTxt { get; set; }
-    }
-
-    public class Main
-    {
-        public float Temp { get; set; }
-        [JsonPropertyName("feels_like")]
-        public float FeelsLike { get; set; }
-        [JsonPropertyName("temp_min")]
-        public float TempMin { get; set; }
-        [JsonPropertyName("temp_max")]
-        public float TempMax { get; set; }
-        public int Pressure { get; set; }
-        public int Humidity { get; set; }
-        [JsonPropertyName("sea_level")]
-        public int SeaLevel { get; set; }
-        [JsonPropertyName("grnd_level")]
-        public int GroundLevel { get; set; }
-        [JsonPropertyName("temp_kf")]
-        public float TempKf { get; set; }
-    }
-
-    public class Weather
     {
         public int Id { get; set; }
         public string Main { get; set; }
@@ -52,9 +33,20 @@ namespace MelonBookshelf.Models.OpenWeatherMapApiModels
         public string Icon { get; set; }
     }
 
-    public class Clouds
+    public class Main
     {
-        public int All { get; set; }
+        public float Temp { get; set; }
+        public float FeelsLike { get; set; }
+        public float TempMin { get; set; }
+        public float TempMax { get; set; }
+        public int Pressure { get; set; }
+        public int Humidity { get; set; }
+        public int SeaLevel { get; set; }
+        public int GroundLevel { get; set; }
+        public float TempKf { get; set; }
+
+        // Additional property to get temperature in Celsius
+        public float TempCelsius => Temp - 273.15f;
     }
 
     public class Wind
@@ -64,27 +56,18 @@ namespace MelonBookshelf.Models.OpenWeatherMapApiModels
         public float Gust { get; set; }
     }
 
+    public class Clouds
+    {
+        public int All { get; set; }
+    }
+
     public class Sys
     {
-        public string Pod { get; set; }
-    }
-
-    public class City
-    {
+        public int Type { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }
-        public Coord Coord { get; set; }
         public string Country { get; set; }
-        public int Population { get; set; }
-        public int Timezone { get; set; }
         public long Sunrise { get; set; }
         public long Sunset { get; set; }
-    }
-
-    public class Coord
-    {
-        public float Lat { get; set; }
-        public float Lon { get; set; }
     }
 }
 
