@@ -22,11 +22,8 @@ namespace MelonBookshelf.Controllers
             HttpContext httpContext = HttpContext;                        
             ViewData["HttpContext"] = httpContext;
 
-            string name = User.Identity.Name;
-            var user = userService.GetByUserName(name).Result;
-
-            var viewModel = weatherService.GetById(user.City).Result;
-            return View(viewModel);
+            
+            return View();
         }
 
         public IActionResult Privacy()

@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FileStorage\" />
+    <None Include="wwwroot\Logo\melon-logo.jpg" />
   </ItemGroup>
 
 </Project>
