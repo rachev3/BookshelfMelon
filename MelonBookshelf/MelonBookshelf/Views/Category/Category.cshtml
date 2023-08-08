@@ -3,26 +3,23 @@
 @{
     ViewData["Title"] = "List of Categories";
 }
-@*<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this category?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="deleteCategoryLink" asp-action="Delete" asp-route-id="">Delete</a>
-            </div>
-        </div>
-    </div>
-</div>*@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse and manage categories.">
+    <meta name="keywords" content="categories, list, management, MelonBookshelf">
+    <meta name="author" content="Your Name">
 
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="List of Categories - Melon Bookshelf">
+    <meta property="og:description" content="Browse and manage categories.">
+  @*  <meta property="og:url" content="@HttpContext.Current.Request.Url.AbsoluteUri">*@
+    <meta property="og:image" content="URL_to_your_image_if_available">
+
+    <title>@ViewData["All Categories"]</title>
+
+    <!-- Include your CSS and JavaScript files here -->
+</head>
 <div class="row">
     <div class="col-md-8 offset-md-2">
         <div class="text-center">

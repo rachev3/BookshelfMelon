@@ -16,6 +16,7 @@ namespace MelonBookshelf.Models
             Id = user.Id;
             PhoneNumber = user.PhoneNumber;
             Username = user.UserName;
+            City = user.City;
         }
         public string Id { get; set; }
         public string Username { get; set; }
@@ -23,5 +24,6 @@ namespace MelonBookshelf.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? City { get; set; }
     }
 }

@@ -51,10 +51,10 @@ builder.Services.AddVersionedApiExplorer(setup =>
     setup.GroupNameFormat = "'v'VVV";
     setup.SubstituteApiVersionInUrl = true;
 });
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Version 1", Version = "v1", Description = "Bookshelf Api" });
-});
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Version 1", Version = "v1", Description = "Bookshelf Api" });
+//});
 
 
 var emailConfig = builder.Configuration
@@ -68,25 +68,25 @@ builder.Services.AddControllers();
 
 
 var app = builder.Build();
-var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+//var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
 
 
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.RoutePrefix = "";
+    //app.UseSwagger();
+    //app.UseSwaggerUI(options =>
+    //{
+    //    options.RoutePrefix = "";
 
-        foreach (var description in provider.ApiVersionDescriptions)
-        {
-            options.SwaggerEndpoint(
-                $"/swagger/{description.GroupName}/swagger.json",
-                $"Version {description.ApiVersion.MajorVersion?.ToString()}");
-        }
-    });
+    //    foreach (var description in provider.ApiVersionDescriptions)
+    //    {
+    //        options.SwaggerEndpoint(
+    //            $"/swagger/{description.GroupName}/swagger.json",
+    //            $"Version {description.ApiVersion.MajorVersion?.ToString()}");
+    //    }
+    //});
 }
 else
 {
