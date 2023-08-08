@@ -1,0 +1,12 @@
+﻿@keyframes scaleAnimation {
+    0%, 100% {
+        background-size: 100% 0;
+        font-size: 2rem; /* Start with a slightly larger font size */
+    }
+
+    50% {
+        background-size: 100% 100%;
+        font-size: 3rem; /* Gradually become bigger */
+        animation: none;
+    }
+}

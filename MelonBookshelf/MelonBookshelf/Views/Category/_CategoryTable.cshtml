@@ -1,7 +1,7 @@
 ﻿@model CategoryPageViewModel
 
-<table class="table">
-    <thead>
+<table class="table table-bordered table-hover mt-3" style="background-color: #f4f4f4; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+    <thead class="thead-light">
         <tr class="text-center">
             <th>Name</th>
         </tr>
@@ -9,21 +9,17 @@
     <tbody>
         @foreach (var item in Model.Categories)
         {
-            <tr>
+            <tr style="border-top: 1px solid rgba(0, 0, 0, 0.1);">
+                <td class="align-middle">@Html.DisplayFor(modelItem => item.Name)</td>
+                @if (User.IsInRole("Admin"))
+                {
                 <td class="align-middle">
-                    @Html.DisplayFor(modelItem => item.Name)
+                   
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#editPartial" data-ajax-success="showEditModal"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal"><i class="bi bi-trash"></i> Delete</a>
                 </td>
-
-                <td class="align-middle">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#editPartial" data-ajax-success="showEditModal"><i class="bi bi-pencil-square"></i>Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId" data-ajax="true" data-ajax-method="get" data-ajax-mode="replace" data-ajax-update="#confirmDeletePartial" data-ajax-success="showModal"><i class="bi bi-trash"></i>Delete</a>
                     }
-                </td>
             </tr>
         }
-        
     </tbody>
 </table>
-

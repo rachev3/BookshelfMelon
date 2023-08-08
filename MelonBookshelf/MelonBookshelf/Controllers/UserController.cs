@@ -207,6 +207,7 @@ namespace MelonBookshelf.Controllers
             user.LastName = userViewModel.LastName;
             user.Email = userViewModel.Email;
             user.PhoneNumber = userViewModel.PhoneNumber;
+            user.City = userViewModel.City;
 
             await userService.Update(user);
 
