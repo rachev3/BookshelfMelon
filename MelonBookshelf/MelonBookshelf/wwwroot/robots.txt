@@ -1,0 +1,12 @@
+﻿User-agent: *
+Disallow: /private/
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /restricted/
+Disallow: /login/
+Disallow: /register/
+
+User-agent: Googlebot
+Allow: /$
+
+Sitemap: https://www.melonbookshelf.com/sitemap.xml
