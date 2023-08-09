@@ -1,11 +1,15 @@
 ﻿@model CategoryPageViewModel
 
+
 <head>
-    <title>@ViewData["All Categories"]</title>
-    <meta name="description" content="Browse and manage categories.">
-    <meta name="keywords" content="categories, list, management, MelonBookshelf">
-    <meta name="author" content="Your Name">
+    @{
+        ViewData["Title"] = "All Categories";
+        ViewData["Description"] = "All Categories available.";
+        ViewData["Keywords"] = "categories, all, list";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
 </head>
+<body>
 <div class="row">
     <div class="col-md-8 offset-md-2">
         <div class="text-center">
@@ -26,6 +30,7 @@
         <div id="createPartial"></div>
     </div>
 </div>
+</body>
 
 
 

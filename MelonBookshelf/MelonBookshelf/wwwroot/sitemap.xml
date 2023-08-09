@@ -1,17 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-	<!-- Home Page -->
+
 	<url>
 		<loc>https://melonbookshelf.com/home</loc>
+		<lastmod></lastmod>
+		<changefreq></changefreq>
 		<priority>1.0</priority>
 	</url>
 	<url>
 		<loc>https://melonbookshelf.com/login</loc>
+		<lastmod></lastmod>
+		<changefreq></changefreq>
 		<priority>1.0</priority>
 	</url>
 	<url>
 		<loc>https://melonbookshelf.com/register</loc>
+		<lastmod></lastmod>
+		<changefreq></changefreq>
 		<priority>1.0</priority>
 	</url>
-
 </urlset>

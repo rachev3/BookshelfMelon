@@ -1,21 +1,27 @@
 ﻿@model RequestPageViewModel
 
-@{
-    ViewData["Title"] = "List of Requests";
-}
+<head>
+    @{
+        ViewData["Title"] = "Requests";
+        ViewData["Description"] = "All Requests are displayed on this page.";
+        ViewData["Keywords"] = "requests, all requests, list";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <h1>Requests</h1>
+            </div>
+            <div>
+                <a asp-controller="Request" asp-action="Create" asp-route-commingViewName="RequestsTable" class="btn btn-success">Add New Request</a>
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="text-center">
-            <h1>Requests</h1>
-        </div>
-        <div>
-            <a asp-controller="Request" asp-action="Create" asp-route-commingViewName="RequestsTable" class="btn btn-success">Add New Request</a>
-
-        </div>
-        <div id="tableContainer">
-            @Html.Partial("_RequestsTable", @Model)
+            </div>
+            <div id="tableContainer">
+                @Html.Partial("_RequestsTable", @Model)
+            </div>
         </div>
     </div>
-</div>
+</body>
 

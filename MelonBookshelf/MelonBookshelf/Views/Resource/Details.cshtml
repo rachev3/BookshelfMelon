@@ -1,106 +1,109 @@
 ﻿@using MelonBookshelf.Data
 @model ResourceViewModel
 
-@{
-    ViewData["Title"] = "Resources";
-}
-<div class="row text">
-    <div class="col-md-6">
-        <p>
-            <h1>Resource`s details</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                
-                    <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Category" class="control-label"></label>
-                    <input asp-for="Category.Name" class="form-control" readonly />
-                    <span asp-validation-for="Category.Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Type" class="control-label"></label>
-                    <input asp-for="Type" class="form-control" readonly />
-                    <span asp-validation-for="Type" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label"></label>
-                    <input asp-for="Title" class="form-control" readonly />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Author" class="control-label"></label>
-                    <input asp-for="Author" class="form-control" readonly />
-                    <span asp-validation-for="Author" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" readonly />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control" readonly />
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Invoice" class="control-label"></label>
-                    <input asp-for="Invoice" class="form-control" readonly />
-                    <span asp-validation-for="Invoice" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DateAdded" class="control-label"></label>
-                    <input type="date" asp-for="DateAdded" class="form-control" readonly />
-                    <span asp-validation-for="DateAdded" class="text-danger"></span>
-                </div>
-                @if (Model.Type == ResourceType.Physical)
-                {
+<head>
+    @{
+        ViewData["Title"] = "Resource's details";
+        ViewData["Description"] = "Here you can see detailed description of a resource.";
+        ViewData["Keywords"] = "resource, details, resource details, details";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row text">
+        <div class="col-md-6">
+            <p>
+                <h1>Resource`s details</h1>
+            </p>
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label asp-for="Status" class="control-label"></label>
-                        <input asp-for="Status" class="form-control" readonly />
-                        <span asp-validation-for="Status" class="text-danger"></span>
+
+                        <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
                     </div>
                     <div class="form-group">
-                        <label asp-for="DateTaken" class="control-label"></label>
-                        <input type="date" asp-for="DateTaken" class="form-control" readonly />
-                        <span asp-validation-for="DateTaken" class="text-danger"></span>
+                        <label asp-for="Category" class="control-label"></label>
+                        <input asp-for="Category.Name" class="form-control" readonly />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="DateReturn" class="control-label"></label>
-                        <input type="date" asp-for="DateReturn" class="form-control" readonly />
-                        <span asp-validation-for="DateReturn" class="text-danger"></span>
+                        <label asp-for="Type" class="control-label"></label>
+                        <input asp-for="Type" class="form-control" readonly />
+                        <span asp-validation-for="Type" class="text-danger"></span>
                     </div>
-                }
-
-            </div>
-        </div>
-        <div class="col-md-12 mt-3">
-            <h3>Comments</h3>
-
-            @Html.Partial("_AddComment", Model.ResourceCommentViewModel)
-            <hr />
-            <div id="comments">
-                @if (Model.ResourceComments != null)
-                {
-                    @foreach (var item in Model.ResourceComments)
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" readonly />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Author" class="control-label"></label>
+                        <input asp-for="Author" class="form-control" readonly />
+                        <span asp-validation-for="Author" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" readonly />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" readonly />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Invoice" class="control-label"></label>
+                        <input asp-for="Invoice" class="form-control" readonly />
+                        <span asp-validation-for="Invoice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateAdded" class="control-label"></label>
+                        <input type="date" asp-for="DateAdded" class="form-control" readonly />
+                        <span asp-validation-for="DateAdded" class="text-danger"></span>
+                    </div>
+                    @if (Model.Type == ResourceType.Physical)
                     {
-                        <h3>@item.User.UserName</h3>
-                        <p>@item.Comment</p>
-                        if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
+                        <div class="form-group">
+                            <label asp-for="Status" class="control-label"></label>
+                            <input asp-for="Status" class="form-control" readonly />
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateTaken" class="control-label"></label>
+                            <input type="date" asp-for="DateTaken" class="form-control" readonly />
+                            <span asp-validation-for="DateTaken" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateReturn" class="control-label"></label>
+                            <input type="date" asp-for="DateReturn" class="form-control" readonly />
+                            <span asp-validation-for="DateReturn" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-12 mt-3">
+                <h3>Comments</h3>
+                @Html.Partial("_AddComment", Model.ResourceCommentViewModel)
+                <hr />
+                <div id="comments">
+                    @if (Model.ResourceComments != null)
+                    {
+                        @foreach (var item in Model.ResourceComments)
                         {
-                            <form asp-controller="Resource" asp-action="DeleteComment" method="post">
-                                <input type="hidden" asp-for="ResourceId" />
-                              
-                                <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.Id" asp-action="DeleteComment">Delete</button>
-                            </form>
+                            <h3>@item.User.UserName</h3>
+                            <p>@item.Comment</p>
+                            if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
+                            {
+                                <form asp-controller="Resource" asp-action="DeleteComment" method="post">
+                                    <input type="hidden" asp-for="ResourceId" />
+
+                                    <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.Id" asp-action="DeleteComment">Delete</button>
+                                </form>
+                            }
                         }
                     }
-                }
-
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>

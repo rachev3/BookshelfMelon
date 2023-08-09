@@ -1,24 +1,30 @@
 ﻿@model RequestPageViewModel
 
-@{
-    ViewData["Title"] = "List of Requests";
-}
+<head>
+    @{
+        ViewData["Title"] = "My Requests";
+        ViewData["Description"] = "All requests you have created are displayed on this page.";
+        ViewData["Keywords"] = "requests, my, my rquests, list";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <h1>My Requests</h1>
+            </div>
+            <div>
+                <a asp-controller="Request" asp-action="Create" asp-route-commingViewName="MyRequestsTable" class="btn btn-success">Add New Request</a>
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="text-center">
-            <h1>My Requests</h1>
+            </div>
+            <div id="tableContainer">
+                @Html.Partial("_MyRequestsTable", @Model)
+            </div>
+            <div id="confirmDeletePartial"> </div>
         </div>
-        <div>
-            <a asp-controller="Request" asp-action="Create" asp-route-commingViewName="MyRequestsTable" class="btn btn-success">Add New Request</a>
-
-        </div>
-       <div id="tableContainer">
-            @Html.Partial("_MyRequestsTable", @Model)
-       </div>
-        <div id="confirmDeletePartial"> </div>
     </div>
-</div>
+</body>
 
 <script>
     function confirmDelete(requestId) {

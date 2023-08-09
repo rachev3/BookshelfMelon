@@ -1,98 +1,105 @@
 ﻿@using MelonBookshelf.Data
 @model RequestEditViewModel
 
-@{
-    ViewData["Title"] = "Add New Request";
-}
-<div class="row text">
-    <div class="col-md-8 offset-2">
+<head>
+    @{
+        ViewData["Title"] = "Create Request";
+        ViewData["Description"] = "Create your own Request for a resource to be add. This request will be inspected from an Admin and it will be aproved or canceled.";
+        ViewData["Keywords"] = "request, new request, create";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row text">
+        <div class="col-md-8 offset-2">
 
-        <div class="row">
-            <div class="col-md-6 offset-3">
+            <div class="row">
+                <div class="col-md-6 offset-3">
 
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <p>
-                        <h1>Add new Request</h1>
-                    </p>
-                    <div class="form-group">
-                        <label asp-for="CategoryId" class="control-label"></label>
-                        <select name="categoryId" class="form-control">
-                            <option value="">All Categories</option>
-                            @foreach (var value in Model.Categories)
-                            {
-                                <option value="@value.CategoryId">@value.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Type" class="control-label"></label>
-                        <select asp-for="Type" class="form-control">
-                            <option value="">Select Type</option>
-                            @foreach (var value in Enum.GetValues(typeof(ResourceType)))
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                        <span asp-validation-for="Type" class="text-danger"></span>
-                    </div>
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <p>
+                            <h1>Add new Request</h1>
+                        </p>
+                        <div class="form-group">
+                            <label asp-for="CategoryId" class="control-label"></label>
+                            <select name="categoryId" class="form-control">
+                                <option value="">All Categories</option>
+                                @foreach (var value in Model.Categories)
+                                {
+                                    <option value="@value.CategoryId">@value.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Type" class="control-label"></label>
+                            <select asp-for="Type" class="form-control">
+                                <option value="">Select Type</option>
+                                @foreach (var value in Enum.GetValues(typeof(ResourceType)))
+                                {
+                                    <option value="@value">@value</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
 
 
-                    <div class="form-group">
-                        <label asp-for="Title" class="control-label"></label>
-                        <input asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Author" class="control-label"></label>
-                        <input asp-for="Author" class="form-control" />
-                        <span asp-validation-for="Author" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" class="form-control" />
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Link" class="control-label"></label>
-                        <input asp-for="Link" class="form-control" />
-                        <span asp-validation-for="Link" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Priority" class="control-label"></label>
-                        <input asp-for="Priority" class="form-control" />
-                        <span asp-validation-for="Priority" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Motive" class="control-label"></label>
-                        <input asp-for="Motive" class="form-control" />
-                        <span asp-validation-for="Motive" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="DateAdded" class="control-label"></label>
-                        <input type="date" asp-for="DateAdded" class="form-control" />
-                        <span asp-validation-for="DateAdded" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" asp-for="User" class="form-control" />
-                        <input type="hidden" asp-for="CommingViewName" class="form-control" />
-                    </div>
-                    <div>
-                        <p></p>
-                    </div>
-                    <div class="form-group">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <input type="submit" value="Add" class="btn btn-outline-success float-right" asp-action="Create" />
-                            </div>
-                            <div>
-                                <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Author" class="control-label"></label>
+                            <input asp-for="Author" class="form-control" />
+                            <span asp-validation-for="Author" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Link" class="control-label"></label>
+                            <input asp-for="Link" class="form-control" />
+                            <span asp-validation-for="Link" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Priority" class="control-label"></label>
+                            <input asp-for="Priority" class="form-control" />
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Motive" class="control-label"></label>
+                            <input asp-for="Motive" class="form-control" />
+                            <span asp-validation-for="Motive" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateAdded" class="control-label"></label>
+                            <input type="date" asp-for="DateAdded" class="form-control" />
+                            <span asp-validation-for="DateAdded" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-for="User" class="form-control" />
+                            <input type="hidden" asp-for="CommingViewName" class="form-control" />
+                        </div>
+                        <div>
+                            <p></p>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="submit" value="Add" class="btn btn-outline-success float-right" asp-action="Create" />
+                                </div>
+                                <div>
+                                    <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>

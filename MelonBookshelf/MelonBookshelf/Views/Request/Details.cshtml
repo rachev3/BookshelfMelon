@@ -1,90 +1,97 @@
 ﻿@model RequestEditViewModel
 
-@{
-    ViewData["Title"] = "Requests";
-}
-<div class="row text">
-    <div class="col-md-8 offset-4">
-        <p>
-            <h1>Request`s details</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Category" class="control-label"></label>
-                    <input asp-for="Category.Name" class="form-control" readonly />
-                    <span asp-validation-for="Category.Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Status" class="control-label"></label>
-                    <input asp-for="Status" class="form-control" readonly />
-                    <span asp-validation-for="Status" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Type" class="control-label"></label>
-                    <input asp-for="Type" class="form-control" readonly />
-                    <span asp-validation-for="Type" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Author" class="control-label"></label>
-                    <input asp-for="Author" class="form-control" readonly />
-                    <span asp-validation-for="Author" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label"></label>
-                    <input asp-for="Title" class="form-control" readonly />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Priority" class="control-label"></label>
-                    <input asp-for="Priority" class="form-control" readonly />
-                    <span asp-validation-for="Priority" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Link" class="control-label"></label>
-                    <input asp-for="Link" class="form-control" readonly />
-                    <span asp-validation-for="Link" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Motive" class="control-label"></label>
-                    <input asp-for="Motive" class="form-control" readonly />
-                    <span asp-validation-for="Motive" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="DateAdded" class="control-label"></label>
-                    <input type="date" asp-for="DateAdded" class="form-control" readonly />
-                    <span asp-validation-for="DateAdded" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" readonly />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Upvotes" class="control-label"></label>
-                    <input asp-for="Upvotes.Count" class="form-control" readonly />
-                    <span asp-validation-for="Upvotes.Count" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Followers" class="control-label"></label>
-                    <input asp-for="Followers.Count" class="form-control" readonly />
-                    <span asp-validation-for="Followers.Count" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a>
-                            }
-                        </div>
-                        <div>
-                            <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
+<head>
+    @{
+        ViewData["Title"] = "Request's details";
+        ViewData["Description"] = "Here you can see detailed description of a request.";
+        ViewData["Keywords"] = "request, details, request's detils, see";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row text">
+        <div class="col-md-8 offset-4">
+            <p>
+                <h1>Request`s details</h1>
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label"></label>
+                        <input asp-for="Category.Name" class="form-control" readonly />
+                        <span asp-validation-for="Category.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <input asp-for="Status" class="form-control" readonly />
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Type" class="control-label"></label>
+                        <input asp-for="Type" class="form-control" readonly />
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Author" class="control-label"></label>
+                        <input asp-for="Author" class="form-control" readonly />
+                        <span asp-validation-for="Author" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" readonly />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Priority" class="control-label"></label>
+                        <input asp-for="Priority" class="form-control" readonly />
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Link" class="control-label"></label>
+                        <input asp-for="Link" class="form-control" readonly />
+                        <span asp-validation-for="Link" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Motive" class="control-label"></label>
+                        <input asp-for="Motive" class="form-control" readonly />
+                        <span asp-validation-for="Motive" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateAdded" class="control-label"></label>
+                        <input type="date" asp-for="DateAdded" class="form-control" readonly />
+                        <span asp-validation-for="DateAdded" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" readonly />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Upvotes" class="control-label"></label>
+                        <input asp-for="Upvotes.Count" class="form-control" readonly />
+                        <span asp-validation-for="Upvotes.Count" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Followers" class="control-label"></label>
+                        <input asp-for="Followers.Count" class="form-control" readonly />
+                        <span asp-validation-for="Followers.Count" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.RequestId">Edit</a>
+                                }
+                            </div>
+                            <div>
+                                <a class="btn btn-outline-secondary" asp-action="Index">Show All Requests</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>

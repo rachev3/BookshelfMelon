@@ -1,21 +1,27 @@
 ﻿@using MelonBookshelf.Data
 @model RequestPageViewModel
 
-@{
-    ViewData["Title"] = "List of Requests";
-}
-
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="text-center">
-            <h1>Pending Requests</h1>
+<head>
+    @{
+        ViewData["Title"] = "Pending Requests";
+        ViewData["Description"] = "All pending Requests are displayed on this page.";
+        ViewData["Keywords"] = "requests, pending, pendind requests, all, list";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <h1>Pending Requests</h1>
+            </div>
+            <div id="tableContainer">
+                @Html.Partial("_PendingRequestsTable", @Model)
+            </div>
+            <div id="confirmDeletePartial"> </div>
         </div>
-        <div id="tableContainer">
-            @Html.Partial("_PendingRequestsTable", @Model)
-        </div>
-        <div id="confirmDeletePartial"> </div>
     </div>
-</div>
+</body>
 
 <script>
     function confirmDelete(requestId) {

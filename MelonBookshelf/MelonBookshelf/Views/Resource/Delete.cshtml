@@ -1,42 +1,49 @@
 ﻿@model ResourceViewModel
 
-@{
-    ViewData["Title"] = "Delete Resource";
-}
-<div class="row text">
-    <div class="col-md-8 offset-2">
+<head>
+    @{
+        ViewData["Title"] = "Delete Resource";
+        ViewData["Description"] = "Delete Resource";
+        ViewData["Keywords"] = "resource, delete, remove, delete resource, remove resource";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row text">
+        <div class="col-md-8 offset-2">
 
-        <div class="row">
-            <div class="col-md-8 offset-4">
+            <div class="row">
+                <div class="col-md-8 offset-4">
 
-                <form asp-action="Delete">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <p>
-                        <h1>Delete Team</h1>
-                    </p>
-                    <div class="form-group">
-                        <label asp-for="Title" class="control-label"></label>
-                        <input asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Author" class="control-label"></label>
-                        <input asp-for="Author" class="form-control" />
-                        <span asp-validation-for="Author" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Type" class="control-label"></label>
-                        <input asp-for="Type" class="form-control" />
-                        <span asp-validation-for="Type" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" asp-id="ResourceId" />
-                        <input type="submit" value="Confirm" class="btn btn-outline-danger float-right" asp-action="Delete" />
-                        <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
-                    </div>
-                </form>
+                    <form asp-action="Delete">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <p>
+                            <h1>Delete Team</h1>
+                        </p>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Author" class="control-label"></label>
+                            <input asp-for="Author" class="form-control" />
+                            <span asp-validation-for="Author" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Type" class="control-label"></label>
+                            <input asp-for="Type" class="form-control" />
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" asp-id="ResourceId" />
+                            <input type="submit" value="Confirm" class="btn btn-outline-danger float-right" asp-action="Delete" />
+                            <a class="btn btn-outline-secondary" asp-action="Index">Show All Resources</a>
+                        </div>
+                    </form>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>

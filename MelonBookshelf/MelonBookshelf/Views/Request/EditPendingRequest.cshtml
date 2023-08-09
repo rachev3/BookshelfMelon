@@ -2,64 +2,71 @@
 @using MelonBookshelf.Data
 @model RequestEditViewModel
 
-@{
-    ViewData["Title"] = "Edit Request";
-}
-<div class="row text">
-    <div class="col-md-7 offset-4">
-        <div class="row">
-            <div class="col-md-7">
-                <form method="post" asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <p>
-                        <h1>Edit pending Request</h1>
-                    </p>
-                    <div class="form-group">
-                        <label asp-for="Status" class="control-label"></label>
-                        <select asp-for="Status" class="form-control">
-                            <option value="">Select Type</option>
-                            @foreach (var value in Enum.GetValues(typeof(RequestStatus)))
-                            {
-                                <option value="@value">@value</option>
-                            }
-                        </select>
-                        <span asp-validation-for="Status" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Motive" class="control-label"></label>
-                        <input asp-for="Motive" class="form-control" />
-                        <span asp-validation-for="Motive" class="text-danger"></span>
-                    </div>
-                  @*  <div class="form-group">
+<head>
+    @{
+        ViewData["Title"] = "Edit pending Request";
+        ViewData["Description"] = "Edit pending Request. Change the status of a request. You can add and motive for canceling.";
+        ViewData["Keywords"] = "request, details, cahnge, update, edit, pending, pending request, status update, motive update";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+</head>
+<body>
+    <div class="row text">
+        <div class="col-md-7 offset-4">
+            <div class="row">
+                <div class="col-md-7">
+                    <form method="post" asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <p>
+                            <h1>Edit pending Request</h1>
+                        </p>
+                        <div class="form-group">
+                            <label asp-for="Status" class="control-label"></label>
+                            <select asp-for="Status" class="form-control">
+                                <option value="">Select Type</option>
+                                @foreach (var value in Enum.GetValues(typeof(RequestStatus)))
+                                {
+                                    <option value="@value">@value</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Motive" class="control-label"></label>
+                            <input asp-for="Motive" class="form-control" />
+                            <span asp-validation-for="Motive" class="text-danger"></span>
+                        </div>
+                        @*  <div class="form-group">
                         <label asp-for="Category" class="control-label"></label>
                         <input asp-for="CategoryId" class="form-control" />
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    </div>*@
-                    <input type="hidden" asp-for="Type" />
-                    <input type="hidden" asp-for="Author" />
-                    <input type="hidden" asp-for="Title" />
-                    <input type="hidden" asp-for="Priority" />
-                    <input type="hidden" asp-for="Link" />
-                    <input type="hidden" asp-for="Description" />
-                    <input type="hidden" asp-for="DateAdded" />
+                        </div>*@
+                        <input type="hidden" asp-for="Type" />
+                        <input type="hidden" asp-for="Author" />
+                        <input type="hidden" asp-for="Title" />
+                        <input type="hidden" asp-for="Priority" />
+                        <input type="hidden" asp-for="Link" />
+                        <input type="hidden" asp-for="Description" />
+                        <input type="hidden" asp-for="DateAdded" />
 
-                    <input type="hidden" asp-for="CategoryId" />
-                    <input type="hidden" asp-for="Categories"/>
-                    <input type="hidden" asp-for="CommingViewName" />
-                    <input type="hidden" asp-for="User" />
-                    <input type="hidden" asp-for="RequestId" />
+                        <input type="hidden" asp-for="CategoryId" />
+                        <input type="hidden" asp-for="Categories" />
+                        <input type="hidden" asp-for="CommingViewName" />
+                        <input type="hidden" asp-for="User" />
+                        <input type="hidden" asp-for="RequestId" />
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-outline-secondary">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-outline-secondary">
 
-                            <i class="bi bi-pencil-square"></i>Edit
-                        </button>
-                        @Html.ActionLink("Back",nameof(RequestController.PendingRequests),"Request",null, new{@class="btn btn-primary"})
+                                <i class="bi bi-pencil-square"></i>Edit
+                            </button>
+                            @Html.ActionLink("Back",nameof(RequestController.PendingRequests),"Request",null, new{@class="btn btn-primary"})
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>
