@@ -4,3 +4,5 @@ account-password;
 (ivo - Ivo12345?)
 (dimitar - Mitko12345?)
 (stefan - Stefan12345?)
+![Screenshot](screenshots/AdminReport.PNG)
+
