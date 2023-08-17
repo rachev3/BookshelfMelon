@@ -1,0 +1,8 @@
+﻿.btn-dark-theme {
+    background-color: #f7f0f0;
+    color: #fff;
+}
+
+    .btn-dark-theme.dark-theme {
+        background-color: #343a40;
+    }

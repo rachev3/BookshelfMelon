@@ -1,7 +1,7 @@
 ﻿@*@model UserLoginViewModel
 @{
     ViewData["Title"] = "Login";
-    
+
 }
 <div class="row text">
     <div class="col-md-8 offset-2">
@@ -23,7 +23,7 @@
                         <label asp-for="Password" class="control-label"></label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>                   
+                    </div>
                     <div class="form-group">
                         <p></p>
                     </div>
@@ -76,6 +76,14 @@
             margin-bottom: 20px;
         }
     </style>
+
+    @{
+        ViewData["Title"] = "Login screen";
+        ViewData["Description"] = "Here you can login your account.";
+        ViewData["Keywords"] = "login";
+        ViewData["Author"] = "Dimitar Rachev";
+    }
+
 </head>
 <body>
     <div class="container">
@@ -88,7 +96,7 @@
                     <h2>Login</h2>
                     <form method="post" asp-action="Login">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    
+
                         <div class="form-group mt-3">
                             <label asp-for="UserName" class="control-label"></label>
                             <input asp-for="UserName" class="form-control" />

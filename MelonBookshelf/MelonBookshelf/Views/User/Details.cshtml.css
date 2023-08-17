@@ -1,0 +1,11 @@
+﻿.window {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.window-container {
+    max-height: 200px;
+    overflow-y: auto;
+}
