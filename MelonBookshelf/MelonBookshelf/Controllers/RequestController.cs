@@ -230,7 +230,7 @@ namespace MelonBookshelf.Controllers
 
             if (request == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             var categories = await categoryService.GetAll();
@@ -327,7 +327,7 @@ namespace MelonBookshelf.Controllers
 
             if (request == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             RequestViewModel viewModel = new(request);
@@ -345,7 +345,7 @@ namespace MelonBookshelf.Controllers
 
             if (request == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             await requestService.Delete(requestId);
@@ -375,7 +375,7 @@ namespace MelonBookshelf.Controllers
             }
             else
             {
-                return View("NotFound");
+                return View("404");
             }
         }
     }

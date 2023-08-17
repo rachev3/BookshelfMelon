@@ -59,7 +59,7 @@ namespace MelonBookshelf.Controllers
 
             if (category == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             return PartialView("_Edit", categoryViewModel);
@@ -98,7 +98,7 @@ namespace MelonBookshelf.Controllers
 
             if (category == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             return PartialView("_ConfirmDelete", categoryViewModel);
@@ -112,7 +112,7 @@ namespace MelonBookshelf.Controllers
 
             if (category == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             await categoryService.Delete(categoryId);

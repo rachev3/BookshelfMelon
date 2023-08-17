@@ -224,7 +224,7 @@ namespace MelonBookshelf.Controllers
 
             if (user == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             return View(userViewModel);
@@ -238,7 +238,7 @@ namespace MelonBookshelf.Controllers
 
             if (user == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             await userService.Delete(id);

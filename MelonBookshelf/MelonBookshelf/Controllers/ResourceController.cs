@@ -139,7 +139,7 @@ namespace MelonBookshelf.Controllers
 
             if (resource == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             var categories = await categoryService.GetAll();
@@ -242,7 +242,7 @@ namespace MelonBookshelf.Controllers
 
             if (comment == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             await commentService.Delete(commentId);
@@ -391,7 +391,7 @@ namespace MelonBookshelf.Controllers
 
             if (resource == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             return View(resourceViewModel);
@@ -405,7 +405,7 @@ namespace MelonBookshelf.Controllers
 
             if (resource == null)
             {
-                return View("NotFound");
+                return View("404");
             }
 
             await resourceService.Delete(id);
