@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using MelonBookshelf.Data;
+﻿using MelonBookshelf.Data;
 using MelonBookshelf.Data.DTO;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using MelonBookshelf.Models.Email;
-using MelonBookshelf.ReportGenerator;
 using MelonBookshelf.ReportGenrator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +17,6 @@ namespace MelonBookshelf.Controllers
         private readonly IResourceService resourceService;
         private readonly ICategoryService categoryService;
         private readonly IResourceCommentService commentService;
-        private readonly IMapper mapper;
         private readonly IConfiguration _config;
         private readonly IUserService userService;
         private readonly IReportService reportService;
@@ -282,7 +279,7 @@ namespace MelonBookshelf.Controllers
 
             var viewModel = new ResourcePageViewModel(viewListResource, viewListCategory);
 
-            resourceService.Update(resource.ResourceId, resource);
+            await resourceService.Update(resource.ResourceId, resource);
 
             return PartialView("_ResourceTable", viewModel);
         }
@@ -317,6 +314,31 @@ namespace MelonBookshelf.Controllers
         {
             return View("DownloadsReport");
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ImportReportData(IFormFile file)
+        {
+          
+                if (file == null || file.Length <= 0)
+                {
+                    ModelState.AddModelError("File", "Please select a file to upload.");
+                    return View("DownloadsReport");
+                }
+
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+
+                memoryStream.Position = 0; // Reset stream position
+
+                await reportService.ImportDataFromExternalSource(memoryStream);
+
+                TempData["Message"] = "Data imported successfully.";
+                return RedirectToAction("Index");
+            
+           
+        }
+    
 
         [HttpPost]
         [Authorize(Roles = "Admin")]

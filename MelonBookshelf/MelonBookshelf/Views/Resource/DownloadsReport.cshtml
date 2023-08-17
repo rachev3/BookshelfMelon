@@ -7,6 +7,36 @@
         ViewData["Keywords"] = "report, generate, generate report, email, now, later, excel, download, resource";
         ViewData["Author"] = "Dimitar Rachev";
     }
+    <style>
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            width: 48%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-top: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -55,6 +85,19 @@
                     <input type="submit" value="Schedule Report" class="btn btn-primary btn-lg" asp-action="GenerateReportPerTime" />
                 </div>
 
+            </form>
+
+        </div>
+        <div class="column">
+            <form method="post" enctype="multipart/form-data" asp-controller="Resource" asp-action="ImportReportData">
+                <div class="column">
+                    <div class="form-group">
+                        <label for="fileInput">Upload Excel File:</label>
+                        <input type="file" id="fileInput" name="file" class="form-control-file">
+                        <small class="form-text text-muted">Select the Excel file to include in the report.</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Import Data</button>
             </form>
 
         </div>

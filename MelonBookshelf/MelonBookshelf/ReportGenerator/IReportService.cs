@@ -7,5 +7,6 @@ namespace MelonBookshelf.ReportGenrator
         Task Data(DateTime date);
         Task ExcelConfiguration(List<ReportData> data);
         Task<EmailJsonPayload> GenerateJsonPayload(DateTime date);
+        Task ImportDataFromExternalSource(Stream inputStream);
     }
 }

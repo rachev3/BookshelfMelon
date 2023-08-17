@@ -47,6 +47,11 @@ namespace MelonBookshelf.Data.Services
             var result = await _appDbContext.Resources.Include(c=>c.Category).Include(c=>c.Comments).ThenInclude(u=>u.User).FirstOrDefaultAsync(n => n.ResourceId == id);
             return result;
         }
+        public async Task<Resource> GetByName(string name)
+        {
+            var result = await _appDbContext.Resources.Include(c => c.Category).Include(c => c.Comments).ThenInclude(u => u.User).FirstOrDefaultAsync(n => n.Title == name);
+            return result;
+        }
 
         public async Task<List<Resource>> Search(string? title, ResourceType? type, int? categoryId)
         {

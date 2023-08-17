@@ -1,4 +1,5 @@
-﻿using MelonBookshelf.Data.DTO;
+﻿using MelonBookshelf.Controllers.API;
+using MelonBookshelf.Data.DTO;
 using MelonBookshelf.Data.Services;
 using MelonBookshelf.Models;
 using MelonBookshelf.ReportGenerator;
@@ -24,6 +25,53 @@ namespace MelonBookshelf.ReportGenrator
             this._config = configuration;
         }
 
+        public async Task ImportDataFromExternalSource(Stream inputStream)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using var package = new ExcelPackage(inputStream);
+            var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+                var importedData = new List<ReportData>();
+            if (worksheet != null)
+            {
+
+                int rowCount = worksheet.Dimension.Rows;
+                for (int row = 3; row <= rowCount; row++) 
+                {
+                    var downloadDate = worksheet.Cells[row, 1].GetValue<DateTime>().Date;
+                    var resourceName = worksheet.Cells[row, 2].GetValue<string>();
+                    var downloadCount = worksheet.Cells[row, 3].GetValue<int>();
+
+                    var reportData = new ReportData
+                    {
+                        DownloadDate = downloadDate.ToString(),
+                        ResourceName = resourceName,
+                        DownloadCount = downloadCount
+                    };
+
+                    importedData.Add(reportData);
+                }
+
+               
+            }
+            else
+            {
+                
+            }
+            foreach(var item in importedData)
+            {
+               var resource  = await resourceService.GetByName(item.ResourceName);
+                if(resource == null)
+                {
+                    Resource newResource = new Resource {
+                        Title = item.ResourceName,
+                        Type = MelonBookshelf.Data.ResourceType.Digital
+                    };
+                     await resourceService.Add(newResource);
+                }
+            }
+        }
         public async Task Data(DateTime date)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
