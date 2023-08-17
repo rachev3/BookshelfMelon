@@ -107,6 +107,17 @@ app.UseAuthorization();
 //{
 //    endpoints.MapControllers();
 //});
+// ASP.NET Core
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Sitemap",
+        pattern: "sitemap.xml",
+        defaults: new { controller = "Sitemap", action = "Index" }
+    );
+
+   
+});
 
 app.MapControllerRoute(
     name: "default",
