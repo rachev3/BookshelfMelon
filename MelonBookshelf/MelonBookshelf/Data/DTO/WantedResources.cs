@@ -7,7 +7,7 @@ namespace MelonBookshelf.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int WanterId { get; set; }
         public int ResourceId { get; set; }
         [ForeignKey(nameof(ResourceId))]
         public virtual Resource Resource { get; set; }

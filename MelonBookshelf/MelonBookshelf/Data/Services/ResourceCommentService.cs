@@ -20,7 +20,7 @@ namespace MelonBookshelf.Data.Services
 
         public async Task<ResourceComment> GetById(int id)
         {
-            var result = await _appDbContext.ResourceComments.FirstOrDefaultAsync(rc => rc.Id == id);
+            var result = await _appDbContext.ResourceComments.FirstOrDefaultAsync(rc => rc.CommentId == id);
             await _appDbContext.SaveChangesAsync();
             return result;
         }
@@ -40,7 +40,7 @@ namespace MelonBookshelf.Data.Services
 
         public async Task Delete(int id)
         {
-            var result = await _appDbContext.ResourceComments.FirstOrDefaultAsync(n => n.Id == id);
+            var result = await _appDbContext.ResourceComments.FirstOrDefaultAsync(n => n.CommentId == id);
             _appDbContext.ResourceComments.Remove(result);
             await _appDbContext.SaveChangesAsync();
         }

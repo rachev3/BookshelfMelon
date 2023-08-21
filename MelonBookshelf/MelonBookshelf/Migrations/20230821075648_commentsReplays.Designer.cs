@@ -4,6 +4,7 @@ using MelonBookshelf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelonBookshelf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230821075648_commentsReplays")]
+    partial class commentsReplays
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,11 +51,12 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Data.DTO.CommentReplay", b =>
                 {
-                    b.Property<int>("ReplayId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id1");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplayId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Replay")
                         .IsRequired()
@@ -67,7 +70,7 @@ namespace MelonBookshelf.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Id");
 
-                    b.HasKey("ReplayId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ResourceCommentId");
 
@@ -78,11 +81,12 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComment", b =>
                 {
-                    b.Property<int>("CommentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id1");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -96,7 +100,7 @@ namespace MelonBookshelf.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Id");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ResourceId");
 
@@ -151,11 +155,12 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Models.Follower", b =>
                 {
-                    b.Property<int>("FollowerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id1");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FollowerId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -165,7 +170,7 @@ namespace MelonBookshelf.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Id");
 
-                    b.HasKey("FollowerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RequestId");
 
@@ -386,11 +391,12 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Models.WantedResources", b =>
                 {
-                    b.Property<int>("WanterId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id1");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WanterId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ResourceId")
                         .HasColumnType("int");
@@ -400,7 +406,7 @@ namespace MelonBookshelf.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Id");
 
-                    b.HasKey("WanterId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ResourceId");
 

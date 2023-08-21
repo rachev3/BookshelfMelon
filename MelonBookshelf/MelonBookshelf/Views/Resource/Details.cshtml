@@ -97,7 +97,7 @@
                                 <form asp-controller="Resource" asp-action="DeleteComment" method="post">
                                     <input type="hidden" asp-for="ResourceId" />
 
-                                    <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.Id" asp-action="DeleteComment">Delete</button>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.CommentId" asp-action="DeleteComment">Delete</button>
                                 </form>
                             }
                         }

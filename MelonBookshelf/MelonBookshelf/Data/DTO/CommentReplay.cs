@@ -4,21 +4,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MelonBookshelf.Data.DTO
 {
-    public class ResourceComment
+    public class CommentReplay
     {
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CommentId { get; set; }
-        public int ResourceId { get; set; }
-        [ForeignKey(nameof(ResourceId))]
-        public virtual Resource Resource { get; set; }
+        public int ReplayId { get; set; }
+        public int ResourceCommentId { get; set; }
+        [ForeignKey(nameof(ResourceCommentId))]
+        public virtual ResourceComment ResourceComment { get; set; }
 
         [Column("Id")]
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
-        public virtual List<CommentReplay>? CommentsReplays { get; set; }
 
-        public string Comment { get; set; }
+        public string Replay { get; set; }
     }
 }

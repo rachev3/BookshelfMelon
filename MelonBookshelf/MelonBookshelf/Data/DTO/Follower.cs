@@ -7,7 +7,7 @@ namespace MelonBookshelf.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int FollowerId { get; set; }
 
         [Column("Id")]
         public string UserId { get; set; }

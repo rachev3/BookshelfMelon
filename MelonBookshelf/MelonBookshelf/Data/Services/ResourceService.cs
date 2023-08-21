@@ -49,7 +49,7 @@ namespace MelonBookshelf.Data.Services
         }
         public async Task<Resource> GetByName(string name)
         {
-            var result = await _appDbContext.Resources.Include(c => c.Category).Include(c => c.Comments).ThenInclude(u => u.User).FirstOrDefaultAsync(n => n.Title == name);
+            var result = await _appDbContext.Resources.FirstOrDefaultAsync(n => n.Title == name);
             return result;
         }
 

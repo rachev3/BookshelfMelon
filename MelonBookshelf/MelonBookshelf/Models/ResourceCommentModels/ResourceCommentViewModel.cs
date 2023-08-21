@@ -11,7 +11,7 @@ namespace MelonBookshelf.Models
 
         public ResourceCommentViewModel(ResourceComment resourceComment)
         {
-            ResourceCommentId = resourceComment.Id;
+            ResourceCommentId = resourceComment.CommentId;
             UserId = resourceComment.UserId;
             ResourceId = resourceComment.ResourceId;
             Comment = resourceComment.Comment;

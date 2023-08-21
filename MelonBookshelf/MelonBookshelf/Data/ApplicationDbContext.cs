@@ -21,6 +21,7 @@ namespace MelonBookshelf.Data
         public DbSet<ResourceComment> ResourceComments { get; set; }
         public DbSet<ResourceDownloadHistory> ResourceDownloadHistory { get; set; }
         public DbSet<BackgroundTask> BackgroundTasks { get; set; }
+        public DbSet<CommentReplay> CommentReplays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,18 @@ namespace MelonBookshelf.Data
                  .WithMany()
                  .HasForeignKey(r => r.CategoryId)
                  .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Resource>()
+                .HasMany(r => r.Comments)
+                .WithOne(r => r.Resource)
+                .HasForeignKey(r => r.ResourceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ResourceComment>()
+                .HasMany(r => r.CommentsReplays)
+                .WithOne(c => c.ResourceComment)
+                .HasForeignKey(k => k.ResourceCommentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
