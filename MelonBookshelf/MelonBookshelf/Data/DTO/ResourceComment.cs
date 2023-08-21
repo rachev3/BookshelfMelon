@@ -13,11 +13,11 @@ namespace MelonBookshelf.Data.DTO
         [ForeignKey(nameof(ResourceId))]
         public virtual Resource Resource { get; set; }
 
-        [Column("Id")]
+        [Column("UserId")]
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
-        public virtual List<CommentReplay>? CommentsReplays { get; set; }
+        public virtual List<CommentReply>? CommentsReplys { get; set; }
 
         public string Comment { get; set; }
     }

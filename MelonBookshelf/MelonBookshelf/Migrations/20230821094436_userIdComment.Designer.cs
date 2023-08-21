@@ -4,6 +4,7 @@ using MelonBookshelf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelonBookshelf.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230821094436_userIdComment")]
+    partial class userIdComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,15 +49,15 @@ namespace MelonBookshelf.Migrations
                     b.ToTable("BackgroundTasks");
                 });
 
-            modelBuilder.Entity("MelonBookshelf.Data.DTO.CommentReply", b =>
+            modelBuilder.Entity("MelonBookshelf.Data.DTO.CommentReplay", b =>
                 {
-                    b.Property<int>("ReplyId")
+                    b.Property<int>("ReplayId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplyId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReplayId"), 1L, 1);
 
-                    b.Property<string>("Reply")
+                    b.Property<string>("Replay")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -66,13 +68,13 @@ namespace MelonBookshelf.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("UserId");
 
-                    b.HasKey("ReplyId");
+                    b.HasKey("ReplayId");
 
                     b.HasIndex("ResourceCommentId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CommentReplys");
+                    b.ToTable("CommentReplays");
                 });
 
             modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComment", b =>
@@ -541,16 +543,16 @@ namespace MelonBookshelf.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MelonBookshelf.Data.DTO.CommentReply", b =>
+            modelBuilder.Entity("MelonBookshelf.Data.DTO.CommentReplay", b =>
                 {
                     b.HasOne("MelonBookshelf.Data.DTO.ResourceComment", "ResourceComment")
-                        .WithMany("CommentsReplys")
+                        .WithMany("CommentsReplays")
                         .HasForeignKey("ResourceCommentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MelonBookshelf.Models.User", "User")
-                        .WithMany("Replys")
+                        .WithMany("Replays")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -721,7 +723,7 @@ namespace MelonBookshelf.Migrations
 
             modelBuilder.Entity("MelonBookshelf.Data.DTO.ResourceComment", b =>
                 {
-                    b.Navigation("CommentsReplys");
+                    b.Navigation("CommentsReplays");
                 });
 
             modelBuilder.Entity("MelonBookshelf.Models.Request", b =>
@@ -742,7 +744,7 @@ namespace MelonBookshelf.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Replys");
+                    b.Navigation("Replays");
 
                     b.Navigation("Requests");
                 });

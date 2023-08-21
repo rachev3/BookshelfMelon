@@ -12,5 +12,6 @@ namespace MelonBookshelf.Models
         public string? City { get; set; }
         public List<Request> Requests { get; set; }
         public List<ResourceComment> Comments { get; set; }
+        public List<CommentReply> Replys { get; set; }   
     }
 }

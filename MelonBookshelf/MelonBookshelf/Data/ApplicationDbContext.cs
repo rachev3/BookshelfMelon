@@ -21,7 +21,7 @@ namespace MelonBookshelf.Data
         public DbSet<ResourceComment> ResourceComments { get; set; }
         public DbSet<ResourceDownloadHistory> ResourceDownloadHistory { get; set; }
         public DbSet<BackgroundTask> BackgroundTasks { get; set; }
-        public DbSet<CommentReplay> CommentReplays { get; set; }
+        public DbSet<CommentReply> CommentReplys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,12 @@ namespace MelonBookshelf.Data
                 .WithOne(r => r.User)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasMany(r => r.Replys)
+                .WithOne(r => r.User)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Request>()
                  .HasOne(r => r.Category)
@@ -52,7 +58,7 @@ namespace MelonBookshelf.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ResourceComment>()
-                .HasMany(r => r.CommentsReplays)
+                .HasMany(r => r.CommentsReplys)
                 .WithOne(c => c.ResourceComment)
                 .HasForeignKey(k => k.ResourceCommentId)
                 .OnDelete(DeleteBehavior.NoAction);

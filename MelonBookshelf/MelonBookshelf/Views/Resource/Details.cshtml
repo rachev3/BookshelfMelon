@@ -90,16 +90,47 @@
                     {
                         @foreach (var item in Model.ResourceComments)
                         {
-                            <h3>@item.User.UserName</h3>
-                            <p>@item.Comment</p>
-                            if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
-                            {
-                                <form asp-controller="Resource" asp-action="DeleteComment" method="post">
-                                    <input type="hidden" asp-for="ResourceId" />
-
-                                    <button type="submit" class="btn btn-outline-danger btn-sm float-right" asp-route-commentId="@item.CommentId" asp-action="DeleteComment">Delete</button>
+                            <div class="col-md-6">
+                                <h3>@item.User.UserName</h3>
+                                <p>@item.Comment</p>
+                            </div>
+                            <div class="comment">
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        @if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
+                                        {
+                                            <form asp-controller="Resource" asp-action="DeleteComment" method="post">
+                                                <input type="hidden" asp-for="ResourceId" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" asp-route-commentId="@item.CommentId" asp-action="DeleteComment">Delete</button>
+                                            </form>
+                                            <button class="btn btn-outline-info btn-sm ml-2" onclick="toggleReplyForm(@item.CommentId)">Reply</button>
+                                        }
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="replyForm-@item.CommentId" style="display:none;">
+                                <form asp-controller="Resource" asp-action="AddCommentReplay" method="post">
+                                    <input type="hidden" asp-for="Invoice" value="@item.CommentId" />
+                                    <textarea asp-for="ResourceCommentViewModel.Comment" class="form-control"></textarea>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-2">Submit Reply</button>
                                 </form>
-                            }
+                            </div>
+                            <div id="replays-@item.CommentId" style="display:none;">
+                                @if (item.CommentsReplys != null && item.CommentsReplys.Count > 0)
+                                {
+                                    @for (int i = 0; i < Math.Min(item.CommentsReplys.Count, 3); i++)
+                                    {
+                                        var replay = item.CommentsReplys[i];
+                                        <p>@replay.User.UserName: @replay</p>
+                                    }
+                                    if (item.CommentsReplys.Count > 3)
+                                    {
+                                        <button class="btn btn-link btn-sm" onclick="toggleReplays(@item.CommentId)">Show All Replays</button>
+                                    }
+                                }
+                            </div>
+
                         }
                     }
                 </div>
@@ -107,3 +138,15 @@
         </div>
     </div>
 </body>
+<script>
+    function toggleReplyForm(commentId) {
+        var form = document.getElementById(`replyForm-${commentId}`);
+        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function toggleReplays(commentId) {
+        var replays = document.getElementById(`replays-${commentId}`);
+        replays.style.display = (replays.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
+
