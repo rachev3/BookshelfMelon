@@ -58,7 +58,7 @@ namespace MelonBookshelf.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ResourceComment>()
-                .HasMany(r => r.CommentsReplys)
+                .HasMany(r => r.CommentsReplies)
                 .WithOne(c => c.ResourceComment)
                 .HasForeignKey(k => k.ResourceCommentId)
                 .OnDelete(DeleteBehavior.NoAction);

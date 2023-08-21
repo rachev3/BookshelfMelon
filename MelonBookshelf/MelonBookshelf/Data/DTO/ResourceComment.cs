@@ -17,7 +17,7 @@ namespace MelonBookshelf.Data.DTO
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
-        public virtual List<CommentReply>? CommentsReplys { get; set; }
+        public virtual List<CommentReply>? CommentsReplies { get; set; }
 
         public string Comment { get; set; }
     }

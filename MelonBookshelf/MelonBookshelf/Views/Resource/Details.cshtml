@@ -105,32 +105,19 @@
                                             </form>
                                             <button class="btn btn-outline-info btn-sm ml-2" onclick="toggleReplyForm(@item.CommentId)">Reply</button>
                                         }
-                                        
+
                                     </div>
                                 </div>
                             </div>
                             <div id="replyForm-@item.CommentId" style="display:none;">
-                                <form asp-controller="Resource" asp-action="AddCommentReplay" method="post">
-                                    <input type="hidden" asp-for="Invoice" value="@item.CommentId" />
-                                    <textarea asp-for="ResourceCommentViewModel.Comment" class="form-control"></textarea>
+                                <form asp-controller="Resource" asp-action="AddCommentReply" method="post">
+                                    <input type="hidden" asp-for="CommentReplyViewModel.ResourceCommentId" value="@item.CommentId" class="form-control" />
+                                    <input asp-for="CommentReplyViewModel.Reply" class="form-control" />
                                     <button type="submit" class="btn btn-primary btn-sm mt-2">Submit Reply</button>
                                 </form>
                             </div>
-                            <div id="replays-@item.CommentId" style="display:none;">
-                                @if (item.CommentsReplys != null && item.CommentsReplys.Count > 0)
-                                {
-                                    @for (int i = 0; i < Math.Min(item.CommentsReplys.Count, 3); i++)
-                                    {
-                                        var replay = item.CommentsReplys[i];
-                                        <p>@replay.User.UserName: @replay</p>
-                                    }
-                                    if (item.CommentsReplys.Count > 3)
-                                    {
-                                        <button class="btn btn-link btn-sm" onclick="toggleReplays(@item.CommentId)">Show All Replays</button>
-                                    }
-                                }
-                            </div>
-
+                           
+                           
                         }
                     }
                 </div>

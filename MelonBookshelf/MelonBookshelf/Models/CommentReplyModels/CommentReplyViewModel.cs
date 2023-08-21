@@ -1,6 +1,6 @@
 ﻿using MelonBookshelf.Data.DTO;
 
-namespace MelonBookshelf.Models.CommentReplyModels
+namespace MelonBookshelf.Models
 {
     public class CommentReplyViewModel
     {

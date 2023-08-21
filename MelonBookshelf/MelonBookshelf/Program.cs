@@ -36,6 +36,7 @@ builder.Services.AddScoped<IResourceCommentService, ResourceCommentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IBackgroundTaskService, BackgroundTaskService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.AddScoped<ICommentReplyService, CommentReplyService>();
 builder.Services.AddHostedService<TimedHostedService>();
 
 builder.Services.AddHttpClient();

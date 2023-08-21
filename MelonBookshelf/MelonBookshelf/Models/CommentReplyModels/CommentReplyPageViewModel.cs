@@ -1,4 +1,4 @@
-﻿namespace MelonBookshelf.Models.CommentReplyModels
+﻿namespace MelonBookshelf.Models
 {
     public class CommentReplyPageViewModel
     {

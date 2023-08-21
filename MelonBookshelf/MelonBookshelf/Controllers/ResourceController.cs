@@ -22,8 +22,9 @@ namespace MelonBookshelf.Controllers
         private readonly IReportService reportService;
         private readonly IEmailSender emailSender;
         private readonly IBackgroundTaskService backgroundTaskService;
+        private readonly ICommentReplyService commentReplyService;
 
-        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService, IReportService reportService, IEmailSender email, IBackgroundTaskService backgroundTaskService)
+        public ResourceController(IResourceService resourceService, ICategoryService categoryService, IConfiguration config, IUserService userService, IResourceCommentService commentService, IReportService reportService, IEmailSender email, IBackgroundTaskService backgroundTaskService, ICommentReplyService commentReplyService)
         {
             this.resourceService = resourceService;
             this.categoryService = categoryService;
@@ -33,6 +34,7 @@ namespace MelonBookshelf.Controllers
             this.reportService = reportService;
             emailSender = email;
             this.backgroundTaskService = backgroundTaskService;
+            this.commentReplyService = commentReplyService;
         }
 
         [HttpGet]
@@ -220,7 +222,7 @@ namespace MelonBookshelf.Controllers
         public async Task<IActionResult> AddComment(ResourceCommentViewModel resourceCommentViewModel, int resourceId)
         {
             string name = User.Identity.Name;
-            User user = userService.GetByUserName(name).Result;
+            User user = await userService.GetByUserName(name);
 
             ResourceComment resourceComment = new();
             resourceComment.Comment = resourceCommentViewModel.Comment;
@@ -251,6 +253,37 @@ namespace MelonBookshelf.Controllers
             ResourceViewModel resource = new(data, "Details");
 
             return View("Details", resource);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCommentReply(CommentReplyViewModel commentReplyViewModel)
+        {
+            string userName = User.Identity.Name;
+            User user = await userService.GetByUserName(userName);
+
+            CommentReply commentReply = new CommentReply();
+            commentReply.ResourceCommentId = commentReplyViewModel.ResourceCommentId;
+            commentReply.Reply = commentReplyViewModel.Reply;
+            commentReply.User = user;
+
+            await commentReplyService.Add(commentReply);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCommentReply(int replyId, int commentId)
+        {
+            var reply = await commentService.GetById(replyId);
+
+            if(reply == null)
+            {
+                return View("404");
+            }
+
+            await commentReplyService.Delete(replyId);
+
+            return Ok();
         }
 
         [HttpPost]

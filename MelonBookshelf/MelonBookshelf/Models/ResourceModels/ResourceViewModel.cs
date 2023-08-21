@@ -49,6 +49,7 @@ namespace MelonBookshelf.Models
             FileName = resource.FileName;
             CommingViewName = commingViewName;
             ResourceCommentViewModel.ResourceId = resource.ResourceId;
+            
         }
 
         public int ResourceId { get; set; }
@@ -70,6 +71,7 @@ namespace MelonBookshelf.Models
         public List<WantedResources>? wantedResources { get; set; }
         public ResourceCommentViewModel ResourceCommentViewModel = new();
         public List<ResourceComment>? ResourceComments { get; set; }
+        public CommentReplyViewModel CommentReplyViewModel = new();
     
     }
 }

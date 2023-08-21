@@ -16,6 +16,7 @@ namespace MelonBookshelf.Models
             ResourceId = resourceComment.ResourceId;
             Comment = resourceComment.Comment;
             User = resourceComment.User;
+            CommentReplyViewModel.ResourceCommentId = resourceComment.CommentId;
         }
 
         public int ResourceCommentId { get; set; }
@@ -23,5 +24,7 @@ namespace MelonBookshelf.Models
         public User? User { get; set; }
         public int ResourceId { get; set; }
         public string Comment { get; set; }
+        public CommentReplyViewModel CommentReplyViewModel = new();
+        public List<CommentReply>? CommentReplies { get; set; }
     }
 }
