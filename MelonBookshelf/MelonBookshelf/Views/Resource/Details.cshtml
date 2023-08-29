@@ -90,34 +90,46 @@
                     {
                         @foreach (var item in Model.ResourceComments)
                         {
-                            <div class="col-md-6">
-                                <h3>@item.User.UserName</h3>
-                                <p>@item.Comment</p>
-                            </div>
-                            <div class="comment">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        @if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
-                                        {
-                                            <form asp-controller="Resource" asp-action="DeleteComment" method="post">
-                                                <input type="hidden" asp-for="ResourceId" />
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" asp-route-commentId="@item.CommentId" asp-action="DeleteComment">Delete</button>
-                                            </form>
-                                            <button class="btn btn-outline-info btn-sm ml-2" onclick="toggleReplyForm(@item.CommentId)">Reply</button>
-                                        }
-
-                                    </div>
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <h4>@item.User.UserName</h4>
+                                    <p>@item.Comment</p>
+                                </div>
+                                <div class="comment-actions">
+                                    @if (User.Identity.IsAuthenticated && item.User != null && User.Identity.Name == item.User.UserName)
+                                    {
+                                        <form asp-controller="Resource" asp-action="DeleteComment" method="post">
+                                            <input type="hidden" asp-for="ResourceId" />
+                                            <button type="submit" class="btn btn-danger btn-sm" asp-route-commentId="@item.CommentId" asp-action="DeleteComment">Delete</button>
+                                        </form>
+                                        <button class="btn btn-info btn-sm ml-2" onclick="toggleReplyForm(@item.CommentId)">Reply</button>
+                                    }
                                 </div>
                             </div>
-                            <div id="replyForm-@item.CommentId" style="display:none;">
+                            <div id="replyForm-@item.CommentId" class="reply-form" style="display:none;">
                                 <form asp-controller="Resource" asp-action="AddCommentReply" method="post">
                                     <input type="hidden" asp-for="CommentReplyViewModel.ResourceCommentId" value="@item.CommentId" class="form-control" />
                                     <input asp-for="CommentReplyViewModel.Reply" class="form-control" />
                                     <button type="submit" class="btn btn-primary btn-sm mt-2">Submit Reply</button>
                                 </form>
                             </div>
-                           
-                           
+                            @if (item.CommentsReplies != null && item.CommentsReplies.Any())
+                            {
+                                <div class="replies">
+                                    @for (int i = 0; i < Math.Min(3, item.CommentsReplies.Count()); i++)
+                                    {
+                                        var reply = item.CommentsReplies[i];
+                                        <div class="reply-item">
+                                            <h6>@reply.User.UserName</h6>
+                                            <p>@reply.Reply</p>
+                                        </div>
+                                    }
+                                    @if (item.CommentsReplies.Count() > 3)
+                                    {
+                                        <button class="show-more-replies-btn" onclick="toggleReplies(@item.CommentId)">Show More Replies</button>
+                                    }
+                                </div>
+                            }
                         }
                     }
                 </div>
@@ -136,4 +148,41 @@
         replays.style.display = (replays.style.display === 'none') ? 'block' : 'none';
     }
 </script>
+<style>
+
+.comment-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f7f7f7;
+}
+
+.comment-header {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.comment-actions {
+    margin-top: 10px;
+}
+
+.reply-form {
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.reply-item {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.replies {
+    margin-left: 20px;
+    border-left: 1px solid #ccc;
+    padding-left: 20px;
+}
+</style>
+
 
