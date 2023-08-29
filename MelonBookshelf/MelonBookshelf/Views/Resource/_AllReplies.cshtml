@@ -1,0 +1,10 @@
+﻿@model ResourceCommentViewModel
+
+@for(int i = 3; i<=Model.CommentReplies.Count; i++)
+{
+    var reply = Model.CommentReplies[i];
+    <div class="reply-item">
+        <h6>@reply.User.UserName</h6>
+        <p>@reply.Reply</p>
+    </div>
+}

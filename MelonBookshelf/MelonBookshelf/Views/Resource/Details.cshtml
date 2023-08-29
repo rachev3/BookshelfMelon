@@ -126,7 +126,12 @@
                                     }
                                     @if (item.CommentsReplies.Count() > 3)
                                     {
-                                        <button class="show-more-replies-btn" onclick="toggleReplies(@item.CommentId)">Show More Replies</button>
+                                        <div id="replies">
+                                            <div id="allReplies">
+
+                                            </div>
+                                            <button id="repliesCount" class="show-more-replies-btn" onclick="toggleReplies(@item.CommentId)">Show More Replies</button>
+                                        </div>
                                     }
                                 </div>
                             }
@@ -137,52 +142,42 @@
         </div>
     </div>
 </body>
-<script>
-    function toggleReplyForm(commentId) {
-        var form = document.getElementById(`replyForm-${commentId}`);
-        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-    }
 
-    function toggleReplays(commentId) {
-        var replays = document.getElementById(`replays-${commentId}`);
-        replays.style.display = (replays.style.display === 'none') ? 'block' : 'none';
-    }
-</script>
 <style>
 
-.comment-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #f7f7f7;
-}
+    .comment-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #f7f7f7;
+    }
 
-.comment-header {
-    font-size: 18px;
-    font-weight: bold;
-}
+    .comment-header {
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-.comment-actions {
-    margin-top: 10px;
-}
+    .comment-actions {
+        margin-top: 10px;
+    }
 
-.reply-form {
-    margin-top: 10px;
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
-}
+    .reply-form {
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+    }
 
-.reply-item {
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
-    margin-top: 10px;
-}
+    .reply-item {
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
 
-.replies {
-    margin-left: 20px;
-    border-left: 1px solid #ccc;
-    padding-left: 20px;
-}
+    .replies {
+        margin-left: 20px;
+        border-left: 1px solid #ccc;
+        padding-left: 20px;
+    }
 </style>
 
 
